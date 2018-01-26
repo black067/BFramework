@@ -22,7 +22,7 @@ namespace TestConsole
         static void Main(string[] args)
         {
             objectPool = new ObjectPool();
-            int[] arrayInt = new int[5]{ 0,1,2,3,4};
+            int[] arrayInt = new int[5]{0,1,2,3,4};
             objectPool.CreateNewQueue("A", arrayInt, 5);
             var A = "A";
             for (int i = objectPool.GetCount(A) - 1; i > -1; i--)

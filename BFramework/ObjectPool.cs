@@ -87,11 +87,19 @@ namespace BFramework
             get => new List<Object>(_pool.Keys);
         }
 
+        /// <summary>
+        /// 池的类型表
+        /// </summary>
         public List<Type> Types
         {
             get => new List<Type>(_types.Values);
         }
 
+        /// <summary>
+        /// 获取键值对应队列的元素数量
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public int GetCount(Object key)
         {
             if (_pool.ContainsKey(key))
@@ -104,13 +112,22 @@ namespace BFramework
             }
         }
         
+        /// <summary>
+        /// 清空对象池
+        /// </summary>
         public void Clear()
         {
             _pool.Clear();
             _tags.Clear();
         }
 
-        public void CreateNewQueue(Object key, Type itemType, int cache)
+        /// <summary>
+        /// 根据键值，类型创建新池
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="itemType"></param>
+        /// <param name="cache"></param>
+        public void CreateNewQueue(Object key, Type itemType, int cache = 1)
         {
             if (_pool.ContainsKey(key))
             {
@@ -120,6 +137,12 @@ namespace BFramework
             _caches.Add(key, cache > 1 ? cache : 1);
             _types.Add(key, itemType);
         }
+        /// <summary>
+        /// 根据键值，已有的队列创建新池
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="queue"></param>
+        /// <param name="cache"></param>
         public void CreateNewQueue(Object key, Queue<Object> queue, int cache = 1)
         {
             if (queue.Count < 1)
@@ -132,6 +155,12 @@ namespace BFramework
                 _pool[key].Enqueue(queue.Dequeue());
             }
         }
+        /// <summary>
+        /// 根据键值，已有的列表创建新池
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="list"></param>
+        /// <param name="cache"></param>
         public void CreateNewQueue(Object key, List<Object> list, int cache = 1)
         {
             if(list.Count < 1)
@@ -144,6 +173,12 @@ namespace BFramework
                 _pool[key].Enqueue(list[i]);
             }
         }
+        /// <summary>
+        /// 根据键值，已有的数组创建新池
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="array"></param>
+        /// <param name="cache"></param>
         public void CreateNewQueue(Object key, Array array, int cache = 1)
         {
             if (array.Length < 1)
@@ -157,6 +192,11 @@ namespace BFramework
             }
         }
 
+        /// <summary>
+        /// 从键值对应的队列中获取对象
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public Object GetItem(Object key)
         {
             if (_pool.ContainsKey(key))
@@ -167,7 +207,7 @@ namespace BFramework
                     return null;
                 }
                 MarkAsOut(ref _pointer, key);
-                FillPool(ref key);
+                Fill(ref key);
                 return _pointer;
             }
             else
@@ -176,7 +216,11 @@ namespace BFramework
             }
         }
 
-        public void RestoreItem(Object item)
+        /// <summary>
+        /// 返还对象到池中
+        /// </summary>
+        /// <param name="item"></param>
+        public void Restore(Object item)
         {
             if (item == null)
             {
@@ -189,12 +233,21 @@ namespace BFramework
             }
         }
 
+        /// <summary>
+        /// 将对象标记为出借
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="key"></param>
         private void MarkAsOut(ref Object item, Object key)
         {
             _tags.Add(item, key);
         }
 
-        private void FillPool(ref Object key)
+        /// <summary>
+        /// 补充对象池
+        /// </summary>
+        /// <param name="key"></param>
+        private void Fill(ref Object key)
         {
             if(_pool[key].Count < _caches[key])
             {
