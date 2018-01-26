@@ -13,6 +13,7 @@ namespace TestConsole
                 _name = name;
                 _age = age;
             }
+            public TestClass():this("default", 0) { }
             String _name = "default";
             int _age = 18;
 
@@ -24,13 +25,17 @@ namespace TestConsole
             objectPool = new ObjectPool();
             int[] arrayInt = new int[5]{0,1,2,3,4};
             objectPool.CreateNewQueue("A", arrayInt, 5);
-            var A = "A";
-            for (int i = objectPool.GetCount(A) - 1; i > -1; i--)
+            for (int i = objectPool.GetCount("A") - 1; i > -1; i--)
             {
-                Object item = objectPool.GetItem("A");
+                var item = objectPool.GetItem("A");
                 Console.WriteLine(item);
             }
-
+            TestClass[] testClasses = new TestClass[]
+            {
+                new TestClass("XM", 14),
+                new TestClass("LL", 54),
+            };
+            objectPool.CreateNewQueue("B", testClasses, 5);
             for (int i = objectPool.GetCount("B") - 1; i > -1; i--)
             {
                 TestClass item = (TestClass)objectPool.GetItem("B");
@@ -44,8 +49,32 @@ namespace TestConsole
             }
 
             Console.WriteLine(objectPool.GetCount("A"));
+            
+            for (int i = objectPool.GetCount("B") - 1; i > -1; i--)
+            {
+                TestClass item = (TestClass)objectPool.GetItem("B");
+                Console.WriteLine(item.Name + " , Age: " + item.Age);
+            }
 
-            Console.Read();
+            for (int i = 10; i > -1; i--)
+            {
+                Console.WriteLine(BRandom.Range(-100, 100));
+            }
+            
+            int[] arr = BRandom.Distribution(50, 1000);
+            int s = 0;
+            for (int i = arr.Length - 1; i > -1; i--)
+            {
+                s += arr[i];
+            }
+            Console.WriteLine("Summury = " + s);
+            for (int i = arr.Length - 1; i > -1; i--)
+            {
+                Console.WriteLine(arr[i]);
+            }
+
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
         }
 
         public static ObjectPool objectPool;

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace BFramework
 {
-
     /// <summary>
     /// 对象池
     /// </summary>
@@ -72,6 +71,14 @@ namespace BFramework
             }
         }
 
+        public ObjectPool(int capacity = 10)
+        {
+            _pool = new Dictionary<object, Queue<object>>(capacity);
+            _types = new Dictionary<object, Type>(capacity);
+            _caches = new Dictionary<object, int>(capacity);
+            _tags = new Dictionary<object, object>(capacity);
+        }
+
         private Dictionary<Object, Queue<Object>> _pool = new Dictionary<object, Queue<object>>();
         private Dictionary<Object, Type> _types = new Dictionary<object, Type>();
         private Dictionary<Object, int> _caches = new Dictionary<object, int>();
@@ -137,42 +144,7 @@ namespace BFramework
             _caches.Add(key, cache > 1 ? cache : 1);
             _types.Add(key, itemType);
         }
-        /// <summary>
-        /// 根据键值，已有的队列创建新池
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="queue"></param>
-        /// <param name="cache"></param>
-        public void CreateNewQueue(Object key, Queue<Object> queue, int cache = 1)
-        {
-            if (queue.Count < 1)
-            {
-                return;
-            }
-            CreateNewQueue(key, queue.Peek().GetType(), cache);
-            for (int i = queue.Count - 1; i >= 0; i--)
-            {
-                _pool[key].Enqueue(queue.Dequeue());
-            }
-        }
-        /// <summary>
-        /// 根据键值，已有的列表创建新池
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="list"></param>
-        /// <param name="cache"></param>
-        public void CreateNewQueue(Object key, List<Object> list, int cache = 1)
-        {
-            if(list.Count < 1)
-            {
-                return;
-            }
-            CreateNewQueue(key, list[0].GetType(), cache);
-            for (int i = 0, length = list.Count; i < length; i++)
-            {
-                _pool[key].Enqueue(list[i]);
-            }
-        }
+
         /// <summary>
         /// 根据键值，已有的数组创建新池
         /// </summary>
