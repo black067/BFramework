@@ -7,11 +7,14 @@ namespace BFramework
         static Random _randomCast = new Random();
         static int _seed = 0;
 
+        /// <summary>
+        /// 随机数生成器种子（只读）
+        /// </summary>
         public static int Seed { get => _seed; private set => _seed = value; }
 
         /// <summary>
         /// 返回一个范围内的随机整数。
-        /// 注意：返回值 ∈ [min, max)
+        /// 返回值 ∈ [min, max)
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -24,10 +27,7 @@ namespace BFramework
                 max = min;
                 min = m;
             }
-            int range = max - min;
-            int next = _randomCast.Next(range);
-            next += min;
-            return next;
+            return _randomCast.Next(max - min) + min;
         }
 
         /// <summary>
@@ -40,21 +40,24 @@ namespace BFramework
         {
             number = number > range ? range : number;
             int[] array = new int[number];
+            int powerSum = 0;
             int sum = 0;
-            int sum2 = 0;
+            //随机产生权重并计算权重之和
             for (int i = number - 1; i > -1; i--)
             {
-                array[i] = _randomCast.Next(1, 100000);
+                array[i] = _randomCast.Next(1, int.MaxValue);
+                powerSum += array[i];
+            }
+            //根据随机产生的权重与权重和，重新计算数组元素的数值，并计算新的数组元素和
+            for (int i = number - 1; i > -1; i--)
+            {
+                array[i] = range * array[i] / powerSum;
                 sum += array[i];
             }
-            for (int i = number - 1; i > -1; i--)
+            //补偿误差
+            if (sum < range)
             {
-                array[i] = range * array[i] / sum;
-                sum2 += array[i];
-            }
-            if (sum2 < range)
-            {
-                for (int i = range - sum2 - 1; i > -1; i--)
+                for (int i = range - sum - 1; i > -1; i--)
                 {
                     array[Range(0, number)] ++;
                 }
@@ -63,12 +66,19 @@ namespace BFramework
             return array;
         }
 
+        /// <summary>
+        /// 使用种子初始化随机数生成器
+        /// </summary>
+        /// <param name="seed"></param>
         public static void Init(int seed)
         {
             Seed = seed;
             _randomCast = new Random(Seed);
         }
 
+        /// <summary>
+        /// 使用当前时间作为种子初始化随机数生成器
+        /// </summary>
         public static void Init()
         {
             _randomCast = new Random();

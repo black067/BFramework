@@ -71,6 +71,10 @@ namespace BFramework
             }
         }
 
+        /// <summary>
+        /// 创建给定容量的对象池
+        /// </summary>
+        /// <param name="capacity"></param>
         public ObjectPool(int capacity = 10)
         {
             _pool = new Dictionary<object, Queue<object>>(capacity);
