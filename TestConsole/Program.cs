@@ -6,7 +6,6 @@ namespace TestConsole
 {
     class Program
     {
-
         /// <summary>
         /// 用于测试的类
         /// </summary>
@@ -76,20 +75,20 @@ namespace TestConsole
             Console.WriteLine("BRandom.Distribution Test Over\n");
 
             Console.WriteLine("#############\nStateMachine Test");
-            StateMachine.State s_1 = new StateMachine.State("State 1");
-            StateMachine.State s_2 = new StateMachine.State("State 2");
-            StateMachine machine = new StateMachine(s_1, s_2);
+            StatusMachine.Status s_1 = new StatusMachine.Status("State 1");
+            StatusMachine.Status s_2 = new StatusMachine.Status("State 2");
+            StatusMachine machine = new StatusMachine(s_1, s_2);
             s_1.Action = new BDelegate<string>(delegate (Object[] __args)
             {
-                s_1.StateMachine.Params = "I am 2";
+                s_1.StatusMachine.Params = 5614.218f;
                 Console.WriteLine(s_1.Name + " Say: " + __args[0]);
-                return s_1.StateMachine.Tags[1];
+                return s_1.StatusMachine.Tags[1];
             });
             s_2.Action = new BDelegate<string>(delegate (Object[] __args)
             {
-                s_2.StateMachine.Params = "I am 1";
+                s_2.StatusMachine.Params = "I am 1";
                 Console.WriteLine(s_2.Name + " Say: " + __args[0]);
-                return s_2.StateMachine.Tags[0];
+                return s_2.StatusMachine.Tags[0];
             });
 
             for (int i = 0; i < 10; i++)

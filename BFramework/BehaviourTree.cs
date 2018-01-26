@@ -8,22 +8,23 @@ namespace BFramework
 {
     class BehaviourTree
     {
-        public class Node
+        public enum Status
         {
-            Node(String name)
-            {
-                _name = name;
-            }
+            SUSPENDED = 0,
+            RUNNING = 1,
+            SUCCESS = 2,
+            FAILURE = 3,
+        }
+        public interface IBehaviour
+        {
+            void OnInitialize();
+            Status Update();
+            void OnTerminate(Status status);
+        }
+        
+        public void Update()
+        {
 
-            String _name = "default";
-            enum State
-            {
-                Stop = 0,
-                Working = 1,
-                Pause = 2,
-            }
-           
-            public string Name { get => _name; private set => _name = value; }
         }
     }
 }
