@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BFramework", "BFramework\BFramework.csproj", "{6F5CE83A-8788-46C1-89FD-B1F18C1C7B20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F5CE83A-8788-46C1-89FD-B1F18C1C7B20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5CE83A-8788-46C1-89FD-B1F18C1C7B20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5CE83A-8788-46C1-89FD-B1F18C1C7B20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5CE83A-8788-46C1-89FD-B1F18C1C7B20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4983D340-EC53-47C1-84C2-2DB97CC104C2}
+	EndGlobalSection
+EndGlobal
