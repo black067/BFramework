@@ -22,32 +22,32 @@ namespace TestConsole
         static void Main(string[] args)
         {
             objectPool = new ObjectPool();
-            objectPool.Add("A", 45);
-            objectPool.Add("A", 1235);
-            objectPool.Add("A", 565);
-            objectPool.Add("A", 432);
-            objectPool.Add("B", new TestClass("小明", 14));
-            objectPool.Add("B", new TestClass("小红", 23));
-            objectPool.Add("B", new TestClass("小王", 19));
-            objectPool.Add("B", new TestClass("老王", 42));
-            objectPool.Add(842, new TestClass("老王", 81));
+            int[] arrayInt = new int[5]{ 0,1,2,3,4};
+            objectPool.CreateNewQueue("A", arrayInt, 5);
             var A = "A";
             for (int i = objectPool.GetCount(A) - 1; i > -1; i--)
             {
                 Object item = objectPool.GetItem("A");
                 Console.WriteLine(item);
             }
+
             for (int i = objectPool.GetCount("B") - 1; i > -1; i--)
             {
                 TestClass item = (TestClass)objectPool.GetItem("B");
                 Console.WriteLine(item.Name + " , Age: " + item.Age);
             }
-            Console.WriteLine(objectPool.GetItem(842));
 
+            List<Type> typeList = objectPool.Types;
+            foreach(Type i in typeList)
+            {
+                Console.WriteLine(i.ToString());
+            }
+
+            Console.WriteLine(objectPool.GetCount("A"));
 
             Console.Read();
         }
 
-        static ObjectPool objectPool;
+        public static ObjectPool objectPool;
     }
 }

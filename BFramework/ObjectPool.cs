@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace BFramework
 {
+
+    /// <summary>
+    /// 对象池
+    /// </summary>
     public class ObjectPool
     {
         private interface IShellObject
@@ -33,6 +38,38 @@ namespace BFramework
                 _shell = (IShellObject)Activator.CreateInstance(_type);
                 _shell.Create(_createParam);
             }
+
+            public void Recreate()
+            {
+                _shell.Release();
+                Create();
+            }
+
+            public void Release()
+            {
+                _shell.Release();
+            }
+            
+            public Object InnerObject
+            {
+                get => _shell.GetInnerObject();
+            }
+
+            public int InnerObjectHashcode
+            {
+                get => InnerObject.GetHashCode();
+            }
+
+            public bool IsValidate
+            {
+                get => _shell.IsValidate();
+            }
+
+            public bool Using
+            {
+                get => _beUsing;
+                set => _beUsing = value;
+            }
         }
 
         private Dictionary<Object, Queue<Object>> _pool = new Dictionary<object, Queue<object>>();
@@ -41,9 +78,18 @@ namespace BFramework
         private Dictionary<Object, Object> _tags = new Dictionary<object, object>();
         private Object _pointer;
         
-        public List<Object> GetKeys()
+        
+        /// <summary>
+        /// 池的键值表
+        /// </summary>
+        public List<Object> Keys
         {
-            return new List<Object>(_pool.Keys);
+            get => new List<Object>(_pool.Keys);
+        }
+
+        public List<Type> Types
+        {
+            get => new List<Type>(_types.Values);
         }
 
         public int GetCount(Object key)
@@ -66,18 +112,49 @@ namespace BFramework
 
         public void CreateNewQueue(Object key, Type itemType, int cache)
         {
+            if (_pool.ContainsKey(key))
+            {
+                return;
+            }
             _pool.Add(key, new Queue<object>());
             _caches.Add(key, cache > 1 ? cache : 1);
             _types.Add(key, itemType);
         }
-
-        public void Add(Object key, Object item)
+        public void CreateNewQueue(Object key, Queue<Object> queue, int cache = 1)
         {
-            if (!_pool.ContainsKey(key))
+            if (queue.Count < 1)
             {
-                CreateNewQueue(key, item.GetType(), 2);
+                return;
             }
-            _pool[key].Enqueue(item);
+            CreateNewQueue(key, queue.Peek().GetType(), cache);
+            for (int i = queue.Count - 1; i >= 0; i--)
+            {
+                _pool[key].Enqueue(queue.Dequeue());
+            }
+        }
+        public void CreateNewQueue(Object key, List<Object> list, int cache = 1)
+        {
+            if(list.Count < 1)
+            {
+                return;
+            }
+            CreateNewQueue(key, list[0].GetType(), cache);
+            for (int i = 0, length = list.Count; i < length; i++)
+            {
+                _pool[key].Enqueue(list[i]);
+            }
+        }
+        public void CreateNewQueue(Object key, Array array, int cache = 1)
+        {
+            if (array.Length < 1)
+            {
+                return;
+            }
+            CreateNewQueue(key, array.GetValue(0).GetType(), cache);
+            for (int i = 0, length = array.Length; i < length; i++)
+            {
+                _pool[key].Enqueue(array.GetValue(i));
+            }
         }
 
         public Object GetItem(Object key)
@@ -89,7 +166,8 @@ namespace BFramework
                 {
                     return null;
                 }
-                MarkAsOut(_pointer, key);
+                MarkAsOut(ref _pointer, key);
+                FillPool(ref key);
                 return _pointer;
             }
             else
@@ -111,12 +189,12 @@ namespace BFramework
             }
         }
 
-        private void MarkAsOut(Object item, Object key)
+        private void MarkAsOut(ref Object item, Object key)
         {
             _tags.Add(item, key);
         }
 
-        private void FillPool(Object key)
+        private void FillPool(ref Object key)
         {
             if(_pool[key].Count < _caches[key])
             {
