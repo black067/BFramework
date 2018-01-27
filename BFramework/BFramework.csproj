@@ -50,7 +50,7 @@
     <Compile Include="BehaviourTree.cs" />
     <Compile Include="BRandom.cs" />
     <Compile Include="ObjectPool.cs" />
-    <Compile Include="StatusMachine.cs" />
+    <Compile Include="StateMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
