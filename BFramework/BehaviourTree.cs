@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BFramework
 {
-    class BehaviourTree
+    public class BehaviourTree
     {
         public enum STATUS
         {
@@ -15,58 +15,24 @@ namespace BFramework
             SUCCESS = 2,
             FAILURE = 3,
         }
-        public interface IBehaviour
+        
+        public class Behaviour
         {
-            void OnInitialize();
-            STATUS Update();
-            STATUS OnTerminate(STATUS status);
-        }
-
-        public class Behaviour : IBehaviour
-        {
+            private BehaviourTree _tree;
+            public BDelegate<int, int> OnInitialize;
+            public BDelegate<int, STATUS> OnTerminate;
+            public BDelegate<STATUS, STATUS> Update;
+            public BDelegate<Behaviour, STATUS> Tick;
             private STATUS _status;
 
-            public virtual void OnInitialize() { }
-
-            public virtual STATUS OnTerminate(STATUS status)
-            {
-                return STATUS.SUCCESS;
-            }
-
-            public virtual STATUS Update()
-            {
-                return STATUS.SUCCESS;
-            }
-
-            public STATUS Tick()
-            {
-                if (_status != STATUS.RUNNING)
-                {
-                    OnInitialize();
-                }
-                _status = Update();
-                if (_status != STATUS.RUNNING)
-                {
-                    _status = OnTerminate(_status);
-                }
-                return _status;
-            }
+            public STATUS Status { get => _status; set => _status = value; }
+            public BehaviourTree Tree { get => _tree; set => _tree = value; }
         }
 
-        public class Action : Behaviour { }
-
-        public class Decorator : Behaviour
-        {
-            Behaviour _child;
-            public Decorator(ref Behaviour behaviour)
-            {
-                _child = behaviour;
-            }
-        }
-
+        public class Action: Behaviour { }
         public void Tick()
         {
-            Behaviour A = new Behaviour();
+            //Behaviour A = new Behaviour();
         }
     }
 }

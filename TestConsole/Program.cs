@@ -73,20 +73,20 @@ namespace TestConsole
             }
             Console.WriteLine("Summury = " + s);
             Console.WriteLine("BRandom.Distribution Test Over\n");
-
+           
             Console.WriteLine("#############\nStateMachine Test");
             StateMachine.State s_1 = new StateMachine.State("State 1");
             StateMachine.State s_2 = new StateMachine.State("State 2");
             StateMachine machine = new StateMachine(s_1, s_2);
-            s_1.Action = new BDelegate<string>(delegate (Object[] __args)
+            s_1.Action = new BDelegate<object, string>(delegate (Object[] __args)
             {
                 s_1.StateMachine.Params = "I am 123";
                 Console.WriteLine(s_1.Name + " Say: " + __args[0]);
                 return s_1.StateMachine.Tags[1];
             });
-            s_2.Action = new BDelegate<string>(delegate (Object[] __args)
+            s_2.Action = new BDelegate<object, string>(delegate (Object[] __args)
             {
-                s_2.StateMachine.Params = "I am 1";
+                s_2.StateMachine.Params = "I am 456";
                 Console.WriteLine(s_2.Name + " Say: " + __args[0]);
                 return s_2.StateMachine.Tags[0];
             });
@@ -96,11 +96,12 @@ namespace TestConsole
                 machine.Run();
             }
             Console.WriteLine("StateMachine Test Over\n");
-
+           
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
 
         public static ObjectPool objectPool;
+        
     }
 }
