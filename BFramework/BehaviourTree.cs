@@ -8,6 +8,61 @@ namespace BFramework
 {
     public class BehaviourTree
     {
+        public class Cognition
+        {
+            public Dictionary<string, List<object>> Memory;
+            public Dictionary<string, int> CacheDictinary;
+            public Cognition()
+            {
+                Memory = new Dictionary<string, List<object>>();
+                CacheDictinary = new Dictionary<string, int>();
+            }
+            public void AddNewRecordList(string key, int cache)
+            {
+                if (!Memory.ContainsKey(key))
+                {
+                    Memory.Add(key, new List<object>(cache));
+                    CacheDictinary.Add(key, cache);
+                }
+            }
+            public void AddRecord(string key, object record)
+            {
+                if (Memory.ContainsKey(key))
+                {
+                    Memory[key].Add(record);
+                }
+            }
+
+            public List<object> this[string key]
+            {
+                get
+                {
+                    return Memory[key];
+                }
+            }
+            public object this[string key, int index]
+            {
+                get
+                {
+                    if (Memory.ContainsKey(key))
+                    {
+                        if (index >= 0 && index <= Memory[key].Count)
+                        {
+                            return Memory[key][index];
+                        }
+                        else
+                        {
+                            return Memory[key][Memory[key].Count - 1];
+                        }
+                    }
+                    else
+                    {
+                        return default(object);
+                    }
+                }
+            }
+        }
+
         public enum STATUS
         {
             SUSPENDED = 0,

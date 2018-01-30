@@ -21,10 +21,9 @@ namespace BFramework
             }
 
             String _name;
-            BDelegate<Object, String> _action;
+            public BDelegate<Object, String> Action;
             private StateMachine _stateMachine;
             public string Name { get => _name; set => _name = value; }
-            public BDelegate<Object, String> Action { get => _action; set => _action = value; }
             public StateMachine StateMachine { get => _stateMachine; private set => _stateMachine = value; }
 
             public void Initiate(StateMachine machine)
@@ -46,7 +45,7 @@ namespace BFramework
                 AddState(s);
             }
             Current = states[0].Name;
-            Params = new object[] { };
+            Params = null;
         }
 
         /// <summary>
