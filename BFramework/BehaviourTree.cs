@@ -11,25 +11,37 @@ namespace BFramework
         public class Cognition
         {
             public Dictionary<string, List<object>> Memory;
-            public Dictionary<string, int> CacheDictinary;
-            public Cognition()
+            public Dictionary<string, int> CapacityDictinary;
+            public int MainCapacity;
+            public Cognition(int capacity)
             {
-                Memory = new Dictionary<string, List<object>>();
-                CacheDictinary = new Dictionary<string, int>();
+                MainCapacity = capacity;
+                Memory = new Dictionary<string, List<object>>(MainCapacity);
+                CapacityDictinary = new Dictionary<string, int>(MainCapacity);
             }
-            public void AddNewRecordList(string key, int cache)
+            public bool AddNewRecordList(string key, int capacity)
             {
-                if (!Memory.ContainsKey(key))
+                if (!Memory.ContainsKey(key) && Memory.Count < MainCapacity)
                 {
-                    Memory.Add(key, new List<object>(cache));
-                    CacheDictinary.Add(key, cache);
+                    Memory.Add(key, new List<object>(capacity));
+                    CapacityDictinary.Add(key, capacity);
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
-            public void AddRecord(string key, object record)
+            public bool AddRecord(string key, object record)
             {
-                if (Memory.ContainsKey(key))
+                if (Memory.ContainsKey(key) && Memory[key].Count < CapacityDictinary[key])
                 {
                     Memory[key].Add(record);
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
 
@@ -65,6 +77,7 @@ namespace BFramework
 
         public enum STATUS
         {
+            INVALID = -1,
             SUSPENDED = 0,
             RUNNING = 1,
             SUCCESS = 2,
@@ -73,15 +86,26 @@ namespace BFramework
         
         public class Behaviour
         {
-            private BehaviourTree _tree;
-            public BDelegate<int, int> OnInitialize;
-            public BDelegate<int, STATUS> OnTerminate;
+            public BDelegate<bool, STATUS> OnInitialize;
+            public BDelegate<STATUS, STATUS> OnTerminate;
             public BDelegate<STATUS, STATUS> Update;
-            public BDelegate<Behaviour, STATUS> Tick;
-            private STATUS _status;
+            public STATUS Tick()
+            {
+                if(_status == STATUS.INVALID)
+                {
+                    _status = OnInitialize[true];
+                }
+                _status = Update[_status];
+                if(_status != STATUS.RUNNING)
+                {
+                    _status = OnTerminate[_status];
+                }
+                return _status;
+            }
 
-            public STATUS Status { get => _status; set => _status = value; }
-            public BehaviourTree Tree { get => _tree; set => _tree = value; }
+            private STATUS _status;
+            public STATUS Status { get => _status; }
+            public BehaviourTree Tree;
         }
 
         public class Action: Behaviour { }

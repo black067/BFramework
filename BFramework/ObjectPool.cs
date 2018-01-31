@@ -9,68 +9,6 @@ namespace BFramework
     /// </summary>
     public class ObjectPool
     {
-        private interface IShellObject
-        {
-            void Create(Object param);
-            Object GetInnerObject();
-            bool IsValidate();
-            void Release();
-        }
-
-        private class ShellObject
-        {
-            private IShellObject _shell;
-            private bool _beUsing;
-            private Type _type;
-            private Object _createParam;
-
-            public ShellObject(Type type, Object param)
-            {
-                _type = type;
-                _createParam = param;
-                Create();
-            }
-
-            private void Create()
-            {
-                _beUsing = false;
-                _shell = (IShellObject)Activator.CreateInstance(_type);
-                _shell.Create(_createParam);
-            }
-
-            public void Recreate()
-            {
-                _shell.Release();
-                Create();
-            }
-
-            public void Release()
-            {
-                _shell.Release();
-            }
-            
-            public Object InnerObject
-            {
-                get => _shell.GetInnerObject();
-            }
-
-            public int InnerObjectHashcode
-            {
-                get => InnerObject.GetHashCode();
-            }
-
-            public bool IsValidate
-            {
-                get => _shell.IsValidate();
-            }
-
-            public bool Using
-            {
-                get => _beUsing;
-                set => _beUsing = value;
-            }
-        }
-
         /// <summary>
         /// 创建给定容量的对象池
         /// </summary>
@@ -81,13 +19,15 @@ namespace BFramework
             _types = new Dictionary<object, Type>(capacity);
             _caches = new Dictionary<object, int>(capacity);
             _tags = new Dictionary<object, object>(capacity);
+            Capacity = capacity;
         }
 
-        private Dictionary<Object, Queue<Object>> _pool = new Dictionary<object, Queue<object>>();
-        private Dictionary<Object, Type> _types = new Dictionary<object, Type>();
-        private Dictionary<Object, int> _caches = new Dictionary<object, int>();
-        private Dictionary<Object, Object> _tags = new Dictionary<object, object>();
+        private Dictionary<Object, Queue<Object>> _pool;
+        private Dictionary<Object, Type> _types;
+        private Dictionary<Object, int> _caches;
+        private Dictionary<Object, Object> _tags;
         private Object _pointer;
+        public int Capacity;
         
         
         /// <summary>
@@ -138,13 +78,13 @@ namespace BFramework
         /// <param name="key"></param>
         /// <param name="itemType"></param>
         /// <param name="cache"></param>
-        public void CreateNewQueue(Object key, Type itemType, int cache = 1)
+        public void CreateNewQueue(Object key, Type itemType, int cache = 2, int capacity = 20)
         {
             if (_pool.ContainsKey(key))
             {
                 return;
             }
-            _pool.Add(key, new Queue<object>());
+            _pool.Add(key, new Queue<object>(capacity));
             _caches.Add(key, cache > 1 ? cache : 1);
             _types.Add(key, itemType);
         }
@@ -155,13 +95,13 @@ namespace BFramework
         /// <param name="key"></param>
         /// <param name="array"></param>
         /// <param name="cache"></param>
-        public void CreateNewQueue(Object key, Array array, int cache = 1)
+        public void CreateNewQueue(Object key, Array array, int cache = 2)
         {
             if (array.Length < 1)
             {
                 return;
             }
-            CreateNewQueue(key, array.GetValue(0).GetType(), cache);
+            CreateNewQueue(key, array.GetValue(0).GetType(), cache, array.Length);
             for (int i = 0, length = array.Length; i < length; i++)
             {
                 _pool[key].Enqueue(array.GetValue(i));
