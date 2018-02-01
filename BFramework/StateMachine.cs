@@ -19,6 +19,11 @@ namespace BFramework
             {
                 Name = name;
             }
+            public State(String name, BDelegate<Object, String> action)
+            {
+                Name = name;
+                Action = action;
+            }
 
             String _name;
             public BDelegate<Object, String> Action;
@@ -38,8 +43,8 @@ namespace BFramework
         /// <param name="states"></param>
         public StateMachine(params State[] states)
         {
-            States = new Dictionary<string, State>();
-            Tags = new List<string>();
+            States = new Dictionary<string, State>(states.Length);
+            Tags = new List<string>(states.Length);
             foreach(State s in states)
             {
                 AddState(s);
