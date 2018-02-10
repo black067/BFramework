@@ -7,3 +7,12 @@ D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csprojResolveAssemblyRe
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CoreCompileInputs.cache
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.exe
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.pdb
+C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\TestConsole.exe.config
+C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\TestConsole.exe
+C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\TestConsole.pdb
+C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\BFramework.dll
+C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\BFramework.pdb
+C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csprojResolveAssemblyReference.cache
+C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CoreCompileInputs.cache
+C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.exe
+C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.pdb

@@ -61,7 +61,8 @@ namespace TestConsole
             Console.WriteLine("ObjectPool Test Over\n");
 
             Console.WriteLine("#############\nBRandom.Distribution Test");
-            int[] arr = BRandom.Distribution(3, 25);
+            BRandom.Init();
+            int[] arr = BRandom.Distribution(50, 1000000);
             for (int i = arr.Length - 1; i > -1; i--)
             {
                 Console.WriteLine(arr[i]);
