@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace BFramework
 {
+    
+    /// <summary>
+    /// 行为树类
+    /// </summary>
     public class BehaviourTree
     {
+
+        /// <summary>
+        /// 用于行为树节点间交互的印象类
+        /// </summary>
         public class Cognition
         {
             public Dictionary<string, List<object>> Memory;
@@ -75,6 +83,9 @@ namespace BFramework
             }
         }
 
+        /// <summary>
+        /// 节点状态
+        /// </summary>
         public enum STATUS
         {
             INVALID = -1,
@@ -84,10 +95,25 @@ namespace BFramework
             FAILURE = 3,
         }
         
+        /// <summary>
+        /// 行为类
+        /// </summary>
         public class Behaviour
         {
+
+            /// <summary>
+            /// 初始化
+            /// </summary>
             public BDelegate<bool, STATUS> OnInitialize;
+
+            /// <summary>
+            /// 退出
+            /// </summary>
             public BDelegate<STATUS, STATUS> OnTerminate;
+
+            /// <summary>
+            /// 刷新
+            /// </summary>
             public BDelegate<STATUS, STATUS> Update;
             public STATUS Tick()
             {
@@ -104,6 +130,10 @@ namespace BFramework
             }
 
             private STATUS _status;
+
+            /// <summary>
+            /// 行为的状态
+            /// </summary>
             public STATUS Status { get => _status; }
             public BehaviourTree Tree;
         }

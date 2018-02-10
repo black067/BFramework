@@ -78,19 +78,26 @@ namespace TestConsole
             Console.WriteLine("#############\nStateMachine Test");
             StateMachine.State s_1 = new StateMachine.State("State 1");
             StateMachine.State s_2 = new StateMachine.State("State 2");
+            StateMachine.State s_3 = new StateMachine.State("State 3");
             s_1.Action = new BDelegate<object, string>(delegate (ref Object input)
             {
-                s_1.StateMachine.Params = "I am 123";
+                s_1.StateMachine.Params = "I am State 2";
                 Console.WriteLine(s_1.Name + " Say: " + input);
                 return s_1.StateMachine.Tags[1];
             });
-            s_2.Action = new BDelegate<object, string>(delegate (Object input)
+            s_2.Action = new BDelegate<object, string>(delegate (ref Object input)
             {
-                s_2.StateMachine.Params = "I am 456";
+                s_2.StateMachine.Params = "I am State 3";
                 Console.WriteLine(s_2.Name + " Say: " + input);
-                return s_2.StateMachine.Tags[0];
+                return s_2.StateMachine.Tags[2];
             });
-            StateMachine machine = new StateMachine(s_1, s_2);
+            s_3.Action = new BDelegate<object, string>(delegate (ref Object input)
+            {
+                s_3.StateMachine.Params = "I am State 1";
+                Console.WriteLine(s_3.Name + " Say: " + input);
+                return s_3.StateMachine.Tags[0];
+            });
+            StateMachine machine = new StateMachine(s_1, s_2, s_3);
             for (int i = 0; i < 10; i++)
             {
                 machine.Run();
