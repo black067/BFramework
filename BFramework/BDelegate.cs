@@ -22,6 +22,11 @@ namespace BFramework
             _case = TYPE.PARAMS;
         }
 
+        /// <summary>
+        /// 根据规定类型的输入获取该对应的输出
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public TOutput this[TInput input]
         {
             get

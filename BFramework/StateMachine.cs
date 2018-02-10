@@ -3,13 +3,11 @@ using System.Collections.Generic;
 
 namespace BFramework
 {
-
     /// <summary>
     /// 有限状态机
     /// </summary>
     public class StateMachine
     { 
-
         /// <summary>
         /// 用于状态机的状态类
         /// </summary>

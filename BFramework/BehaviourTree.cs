@@ -6,30 +6,32 @@ using System.Threading.Tasks;
 
 namespace BFramework
 {
-    
     /// <summary>
     /// 行为树类
     /// </summary>
     public class BehaviourTree
     {
-
         /// <summary>
         /// 用于行为树节点间交互的印象类
         /// </summary>
         public class Cognition
         {
-            public Dictionary<string, List<object>> Memory;
-            public Dictionary<string, int> CapacityDictinary;
-            public int MainCapacity;
+            private Dictionary<string, List<object>> _memory;
+            private Dictionary<string, int> _capacityDictinary;
+            public int Capacity;
+
+            public Dictionary<string, List<object>> Memory { get => _memory;private set => _memory = value; }
+            public Dictionary<string, int> CapacityDictinary { get => _capacityDictinary;private set => _capacityDictinary = value; }
+
             public Cognition(int capacity)
             {
-                MainCapacity = capacity;
-                Memory = new Dictionary<string, List<object>>(MainCapacity);
-                CapacityDictinary = new Dictionary<string, int>(MainCapacity);
+                Capacity = capacity;
+                Memory = new Dictionary<string, List<object>>(Capacity);
+                CapacityDictinary = new Dictionary<string, int>(Capacity);
             }
             public bool AddNewRecordList(string key, int capacity)
             {
-                if (!Memory.ContainsKey(key) && Memory.Count < MainCapacity)
+                if (!Memory.ContainsKey(key) && Memory.Count < Capacity)
                 {
                     Memory.Add(key, new List<object>(capacity));
                     CapacityDictinary.Add(key, capacity);
@@ -84,7 +86,7 @@ namespace BFramework
         }
 
         /// <summary>
-        /// 节点状态
+        /// 节点状态枚举类
         /// </summary>
         public enum STATUS
         {

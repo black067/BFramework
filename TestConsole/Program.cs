@@ -95,7 +95,7 @@ namespace TestConsole
             {
                 s_3.StateMachine.Params = "I am State 1";
                 Console.WriteLine(s_3.Name + " Say: " + input);
-                return s_3.StateMachine.Tags[0];
+                return "State 1";
             });
             StateMachine machine = new StateMachine(s_1, s_2, s_3);
             for (int i = 0; i < 10; i++)
