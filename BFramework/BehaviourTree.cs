@@ -102,7 +102,16 @@ namespace BFramework
         /// </summary>
         public class Behaviour
         {
+            public Behaviour(string name, BDelegate<bool, STATUS> onInitialize, BDelegate<STATUS, STATUS> onTerminate, BDelegate<STATUS, STATUS> update)
+            {
+                Name = name;
+                OnInitialize = onInitialize;
+                OnTerminate = onTerminate;
+                Update = update;
+                _status = STATUS.INVALID;
+            }
 
+            public Behaviour():this("Default", null, null, null) { }
             /// <summary>
             /// 初始化
             /// </summary>
@@ -132,7 +141,7 @@ namespace BFramework
             }
 
             private STATUS _status;
-
+            public string Name;
             /// <summary>
             /// 行为的状态
             /// </summary>
@@ -141,6 +150,8 @@ namespace BFramework
         }
 
         public class Action: Behaviour { }
+
+        private Behaviour[] _nodes;
         public void Tick()
         {
             //Behaviour A = new Behaviour();
