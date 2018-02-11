@@ -16,73 +16,40 @@ namespace BFramework
         /// </summary>
         public class Cognition
         {
-            private Dictionary<string, List<object>> _memory;
-            private Dictionary<string, int> _capacityDictinary;
-            public int Capacity;
+            private Dictionary<string, string> _memory;
+            private int capacity;
 
-            public Dictionary<string, List<object>> Memory { get => _memory;private set => _memory = value; }
-            public Dictionary<string, int> CapacityDictinary { get => _capacityDictinary;private set => _capacityDictinary = value; }
+            public Cognition(Dictionary<string, string> memory)
+            {
+                _memory = memory;
+                Capacity = _memory.Count;
+            }
+            public Cognition(int capacity) : this(new Dictionary<string, string>(capacity)) { }
 
-            public Cognition(int capacity)
-            {
-                Capacity = capacity;
-                Memory = new Dictionary<string, List<object>>(Capacity);
-                CapacityDictinary = new Dictionary<string, int>(Capacity);
-            }
-            public bool AddNewRecordList(string key, int capacity)
-            {
-                if (!Memory.ContainsKey(key) && Memory.Count < Capacity)
-                {
-                    Memory.Add(key, new List<object>(capacity));
-                    CapacityDictinary.Add(key, capacity);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            public bool AddRecord(string key, object record)
-            {
-                if (Memory.ContainsKey(key) && Memory[key].Count < CapacityDictinary[key])
-                {
-                    Memory[key].Add(record);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            public List<object> this[string key]
+            public string this[string key]
             {
                 get
                 {
-                    return Memory[key];
-                }
-            }
-            public object this[string key, int index]
-            {
-                get
-                {
-                    if (Memory.ContainsKey(key))
+                    if (_memory.ContainsKey(key))
                     {
-                        if (index >= 0 && index <= Memory[key].Count)
-                        {
-                            return Memory[key][index];
-                        }
-                        else
-                        {
-                            return Memory[key][Memory[key].Count - 1];
-                        }
+                        return _memory[key];
+                    }
+                    return null;
+                }
+                set
+                {
+                    if (_memory.ContainsKey(key))
+                    {
+                        _memory[key] = value;
                     }
                     else
                     {
-                        return default(object);
+                        _memory.Add(key, value);
                     }
                 }
             }
+
+            public int Capacity { get => capacity; private set => capacity = value; }
         }
 
         /// <summary>
@@ -96,65 +63,43 @@ namespace BFramework
             SUCCESS = 2,
             FAILURE = 3,
         }
-        
+
         /// <summary>
         /// 行为类
         /// </summary>
-        public class Behaviour
+        public interface IBehaviour
         {
-            public Behaviour(string name, BDelegate<bool, STATUS> onInitialize, BDelegate<STATUS, STATUS> onTerminate, BDelegate<STATUS, STATUS> update)
-            {
-                Name = name;
-                OnInitialize = onInitialize;
-                OnTerminate = onTerminate;
-                Update = update;
-                _status = STATUS.INVALID;
-            }
-
-            public Behaviour():this("Default", null, null, null) { }
-            /// <summary>
-            /// 初始化
-            /// </summary>
-            public BDelegate<bool, STATUS> OnInitialize;
-
-            /// <summary>
-            /// 退出
-            /// </summary>
-            public BDelegate<STATUS, STATUS> OnTerminate;
-
-            /// <summary>
-            /// 刷新
-            /// </summary>
-            public BDelegate<STATUS, STATUS> Update;
-            public STATUS Tick()
-            {
-                if(_status == STATUS.INVALID)
-                {
-                    _status = OnInitialize[true];
-                }
-                _status = Update[_status];
-                if(_status != STATUS.RUNNING)
-                {
-                    _status = OnTerminate[_status];
-                }
-                return _status;
-            }
-
-            private STATUS _status;
-            public string Name;
-            /// <summary>
-            /// 行为的状态
-            /// </summary>
-            public STATUS Status { get => _status; }
-            public BehaviourTree Tree;
+            STATUS OnInitialize(Cognition cognition);
+            void OnTerminate();
+            STATUS Update();
         }
-
-        public class Action: Behaviour { }
-
-        private Behaviour[] _nodes;
-        public void Tick()
+        
+        public class Action : IBehaviour
         {
-            //Behaviour A = new Behaviour();
+
+            public Action(BDelegate<Cognition, STATUS> method)
+            {
+                _tick = method;
+            }
+            public STATUS OnInitialize(Cognition cognition)
+            {
+                _cognition = cognition;
+                return STATUS.RUNNING;
+            }
+
+            public void OnTerminate()
+            {
+                return;
+            }
+
+            public STATUS Update()
+            {
+                return _tick[_cognition];
+            }
+
+            private Cognition _cognition;
+            private STATUS _status = STATUS.INVALID;
+            private BDelegate<Cognition, STATUS> _tick;
         }
     }
 }
