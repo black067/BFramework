@@ -60,6 +60,7 @@ namespace TestConsole
             }
             Console.WriteLine("ObjectPool Test Over\n");
 
+            //随机数测试
             Console.WriteLine("#############\nBRandom.Distribution Test");
             BRandom.Init();
             int[] arr = BRandom.Distribution(50, 1000000);
@@ -74,7 +75,8 @@ namespace TestConsole
             }
             Console.WriteLine("Summury = " + s);
             Console.WriteLine("BRandom.Distribution Test Over\n");
-           
+            
+            //状态机测试
             Console.WriteLine("#############\nStateMachine Test");
             StateMachine.State s_1 = new StateMachine.State("State 1");
             StateMachine.State s_2 = new StateMachine.State("State 2");
@@ -103,7 +105,10 @@ namespace TestConsole
                 machine.Run();
             }
             Console.WriteLine("StateMachine Test Over\n");
-           
+
+            //行为树测试
+            BFramework.BehaviourTree.BehaviourTree behaviourTree = new BFramework.BehaviourTree.BehaviourTree();
+
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
