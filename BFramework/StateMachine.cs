@@ -7,7 +7,7 @@ namespace BFramework
     /// 有限状态机
     /// </summary>
     public class StateMachine
-    { 
+    {
         /// <summary>
         /// 用于状态机的状态类
         /// </summary>
@@ -70,7 +70,7 @@ namespace BFramework
         {
             States = new Dictionary<string, State>(states.Length);
             Tags = new List<string>(states.Length);
-            foreach(State s in states)
+            foreach (State s in states)
             {
                 AddState(s);
             }
@@ -133,7 +133,7 @@ namespace BFramework
         /// 用于记录状态节点的名称
         /// </summary>
         public List<string> Tags { get => _tags; private set => _tags = value; }
-        
+
         /// <summary>
         /// 执行当前状态节点
         /// </summary>
@@ -142,7 +142,12 @@ namespace BFramework
             _nextState = States[Current].Action[Params];
             ChangeTo(ref _nextState);
         }
-        
+        public void Run(object input)
+        {
+            _nextState = States[Current].Action[input];
+            ChangeTo(ref _nextState);
+        }
+
         /// <summary>
         /// 改变状态节点
         /// </summary>

@@ -8,16 +8,8 @@ namespace BFramework.ShootingGame
 {
     class Brain
     {
-        public class Command
-        {
-
-        }
-        public void OnGetInformation()
-        {
-
-        }
-
-        public void SendCommand(ref Command command)
+        private Creature.Command _command;
+        public void Work(ref Creature.Attributes attributes, ref Creature.Command command)
         {
 
         }
