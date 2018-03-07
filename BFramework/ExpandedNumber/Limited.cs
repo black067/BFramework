@@ -23,7 +23,10 @@ namespace BFramework.ExpandedNumber
 
         public float Value
         {
-            get => _value;
+            get
+            {
+                return _value;
+            }
             set
             {
                 if (value >= _min)
@@ -45,7 +48,10 @@ namespace BFramework.ExpandedNumber
         }
         public float Max
         {
-            get => _max;
+            get
+            {
+                return _max;
+            }
             set
             {
                 if (value >= _value)
@@ -67,7 +73,10 @@ namespace BFramework.ExpandedNumber
         }
         public float Min
         {
-            get => _min;
+            get
+            {
+                return _min;
+            }
             set
             {
                 if (value <= _value)
@@ -92,7 +101,31 @@ namespace BFramework.ExpandedNumber
         {
             return (Value - Min) / (Max - Min);
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            var limited = obj as Limited;
+            return limited != null &&
+                   _min == limited._min &&
+                   _max == limited._max &&
+                   _value == limited._value &&
+                   Value == limited.Value &&
+                   Max == limited.Max &&
+                   Min == limited.Min;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -2087586221;
+            hashCode = hashCode * -1521134295 + _min.GetHashCode();
+            hashCode = hashCode * -1521134295 + _max.GetHashCode();
+            hashCode = hashCode * -1521134295 + _value.GetHashCode();
+            hashCode = hashCode * -1521134295 + Value.GetHashCode();
+            hashCode = hashCode * -1521134295 + Max.GetHashCode();
+            hashCode = hashCode * -1521134295 + Min.GetHashCode();
+            return hashCode;
+        }
+
         public static Limited operator + (Limited lhs, Limited rhs)
         {
             return new Limited(lhs)
@@ -175,6 +208,40 @@ namespace BFramework.ExpandedNumber
         public static bool operator != (Limited lhs, float rhs)
         {
             return lhs.Value != rhs;
+        }
+
+        public static bool operator >= (Limited lhs, Limited rhs)
+        {
+            return lhs.Value >= rhs.Value;
+        }
+        public static bool operator <= (Limited lhs, Limited rhs)
+        {
+            return lhs.Value <= rhs.Value;
+        }
+        public static bool operator > (Limited lhs, Limited rhs)
+        {
+            return lhs.Value > rhs.Value;
+        }
+        public static bool operator < (Limited lhs, Limited rhs)
+        {
+            return lhs.Value < rhs.Value;
+        }
+
+        public static bool operator >=(Limited lhs, float rhs)
+        {
+            return lhs.Value >= rhs;
+        }
+        public static bool operator <=(Limited lhs, float rhs)
+        {
+            return lhs.Value <= rhs;
+        }
+        public static bool operator > (Limited lhs, float rhs)
+        {
+            return lhs.Value > rhs;
+        }
+        public static bool operator < (Limited lhs, float rhs)
+        {
+            return lhs.Value < rhs;
         }
     }
 }

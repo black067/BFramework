@@ -30,7 +30,17 @@ namespace BFramework.ShootingGame
             private POSTURE _posture;
             private bool _grounded;
 
-            public Body Body { get => _body; set => _body = value; }
+            public Body Body
+            {
+                get
+                {
+                    return _body;
+                }
+                set
+                {
+                    _body = value;
+                }
+            }
         }
 
         public struct Command
@@ -62,8 +72,28 @@ namespace BFramework.ShootingGame
         public Command command;
         public Actuator actuator;
 
-        public int Id { get => _id; set => _id = value; }
-        public string Name { get => _name; set => _name = value; }
+        public int Id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        }
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+            }
+        }
 
         public void Refresh()
         {

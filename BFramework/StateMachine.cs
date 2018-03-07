@@ -45,13 +45,25 @@ namespace BFramework
             /// <summary>
             /// 状态名
             /// </summary>
-            public string Name { get => _name; set => _name = value; }
-
+            public string Name
+            {
+                get
+                {
+                    return _name;
+                }
+                set { _name = value; }
+            }
             /// <summary>
             /// 状态节点对状态机的引用
             /// </summary>
-            public StateMachine StateMachine { get => _stateMachine; private set => _stateMachine = value; }
-
+            public StateMachine StateMachine
+            {
+                get
+                {
+                    return _stateMachine;
+                }
+                private set { _stateMachine = value; }
+            }
             /// <summary>
             /// 使用给定的状态机进行初始化
             /// </summary>
@@ -117,23 +129,54 @@ namespace BFramework
         /// <summary>
         /// 当前状态节点
         /// </summary>
-        public string Current { get => _current; set => _current = value; }
+        public string Current
+        {
+            get
+            {
+                return _current;
+            }
+            set
+            {
+                _current = value;
+            }
+        }
 
         /// <summary>
         /// 公用变量，用于状态之间传递参数
         /// </summary>
-        public object Params { get => _params; set => _params = value; }
-
+        public object Params
+        {
+            get
+            {
+                return _params;
+            }
+            set
+            {
+                _params = value;
+            }
+        }
         /// <summary>
         /// 保存状态机中所有状态节点
         /// </summary>
-        public Dictionary<string, State> States { get => _states; private set => _states = value; }
-
+        public Dictionary<string, State> States
+        {
+            get
+            {
+                return _states;
+            }
+            private set { _states = value; }
+        }
         /// <summary>
         /// 用于记录状态节点的名称
         /// </summary>
-        public List<string> Tags { get => _tags; private set => _tags = value; }
-
+        public List<string> Tags
+        {
+            get
+            {
+                return _tags;
+            }
+            private set { _tags = value; }
+        }
         /// <summary>
         /// 执行当前状态节点
         /// </summary>

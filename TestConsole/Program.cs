@@ -20,8 +20,28 @@ namespace TestConsole
             String _name = "default";
             int _age = 18;
 
-            public int Age { get => _age; set => _age = value; }
-            public string Name { get => _name; set => _name = value; }
+            public int Age
+            {
+                get
+                {
+                    return _age;
+                }
+                set
+                {
+                    _age = value;
+                }
+            }
+            public string Name
+            {
+                get
+                {
+                    return _name;
+                }
+                set
+                {
+                    _name = value;
+                }
+            }
         }
 
         /// <summary>
@@ -52,7 +72,7 @@ namespace TestConsole
                 objectPool.Restore(item);
                 Console.WriteLine(item.Name + ", Age: " + item.Age);
             }
-            
+
             for (int i = objectPool.GetCount("B") - 1; i > -1; i--)
             {
                 TestClass item = (TestClass)objectPool.GetItem("B");
@@ -75,7 +95,7 @@ namespace TestConsole
             }
             Console.WriteLine("Summury = " + s);
             Console.WriteLine("BRandom.Distribution Test Over\n");
-            
+
             //状态机测试
             Console.WriteLine("#############\nStateMachine Test");
             StateMachine.State s_1 = new StateMachine.State("State 1");
@@ -118,22 +138,14 @@ namespace TestConsole
             Console.WriteLine("00 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 2;
             creature.Refresh();
-            Console.WriteLine("01 " + creature.actuator.PostureMgr.stateMachine.Current);
-            creature.Refresh();
             Console.WriteLine("02 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 3;
-            creature.Refresh();
-            Console.WriteLine("03 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.Refresh();
             Console.WriteLine("04 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 1;
             creature.Refresh();
-            Console.WriteLine("05 " + creature.actuator.PostureMgr.stateMachine.Current);
-            creature.Refresh();
             Console.WriteLine("06 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 2;
-            creature.Refresh();
-            Console.WriteLine("07 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.Refresh();
             Console.WriteLine("08 " + creature.actuator.PostureMgr.stateMachine.Current);
 
@@ -143,6 +155,6 @@ namespace TestConsole
         }
 
         public static ObjectPool objectPool;
-        
+
     }
 }

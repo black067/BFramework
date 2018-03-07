@@ -109,7 +109,17 @@ namespace BFramework.ShootingGame
 
         private PostureManager _postureMgr;
 
-        public PostureManager PostureMgr { get => _postureMgr; set => _postureMgr = value; }
+        public PostureManager PostureMgr
+        {
+            get
+            {
+                return _postureMgr;
+            }
+            set
+            {
+                _postureMgr = value;
+            }
+        }
 
         public void Work(ref Creature.Command command)
         {

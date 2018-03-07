@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BFramework.ShootingGame
 {
     public class Equipment
@@ -11,8 +6,28 @@ namespace BFramework.ShootingGame
         private string _name;
         private int _id;
 
-        public int Id { get => _id; set => _id = value; }
-        public string Name { get => _name; set => _name = value; }
+        public int Id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        }
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+            }
+        }
 
         public enum TYPE
         {
@@ -20,20 +35,19 @@ namespace BFramework.ShootingGame
             ACCESSORIES,
             WEAPON
         }
+
+        public virtual void Work()
+        {
+
+        }
     }
 
     public class Clothing : Equipment
     {
-
-    }
-
-    public class T
-    {
-        Clothing clothing;
-        void TE()
+        public override void Work()
         {
-            clothing = new Clothing();
-            clothing.Name = "A";
+
         }
     }
+    
 }

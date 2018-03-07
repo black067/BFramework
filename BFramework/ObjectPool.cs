@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace BFramework
@@ -35,7 +34,10 @@ namespace BFramework
         /// </summary>
         public List<Object> Keys
         {
-            get => new List<Object>(_pool.Keys);
+            get
+            {
+                return new List<Object>(_pool.Keys);
+            }
         }
 
         /// <summary>
@@ -43,7 +45,10 @@ namespace BFramework
         /// </summary>
         public List<Type> Types
         {
-            get => new List<Type>(_types.Values);
+            get
+            {
+                return new List<Type>(_types.Values);
+            }
         }
 
         /// <summary>

@@ -48,7 +48,17 @@ namespace BFramework.BehaviourTree
             }
         }
 
-        public int Capacity { get => capacity; private set => capacity = value; }
+        public int Capacity
+        {
+            get
+            {
+                return capacity;
+            }
+            private set
+            {
+                capacity = value;
+            }
+        }
     }
 
     /// <summary>

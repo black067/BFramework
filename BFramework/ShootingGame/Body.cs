@@ -21,10 +21,50 @@ namespace BFramework.ShootingGame
             Limited _defense;
             bool _disabled;
 
-            public string Name { get => _name; set => _name = value; }
-            public bool Crucial { get => _crucial; set => _crucial = value; }
-            public Limited Health { get => _health; set => _health = value; }
-            public bool Disabled { get => _disabled; set => _disabled = value; }
+            public string Name
+            {
+                get
+                {
+                    return _name;
+                }
+                set
+                {
+                    _name = value;
+                }
+            }
+            public bool Crucial
+            {
+                get
+                {
+                    return _crucial;
+                }
+                set
+                {
+                    _crucial = value;
+                }
+            }
+            public Limited Health
+            {
+                get
+                {
+                    return _health;
+                }
+                set
+                {
+                    _health = value;
+                }
+            }
+            public bool Disabled
+            {
+                get
+                {
+                    return _disabled;
+                }
+                set
+                {
+                    _disabled = value;
+                }
+            }
         }
         public Body(params Component[] components)
         {
@@ -42,6 +82,16 @@ namespace BFramework.ShootingGame
         public Dictionary<string, Component> Components;
         public List<string> Tags;
 
-        public float Health { get => _health; set => _health = value; }
+        public float Health
+        {
+            get
+            {
+                return _health;
+            }
+            set
+            {
+                _health = value;
+            }
+        }
     }
 }

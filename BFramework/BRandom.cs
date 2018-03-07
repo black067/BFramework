@@ -10,7 +10,17 @@ namespace BFramework
         /// <summary>
         /// 随机数生成器种子（只读）
         /// </summary>
-        public static int Seed { get => _seed; private set => _seed = value; }
+        public static int Seed
+        {
+            get
+            {
+                return _seed;
+            }
+            private set
+            {
+                _seed = value;
+            }
+        }
 
         /// <summary>
         /// 返回一个范围内的随机整数。
