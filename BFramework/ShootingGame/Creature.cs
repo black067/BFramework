@@ -1,16 +1,20 @@
-﻿
+﻿using BFramework.ExpandedNumber;
+
 namespace BFramework.ShootingGame
 {
-    class Creature
+    public class Creature
     {
-        public class Attributes
+        public class Attribute
         {
-            public class BodyPart
+            public Attribute()
             {
-                private string _name;
-                private float _health;
-                private bool _disabled;
+                Body = new Body(
+                    new Body.Component("Head", true, new Limited(0, 100, 100), new Limited(0, 100, 0)),
+                    new Body.Component("HandR", false, new Limited(0, 100, 100), new Limited(0, 100, 0)),
+                    new Body.Component("HandL", false, new Limited(0, 100, 100), new Limited(0, 100, 0))
+                    );
             }
+
             public enum POSTURE
             {
                 TRANSITION = 0,
@@ -19,18 +23,17 @@ namespace BFramework.ShootingGame
                 CRAWL = 3,
             }
 
-            private BodyPart[] _bodyParts;
-            private float _health;
+            private Body _body;
             private bool _alive;
-            private float _energy;
-            private float _defense;
+            private Limited _energy;
             private float _speed;
             private POSTURE _posture;
             private bool _grounded;
 
+            public Body Body { get => _body; set => _body = value; }
         }
 
-        public class Command
+        public struct Command
         {
             public bool Fire;
             public bool Jump;
@@ -38,19 +41,35 @@ namespace BFramework.ShootingGame
             public int ChangePostureTo;
         }
 
+        public Creature(string name)
+        {
+            Id = GetHashCode();
+            Name = name;
+            attributes = new Attribute();
+            sensor = new Sensor();
+            brain = new Brain();
+            command = new Command();
+            actuator = new Actuator();
+        }
+
+        public Creature() : this("Creature") { }
+
         private int _id;
         private string _name;
-        private Attributes _attributes;
-        private Sensor _sensor;
-        private Brain _brain;
-        private Command _command;
-        private Actuator _actuator;
+        public Attribute attributes;
+        public Sensor sensor;
+        public Brain brain;
+        public Command command;
+        public Actuator actuator;
+
+        public int Id { get => _id; set => _id = value; }
+        public string Name { get => _name; set => _name = value; }
 
         public void Refresh()
         {
-            _sensor.Work(ref _attributes);
-            _brain.Work(ref _attributes, ref _command);
-            _actuator.Work(ref _command);
+            sensor.Work(ref attributes);
+            brain.Work(ref attributes, ref command);
+            actuator.Work(ref command);
         }
     }
 }

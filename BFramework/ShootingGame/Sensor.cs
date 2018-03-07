@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BFramework.ShootingGame
 {
-    class Sensor
+    public class Sensor
     {
         public class Visual
         {
@@ -27,7 +22,7 @@ namespace BFramework.ShootingGame
         {
 
         }
-        public void Work(ref Creature.Attributes attributes)
+        public void Work(ref Creature.Attribute attributes)
         {
             //...
             //在此处添加扫描行为

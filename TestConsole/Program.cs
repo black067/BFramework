@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using BFramework;
+using BFramework.ShootingGame;
 
 namespace TestConsole
 {
@@ -108,6 +108,34 @@ namespace TestConsole
 
             //行为树测试
             BFramework.BehaviourTree.BehaviourTree behaviourTree = new BFramework.BehaviourTree.BehaviourTree();
+
+            //
+            Console.WriteLine("#############\nShooting Game Test");
+            Creature creature = new Creature("TEST");
+            
+            creature.Refresh();
+            Console.WriteLine("00 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.command.ChangePostureTo = 2;
+            creature.Refresh();
+            Console.WriteLine("01 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.Refresh();
+            Console.WriteLine("02 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.command.ChangePostureTo = 3;
+            creature.Refresh();
+            Console.WriteLine("03 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.Refresh();
+            Console.WriteLine("04 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.command.ChangePostureTo = 1;
+            creature.Refresh();
+            Console.WriteLine("05 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.Refresh();
+            Console.WriteLine("06 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.command.ChangePostureTo = 2;
+            creature.Refresh();
+            Console.WriteLine("07 " + creature.actuator.PostureMgr.stateMachine.Current);
+            creature.Refresh();
+            Console.WriteLine("08 " + creature.actuator.PostureMgr.stateMachine.Current);
+
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();

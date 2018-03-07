@@ -49,13 +49,16 @@
     <Compile Include="BDelegate.cs" />
     <Compile Include="BehaviourTree.cs" />
     <Compile Include="BRandom.cs" />
+    <Compile Include="ExpandedNumber\Limited.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="ShootingGame\Actuator.cs" />
+    <Compile Include="ShootingGame\Body.cs" />
     <Compile Include="ShootingGame\Brain.cs" />
     <Compile Include="ShootingGame\Creature.cs" />
     <Compile Include="ShootingGame\Sensor.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

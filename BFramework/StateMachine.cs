@@ -117,7 +117,7 @@ namespace BFramework
         /// <summary>
         /// 当前状态节点
         /// </summary>
-        public string Current { get => _current; private set => _current = value; }
+        public string Current { get => _current; set => _current = value; }
 
         /// <summary>
         /// 公用变量，用于状态之间传递参数
