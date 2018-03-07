@@ -30,16 +30,18 @@ namespace BFramework.ShootingGame
         {
             int length = components.Length;
             Components = new Dictionary<string, Component>(length);
+            Tags = new List<string>(length);
             for (int i = 0; i <= length - 1; i++)
             {
                 Components.Add(components[i].Name, components[i]);
+                Tags.Add(components[i].Name);
             }
         }
 
         private float _health;
         public Dictionary<string, Component> Components;
+        public List<string> Tags;
 
         public float Health { get => _health; set => _health = value; }
-
     }
 }

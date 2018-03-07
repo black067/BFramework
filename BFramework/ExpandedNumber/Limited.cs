@@ -5,10 +5,17 @@ namespace BFramework.ExpandedNumber
     {
         public Limited(float min, float max, float value)
         {
-            Min = min;
-            Max = max;
+            _min = min;
+            _max = max;
+            if (_min > _max)
+            {
+                _max = min;
+                _min = max;
+            }
             Value = value;
         }
+        public Limited(Limited value) : this(value.Min, value.Max, value.Value) { }
+        public Limited() : this(0, 100, 0) { }
 
         float _min;
         float _max;
@@ -84,6 +91,90 @@ namespace BFramework.ExpandedNumber
         public float GetPercentage()
         {
             return (Value - Min) / (Max - Min);
+        }
+        
+        public static Limited operator + (Limited lhs, Limited rhs)
+        {
+            return new Limited(lhs)
+            {
+                Max = lhs.Max > rhs.Max ? lhs.Max : rhs.Max,
+                Min = lhs.Min < rhs.Min ? lhs.Min : rhs.Min,
+                Value = lhs.Value + rhs.Value,
+            };
+        }
+        public static Limited operator - (Limited lhs, Limited rhs)
+        {
+            return new Limited(lhs)
+            {
+                Max = lhs.Max > rhs.Max ? lhs.Max : rhs.Max,
+                Min = lhs.Min < rhs.Min ? lhs.Min : rhs.Min,
+                Value = lhs.Value - rhs.Value,
+            };
+        }
+        public static Limited operator * (Limited lhs, Limited rhs)
+        {
+            return new Limited(lhs)
+            {
+                Max = lhs.Max > rhs.Max ? lhs.Max : rhs.Max,
+                Min = lhs.Min < rhs.Min ? lhs.Min : rhs.Min,
+                Value = lhs.Value * rhs.Value,
+            };
+        }
+        public static Limited operator / (Limited lhs, Limited rhs)
+        {
+            return new Limited(lhs)
+            {
+                Max = lhs.Max > rhs.Max ? lhs.Max : rhs.Max,
+                Min = lhs.Min < rhs.Min ? lhs.Min : rhs.Min,
+                Value = lhs.Value / rhs.Value,
+            };
+        }
+
+        public static Limited operator + (Limited lhs, float rhs)
+        {
+            return new Limited(lhs)
+            {
+                Value = lhs.Value + rhs
+            };
+        }
+        public static Limited operator - (Limited lhs, float rhs)
+        {
+            return new Limited(lhs)
+            {
+                Value = lhs.Value - rhs
+            };
+        }
+        public static Limited operator * (Limited lhs, float rhs)
+        {
+            return new Limited(lhs)
+            {
+                Value = lhs.Value * rhs
+            };
+        }
+        public static Limited operator / (Limited lhs, float rhs)
+        {
+            return new Limited(lhs)
+            {
+                Value = lhs.Value / rhs
+            };
+        }
+
+        public static bool operator == (Limited lhs, Limited rhs)
+        {
+            return lhs.Min == rhs.Min && lhs.Max == rhs.Max && lhs.Value == rhs.Value;
+        }
+        public static bool operator != (Limited lhs, Limited rhs)
+        {
+            return lhs.Min != rhs.Min || lhs.Max != rhs.Max || lhs.Value != rhs.Value;
+        }
+
+        public static bool operator == (Limited lhs, float rhs)
+        {
+            return lhs.Value == rhs;
+        }
+        public static bool operator != (Limited lhs, float rhs)
+        {
+            return lhs.Value != rhs;
         }
     }
 }

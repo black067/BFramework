@@ -112,7 +112,8 @@ namespace TestConsole
             //
             Console.WriteLine("#############\nShooting Game Test");
             Creature creature = new Creature("TEST");
-            
+            creature.attributes.Body.Components["Head"].Health += 2;
+
             creature.Refresh();
             Console.WriteLine("00 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 2;

@@ -55,6 +55,7 @@
     <Compile Include="ShootingGame\Body.cs" />
     <Compile Include="ShootingGame\Brain.cs" />
     <Compile Include="ShootingGame\Creature.cs" />
+    <Compile Include="ShootingGame\Equipment.cs" />
     <Compile Include="ShootingGame\Sensor.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
