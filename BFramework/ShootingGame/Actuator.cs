@@ -67,6 +67,7 @@ namespace BFramework.ShootingGame
             private string ChangeTo(ref object input)
             {
                 _requestTemporary = (ChangeRequest)input;
+                
                 if(_requestTemporary.end == stateMachine.Current)
                 {
                     return stateMachine.Current;
@@ -79,13 +80,7 @@ namespace BFramework.ShootingGame
                     return _tags[0];
                 }
             }
-
-            private void TransitAnimationPlay(string start, string end)
-            {
-                //此处添加播放动画的动作
-                System.Console.WriteLine("From " + start + " change to " + end);
-                TransitionDone = true;
-            }
+            
             private void TransitAnimationPlay(ChangeRequest request)
             {
                 //此处添加播放动画的动作
@@ -95,10 +90,25 @@ namespace BFramework.ShootingGame
 
             public void Run(int postureIndex)
             {
-                _request.start = stateMachine.Current;
-                _request.end = _tags[postureIndex];
+                if (postureIndex > 0 && postureIndex < 4)
+                {
+                    _request.start = stateMachine.Current;
+                    if (_tags[postureIndex] == stateMachine.Current)
+                    {
+                        _request.end = _tags[1];
+                    }
+                    else
+                    {
+                        _request.end = _tags[postureIndex];
+                    }
+                }
                 stateMachine.Params = _request;
                 stateMachine.Run();
+            }
+
+            public void ChangeAction(string tag, BDelegate<object, string> action)
+            {
+                stateMachine.States[tag].Action = action;
             }
         }
 
@@ -123,11 +133,7 @@ namespace BFramework.ShootingGame
 
         public void Work(ref Creature.Command command)
         {
-            if (command.ChangePostureTo > 0)
-            {
-                PostureMgr.Run(command.ChangePostureTo);
-                PostureMgr.Run(command.ChangePostureTo);
-            }
+            PostureMgr.Run(command.ChangePostureTo);
         }
 
         private bool Animation()

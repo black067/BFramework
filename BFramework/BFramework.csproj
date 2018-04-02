@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BFramework</RootNamespace>
     <AssemblyName>BFramework</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -42,14 +42,16 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BDelegate.cs" />
     <Compile Include="BehaviourTree.cs" />
-    <Compile Include="BRandom.cs" />
-    <Compile Include="ExpandedNumber\Limited.cs" />
+    <Compile Include="ExpandedMath\Conditional.cs" />
+    <Compile Include="ExpandedMath\Random.cs" />
+    <Compile Include="ExpandedMath\Limited.cs" />
+    <Compile Include="ExpandedMath\Segments.cs" />
+    <Compile Include="ExpandedMath\Vector.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="ShootingGame\Actuator.cs" />
     <Compile Include="ShootingGame\Body.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="ShootingGame\Creature.cs" />
     <Compile Include="ShootingGame\Equipment.cs" />
     <Compile Include="ShootingGame\Sensor.cs" />
+    <Compile Include="ShootingGame\World.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

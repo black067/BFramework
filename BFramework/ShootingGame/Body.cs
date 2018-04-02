@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BFramework.ExpandedNumber;
+using BFramework.ExpandedMath;
 
 namespace BFramework.ShootingGame
 {
@@ -9,63 +9,19 @@ namespace BFramework.ShootingGame
         {
             public Component(string name, bool crucial, Limited health, Limited defense)
             {
-                _name = name;
-                _crucial = crucial;
-                _health = health;
-                _defense = defense;
-                _disabled = false;
+                this.name = name;
+                this.crucial = crucial;
+                this.health = health;
+                this.defense = defense;
+                this.disabled = false;
             }
-            string _name;
-            bool _crucial;
-            Limited _health;
-            Limited _defense;
-            bool _disabled;
-
-            public string Name
-            {
-                get
-                {
-                    return _name;
-                }
-                set
-                {
-                    _name = value;
-                }
-            }
-            public bool Crucial
-            {
-                get
-                {
-                    return _crucial;
-                }
-                set
-                {
-                    _crucial = value;
-                }
-            }
-            public Limited Health
-            {
-                get
-                {
-                    return _health;
-                }
-                set
-                {
-                    _health = value;
-                }
-            }
-            public bool Disabled
-            {
-                get
-                {
-                    return _disabled;
-                }
-                set
-                {
-                    _disabled = value;
-                }
-            }
+            public string name;
+            public bool crucial;
+            public Limited health;
+            public Limited defense;
+            public bool disabled;
         }
+
         public Body(params Component[] components)
         {
             int length = components.Length;
@@ -73,8 +29,8 @@ namespace BFramework.ShootingGame
             Tags = new List<string>(length);
             for (int i = 0; i <= length - 1; i++)
             {
-                Components.Add(components[i].Name, components[i]);
-                Tags.Add(components[i].Name);
+                Components.Add(components[i].name, components[i]);
+                Tags.Add(components[i].name);
             }
         }
 

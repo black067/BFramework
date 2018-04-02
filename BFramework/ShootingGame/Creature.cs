@@ -1,4 +1,5 @@
-﻿using BFramework.ExpandedNumber;
+﻿using BFramework.ExpandedMath;
+using System.Collections.Generic;
 
 namespace BFramework.ShootingGame
 {
@@ -8,7 +9,7 @@ namespace BFramework.ShootingGame
         {
             public Attribute()
             {
-                Body = new Body(
+                body = new Body(
                     new Body.Component("Head", true, new Limited(0, 100, 100), new Limited(0, 100, 0)),
                     new Body.Component("HandR", false, new Limited(0, 100, 100), new Limited(0, 100, 0)),
                     new Body.Component("HandL", false, new Limited(0, 100, 100), new Limited(0, 100, 0))
@@ -23,83 +24,79 @@ namespace BFramework.ShootingGame
                 CRAWL = 3,
             }
 
-            private Body _body;
-            private bool _alive;
-            private Limited _energy;
-            private float _speed;
-            private POSTURE _posture;
-            private bool _grounded;
+            public Body body;
+            public bool alive;
+            public Vector position;
+            public Vector transform;
 
-            public Body Body
-            {
-                get
-                {
-                    return _body;
-                }
-                set
-                {
-                    _body = value;
-                }
-            }
+            public Limited energy;
+            public float speed;
+            public POSTURE posture;
+            public bool grounded;
         }
 
         public struct Command
         {
             public bool Fire;
+            public Vector Move;
             public bool Jump;
             public bool Run;
-            public int ChangePostureTo;
+            private int _changePostureTo;
+            public int ChangePostureTo
+            {
+                get
+                {
+                    return _changePostureTo;
+                }
+                set
+                {
+                    if (value < -1)
+                    {
+                        _changePostureTo = -1;
+                    }
+                    else if (value > 3)
+                    {
+                        _changePostureTo = 3;
+                    }
+                    else
+                    {
+                        _changePostureTo = value;
+                    }
+                }
+            }
+            public void Refresh()
+            {
+                Fire = false;
+                Move = Vector.Zero;
+                Jump = false;
+                Run = false;
+                ChangePostureTo = -1;
+            }
         }
 
-        public Creature(string name)
+        public Creature()
         {
-            Id = GetHashCode();
-            Name = name;
             attributes = new Attribute();
             sensor = new Sensor();
             brain = new Brain();
             command = new Command();
             actuator = new Actuator();
         }
-
-        public Creature() : this("Creature") { }
-
-        private int _id;
-        private string _name;
+        
+        public string name;
+        public int id;
         public Attribute attributes;
         public Sensor sensor;
         public Brain brain;
         public Command command;
         public Actuator actuator;
-
-        public int Id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
-        }
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
-        }
-
-        public void Refresh()
+        
+        public void Update()
         {
             sensor.Work(ref attributes);
             brain.Work(ref attributes, ref command);
             actuator.Work(ref command);
+            command.Refresh();
         }
     }
 }

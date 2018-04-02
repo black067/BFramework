@@ -1,5 +1,5 @@
 ﻿
-namespace BFramework.ExpandedNumber
+namespace BFramework.ExpandedMath
 {
     public class Limited
     {

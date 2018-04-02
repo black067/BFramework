@@ -44,10 +44,10 @@ namespace BFramework
         /// 添加无输入的方法
         /// </summary>
         /// <param name="methodVoid"></param>
-        public BDelegate(MethodVoid methodVoid)
+        public BDelegate(MethodNone methodVoid)
         {
-            _methodVoid = methodVoid;
-            _case = TYPE.Void;
+            _methodNone = methodVoid;
+            _case = TYPE.NONE;
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace BFramework
                         return _methodRef(ref input);
                     case TYPE.PARAMS:
                         return _methodParams(input);
-                    case TYPE.Void:
-                        return _methodVoid();
+                    case TYPE.NONE:
+                        return _methodNone();
                 }
                 return default(TOutput);
             }
@@ -77,20 +77,20 @@ namespace BFramework
         public delegate TOutput Method(TInput input);
         public delegate TOutput MethodRef(ref TInput input);
         public delegate TOutput MethodParams(params TInput[] input);
-        public delegate TOutput MethodVoid();
+        public delegate TOutput MethodNone();
 
         private enum TYPE
         {
             NORMAL = 0,
             REF = 1,
             PARAMS = 2,
-            Void = 3,
+            NONE = 3,
         }
         
         private TYPE _case;
         private Method _method;
         private MethodRef _methodRef;
         private MethodParams _methodParams;
-        private MethodVoid _methodVoid;
+        private MethodNone _methodNone;
     }
 }

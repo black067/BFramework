@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace BFramework
+namespace BFramework.ExpandedMath
 {
-    public static class BRandom
+    public static class Random
     {
-        static Random _randomCast = new Random();
+        static System.Random _randomCast = new System.Random();
         static int _seed = 0;
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace BFramework
         public static void Init(int seed)
         {
             Seed = seed;
-            _randomCast = new Random(Seed);
+            _randomCast = new System.Random(Seed);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace BFramework
         /// </summary>
         public static void Init()
         {
-            _randomCast = new Random();
+            _randomCast = new System.Random();
         }
     }
 }

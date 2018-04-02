@@ -4,19 +4,7 @@ namespace BFramework.ShootingGame
     public class Equipment
     {
         private string _name;
-        private int _id;
 
-        public int Id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
-        }
         public string Name
         {
             get
@@ -29,25 +17,14 @@ namespace BFramework.ShootingGame
             }
         }
 
-        public enum TYPE
-        {
-            CLOTHING,
-            ACCESSORIES,
-            WEAPON
-        }
-
         public virtual void Work()
         {
-
+            
         }
     }
 
-    public class Clothing : Equipment
+    public class Weapon
     {
-        public override void Work()
-        {
 
-        }
     }
-    
 }

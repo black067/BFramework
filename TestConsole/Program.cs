@@ -1,6 +1,7 @@
 ﻿using System;
 using BFramework;
 using BFramework.ShootingGame;
+using BFramework.ExpandedMath;
 
 namespace TestConsole
 {
@@ -16,7 +17,7 @@ namespace TestConsole
                 _name = name;
                 _age = age;
             }
-            public TestClass() : this("default", BRandom.Range(0, 100)) { }
+            public TestClass() : this("default", BFramework.ExpandedMath.Random.Range(0, 100)) { }
             String _name = "default";
             int _age = 18;
 
@@ -45,7 +46,7 @@ namespace TestConsole
         }
 
         /// <summary>
-        /// 命令行程序主题
+        /// 命令行程序主体
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
@@ -82,8 +83,8 @@ namespace TestConsole
 
             //随机数测试
             Console.WriteLine("#############\nBRandom.Distribution Test");
-            BRandom.Init();
-            int[] arr = BRandom.Distribution(50, 1000000);
+            BFramework.ExpandedMath.Random.Init();
+            int[] arr = BFramework.ExpandedMath.Random.Distribution(50, 1000000);
             for (int i = arr.Length - 1; i > -1; i--)
             {
                 Console.WriteLine(arr[i]);
@@ -131,30 +132,77 @@ namespace TestConsole
 
             //
             Console.WriteLine("#############\nShooting Game Test");
-            Creature creature = new Creature("TEST");
-            creature.attributes.Body.Components["Head"].Health += 2;
+            Creature creature = new Creature();
+            creature.attributes.body.Components["Head"].health += 2;
+            
+            while (true)
+            {
+                
+                Console.WriteLine(creature.command.ChangePostureTo);
+                ConsoleKeyInfo input = Console.ReadKey();
+                if (input.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+                else if (input.Key == ConsoleKey.C)
+                {
+                    creature.command.ChangePostureTo = 2;
+                }
+                else if (input.Key == ConsoleKey.Z)
+                {
+                    creature.command.ChangePostureTo = 3;
+                }
+                creature.Update(); creature.Update();
+                Console.WriteLine(creature.actuator.PostureMgr.stateMachine.Current);
+                
+            }
 
-            creature.Refresh();
+            creature.Update();
             Console.WriteLine("00 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 2;
-            creature.Refresh();
+            creature.Update();
+            creature.Update();
             Console.WriteLine("02 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 3;
-            creature.Refresh();
+            creature.Update();
+            creature.Update();
             Console.WriteLine("04 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 1;
-            creature.Refresh();
+            creature.Update();
+            creature.Update();
             Console.WriteLine("06 " + creature.actuator.PostureMgr.stateMachine.Current);
             creature.command.ChangePostureTo = 2;
-            creature.Refresh();
+            creature.Update();
+            creature.Update();
             Console.WriteLine("08 " + creature.actuator.PostureMgr.stateMachine.Current);
+            
+            //数学拓展测试
+            Console.WriteLine("#############\nMath Test");
+            Vector vectorA = new Vector(1.51556f, 2, 3);
+            Vector vectorB = new Vector(4, 5, 6);
+            Console.WriteLine(vectorA + vectorB);
+            Console.WriteLine(vectorA * vectorB);
+            Console.WriteLine(vectorA / 3);
+            Console.WriteLine(vectorA * 4.57f);
+            Console.WriteLine(vectorA * 15484);
+            Console.WriteLine(vectorA.Cross(vectorB));
+            Console.WriteLine(vectorA.Dot(vectorB));
 
+            Segments segments = new Segments(45,15,841,200,478,104,684);
+            Console.WriteLine(segments);
+            Console.WriteLine(segments.Count);
+            Console.WriteLine(segments.Max);
+            Console.WriteLine(segments[15]);
+            Console.WriteLine(segments[53]);
+            Console.WriteLine(segments[76]);
+            Console.WriteLine(segments[89]);
+            Console.WriteLine(segments[108]);
 
+            
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
 
         public static ObjectPool objectPool;
-
     }
 }

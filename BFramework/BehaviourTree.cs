@@ -109,5 +109,13 @@ namespace BFramework.BehaviourTree
         private Cognition _cognition;
         private STATUS _status = STATUS.INVALID;
         private BDelegate<Cognition, STATUS> _tick;
+
+        public STATUS Status
+        {
+            get
+            {
+                return _status;
+            }
+        }
     }
 }
