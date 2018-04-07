@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BFramework;
 using BFramework.ShootingGame;
 using BFramework.ExpandedMath;
@@ -126,6 +127,23 @@ namespace TestConsole
                 machine.Run();
             }
             Console.WriteLine("StateMachine Test Over\n");
+
+            //限定条件数值
+            Console.WriteLine("#############\nConditional Number Test");
+
+            BDelegate<int, bool>[] conditions = new BDelegate<int, bool>[1];
+
+            Conditional<int> conditional = new Conditional<int>(5, new BDelegate<int, bool>(delegate(int value) {
+                return value > 10;
+            }));
+
+            Console.WriteLine(conditional.Value);
+            conditional.Value = 15;
+            Console.WriteLine(conditional.Value);
+            conditional.Value = 6;
+            Console.WriteLine(conditional.Value);
+
+            Console.WriteLine("Conditional Number Test Over\n");
 
             //行为树测试
             BFramework.BehaviourTree.BehaviourTree behaviourTree = new BFramework.BehaviourTree.BehaviourTree();

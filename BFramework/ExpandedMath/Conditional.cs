@@ -5,7 +5,8 @@ using System.Text;
 
 namespace BFramework.ExpandedMath
 {
-    class Conditional<T>
+    //有条件限制的容器，在对 Value 赋值之前会检查是否符合条件
+    public class Conditional<T>
     {
         private T _value;
         private List<BDelegate<T, bool>> _conditions;
@@ -13,23 +14,23 @@ namespace BFramework.ExpandedMath
         public Conditional(T value, params BDelegate<T, bool>[] conditions)
         {
             int length = conditions.Length;
-            _conditions = new List<BDelegate<T, bool>>(length);
+            Conditions = new List<BDelegate<T, bool>>(length);
             for(int i = 0; i < length; i++)
             {
-                _conditions.Add(conditions[i]);
+                Conditions.Add(conditions[i]);
             }
             Value = value;
         }
 
         public bool Check(T value)
         {
-            if (_conditions.Count < 1)
+            if (Conditions.Count < 1)
             {
                 return true;
             }
-            for (int i = 0, length = _conditions.Count; i < length; i++)
+            for (int i = 0, length = Conditions.Count; i < length; i++)
             {
-                if (_conditions[i][value])
+                if (Conditions[i][value])
                 {
                     if (i == length - 1)
                     {
@@ -55,5 +56,18 @@ namespace BFramework.ExpandedMath
                 _value = Check(value) ? value : _value;
             }
         }
+
+        public List<BDelegate<T, bool>> Conditions
+        {
+            get
+            {
+                return _conditions;
+            }
+            set
+            {
+                _conditions = value;
+            }
+        }
+        
     }
 }

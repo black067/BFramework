@@ -7,21 +7,27 @@ namespace BFramework.ShootingGame
 {
     public class World
     {
-        public World()
+        public World(int number = 10)
         {
-            creatureNumber = 10;
+            creatureNumber = number;
+            creatureID = new int[creatureNumber];
             creatures = new List<Creature>(creatureNumber);
+            int ID = startNumber;
             
             for(int i = 0; i < creatureNumber; i++)
             {
+                ID += i;
+                creatureID[i] = ID;
                 creatures.Add(new Creature() {
-                    id = 10000 + i,
-                    name = "Character_" + 10000 + i,
+                    id = ID,
+                    name = "Character_" + ID,
                 });
             }
         }
 
+        public int startNumber;
         public int creatureNumber;
+        public int[] creatureID;
         public List<Creature> creatures;
 
         public void Refresh()

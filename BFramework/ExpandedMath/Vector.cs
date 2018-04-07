@@ -117,4 +117,5 @@ namespace BFramework.ExpandedMath
             return lhs.Multiply(1 / rhs);
         }
     }
+    
 }
