@@ -27,7 +27,6 @@ namespace BFramework.PathFind
             }
 
             foreach (Block block in Blocks) {
-                block.Map = this;
                 block.Neighbor = GetNeighbor(block.X, block.Y, block.Z);
             }
         }

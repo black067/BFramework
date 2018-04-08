@@ -3,28 +3,6 @@ using System.Collections.Generic;
 
 namespace BFramework.PathFind
 {
-
-    /// <summary>
-    /// 容器类, 用于包装 Block 类
-    /// </summary>
-    public class Container
-    {
-        public Container(Block content, Block father, int gValue, int hValue)
-        {
-            Content = content;
-            Father = father;
-            GValue = gValue;
-            HValue = hValue;
-            Cost = GValue + HValue;
-        }
-        public Block Content { get; set; }
-        public Block Father { get; set; }
-        public int GValue { get; set; }
-        public int HValue { get; set; }
-        public int Cost { get; set; }
-
-    }
-
     /// <summary>
     /// 路径类
     /// </summary>
@@ -37,19 +15,22 @@ namespace BFramework.PathFind
         /// <param name="heuristic"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public Path(int weightThreshold, Block start, Block end, Heuristic.TYPE heuristicType = Heuristic.TYPE.EUCLIDEAN)
+        public Path(int weightThreshold, Block start, Block end, Heuristic.TYPE heuristicType = Heuristic.TYPE.EUCLIDEAN, int maxSteps = 100)
         {
+            MaxSteps = maxSteps;
+            Steps = 0;
             WeightThreshold = weightThreshold;
             Heuristic = new Heuristic(heuristicType);
             Start = start;
             End = end;
-            Open = new List<Container>
-            {
-                new Container(Start, null, 0, Heuristic.Calculate(Start, End))
-            };
-            Close = new List<Container>();
-            Result = new List<Container>();
+            Open = new List<Block>();
+            Close = new List<Block>();
+            SetAsOpen(Start, null);
         }
+
+        public int MaxSteps { get; set; }
+
+        public int Steps { get; set; }
 
         /// <summary>
         /// 权重阈值, 记录对 Block 的通行能力, 用于判断 Block 是否可以通过
@@ -62,7 +43,7 @@ namespace BFramework.PathFind
         public int Weight { get; set; }
 
         /// <summary>
-        /// 路径的花费, 是整个路径中所有 Container 的 Cost 之和
+        /// 路径的花费, 是整个路径中所有 Block 的 Cost 之和
         /// </summary>
         public float Cost { get; set; }
 
@@ -82,38 +63,93 @@ namespace BFramework.PathFind
         public Block End { get; set; }
 
         /// <summary>
+        /// 用于存放当前检测到的 Block
+        /// </summary>
+        public Block Current { get; set; }
+
+        /// <summary>
         /// 待检测的 Block 列表, 需要用容器 Container 包装 Block
         /// </summary>
-        public List<Container> Open { get; set; }
+        public List<Block> Open { get; set; }
 
         /// <summary>
         /// 检测完毕的 Block 列表, 需要用容器 Container 包装 Block
         /// </summary>
-        public List<Container> Close { get; set; }
+        public List<Block> Close { get; set; }
+
+        /// <summary>
+        /// 用于记录寻路状态的枚举类
+        /// </summary>
+        public enum STATUS
+        {
+            FAIL = -1,
+            PROCESSING = 0,
+            SUCCESS = 1,
+        }
 
         /// <summary>
         /// 寻路结果
         /// </summary>
-        public List<Container> Result { get; set; }
+        public STATUS Status { get; set; }
 
-        /// <summary>
-        /// 检查 Block 能否通过
-        /// </summary>
-        /// <param name="block"></param>
-        /// <returns></returns>
-        public bool AvailableCheck(Block block)
+        
+        private int CompareByCost(Block blockA, Block blockB)
         {
-            return  WeightThreshold > block.Weight;
+            return blockA.tag.Cost.CompareTo(blockB.tag.Cost);
+        }
+        public void SetAsOpen(Block block, Block father)
+        {
+            Open.Add(block);
+            block.tag.Set(father, 
+                Heuristic.Calculate(block, father), 
+                Heuristic.Calculate(block, End));
+            Open.Sort(CompareByCost);
+        }
+        public void SetAsClosed(Block block)
+        {
+            Close.Add(block);
+            block.tag.Closed = true;
         }
 
         /// <summary>
         /// 检索路径
         /// </summary>
         /// <returns></returns>
-        public bool FindByStep()
+        public STATUS FindByStep()
         {
-
-            return true;
+            if (Open.Count < 1)
+            {
+                Steps++;
+                return STATUS.FAIL;
+            }
+            Current = Open[0];
+            if (Current == End)
+            {
+                Steps++;
+                return STATUS.SUCCESS;
+            }
+            SetAsClosed(Current);
+            foreach (Block block in Current.Neighbor)
+            {
+                if (block == null || block.tag.Closed || block.Weight > WeightThreshold)
+                {
+                    continue;
+                }
+                if (Open.Contains(block))
+                {
+                    int gValueNew = Heuristic.Calculate(Current, block);
+                    if (gValueNew < block.tag.GValue)
+                    {
+                        block.tag.Set(Current, gValueNew, block.tag.HValue);
+                    }
+                }
+                else
+                {
+                    SetAsOpen(block, Current);
+                }
+            }
+            Steps++;
+            return STATUS.PROCESSING;
         }
     }
 }

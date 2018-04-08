@@ -25,11 +25,16 @@ namespace BFramework.PathFind
 
         public int Manhattan(Block start, Block target)
         {
+            if (target == null)
+            {
+                return 0;
+            }
             return Abs(target.X - start.X) + Abs(target.Y - start.Y) + Abs(target.Z - start.Z);
         }
 
         public int Euclidean(Block start, Block target)
         {
+            if (target == null) { return 0; }
             int dX = target.X - start.X;
             int dY = target.Y - start.Y;
             int dZ = target.Z - start.Z;

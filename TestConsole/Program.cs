@@ -228,6 +228,7 @@ namespace TestConsole
             public static void PathFind()
             {
                 Map map = new Map("TestMap", 11, 15, 1, true);
+
                 Console.WriteLine(map);
                 Console.Write("#####");
                 for (int i = 0; i < map.LengthX; i++)
@@ -244,6 +245,23 @@ namespace TestConsole
                     }
                     Console.Write("| \n");
                 }
+
+                Path path = new Path(888, map[0, 0, 0], map[10, 14, 0], Heuristic.TYPE.EUCLIDEAN, 100);
+                map.SetBlock(500, 0, 0, 0);
+                map.SetBlock(500, 10, 14, 0);
+                while (true)
+                {
+                    path.Status = path.FindByStep();
+                    if (path.Status != Path.STATUS.PROCESSING || path.Steps == path.MaxSteps)
+                    {
+                        break;
+                    }
+                }
+                foreach (Block block in path.Close)
+                {
+                    Console.WriteLine(block);
+                }
+                Console.WriteLine(path.Status);
             }
         }
 
