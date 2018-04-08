@@ -54,6 +54,7 @@
     <Compile Include="ExpandedMath\Vector.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="PathFind\Block.cs" />
+    <Compile Include="PathFind\Heuristic.cs" />
     <Compile Include="PathFind\Map.cs" />
     <Compile Include="PathFind\Path.cs" />
     <Compile Include="ShootingGame\Actuator.cs" />

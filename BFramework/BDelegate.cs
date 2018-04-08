@@ -73,6 +73,24 @@ namespace BFramework
                 return default(TOutput);
             }
         }
+        public TOutput this[TInput[] input]
+        {
+            get
+            {
+                switch (_case)
+                {
+                    case TYPE.NORMAL:
+                        return _method(input[0]);
+                    case TYPE.REF:
+                        return _methodRef(ref input[0]);
+                    case TYPE.PARAMS:
+                        return _methodParams(input);
+                    case TYPE.NONE:
+                        return _methodNone();
+                }
+                return default(TOutput);
+            }
+        }
 
         public delegate TOutput Method(TInput input);
         public delegate TOutput MethodRef(ref TInput input);

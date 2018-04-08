@@ -8,46 +8,25 @@ namespace BFramework.PathFind
 {
     public class Block
     {
-        public Block(int iD, Block[] neighbor, Vector location, int power, float distanceToStart = float.PositiveInfinity, float distanceToEnd = float.PositiveInfinity)
+        public Block(int weight, int x, int y, int z)
         {
-            ID = iD;
-            Power = power;
-            DistanceToStart = distanceToStart;
-            DistanceToEnd = distanceToEnd;
-            Cost = float.PositiveInfinity;
-            Neighbor = neighbor;
-            Location = location;
+            Weight = weight;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
-        public int ID
-        {
-            get; set;
-        }
+        public Map Map { get; set; }
+        public int Weight { get; set; }
+        public Block[,,] Neighbor { get; set; }
+        public Vector Location { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
 
-        public int Power
+        public override string ToString()
         {
-            get; set;
+            return string.Format("Block(Weight: {0}, X: {1}, Y: {2}, Z: {3})", Weight, X, Y, Z);
         }
-        private float DistanceToStart
-        {
-            get; set;
-        }
-        private float DistanceToEnd
-        {
-            get; set;
-        }
-        public float Cost
-        {
-            get; set;
-        }
-        public Block[] Neighbor
-        {
-            get; set;
-        }
-        public Vector Location
-        {
-            get; set;
-        }
-        
     }
 }
