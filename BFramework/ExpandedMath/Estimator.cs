@@ -17,36 +17,26 @@ namespace BFramework.ExpandedMath
     /// </summary>
     public class Estimator<T> where T : IEstimable<int>
     {
-        private int _count;
         private T _weightItem;
-        private int _normalizedValue;
         
-        public int Count { get { return _count; } private set { _count = value; } }
         public T WeightItem { get { return _weightItem; } set { _weightItem = value; } }
-        public int NormalizedValue { get { return _normalizedValue; } set { _normalizedValue = value; } }
 
-        public Estimator(T weightItem, int normalizedValue = 10000)
+        public Estimator(T weightItem)
         {
             WeightItem = weightItem;
-            NormalizedValue = normalizedValue;
-            Count = WeightItem.GetCount();
-            Normalized();
         }
 
-        private void Normalized()
+        public int this[T item]
         {
-            int sum = _weightItem.Sum();
-            int multiplier = NormalizedValue / sum;
-            int remainder = NormalizedValue % sum / Count;
-            _weightItem.Multiply(multiplier);
-            _weightItem.Add(remainder);
-            return;
+            get
+            {
+                return Calculate(item);
+            }
         }
 
         public int Calculate(T item)
         {
             T itemNew = (T)WeightItem.Clone();
-            Console.WriteLine(itemNew);
             itemNew.Multiply(item);
             return itemNew.Sum();
         }

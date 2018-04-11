@@ -313,7 +313,7 @@ namespace TestConsole
             {
                 int LengthX = 11;
                 int LengthY = 15;
-                int LengthZ = 9;
+                int LengthZ = 1;
                 Map map = new Map("TestMap", LengthX, LengthY, LengthZ, true);
 
                 Console.WriteLine(map);
@@ -328,14 +328,21 @@ namespace TestConsole
                     Console.Write(string.Format(" Y{0:D2} ", i));
                     for (int j = 0; j < map.LengthX; j++)
                     {
-                        Console.Write(string.Format("|  {0:D3}  ", map.Blocks[j, i, 0].Weight));
+                        Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, i, 0].property.Difficulty));
                     }
                     Console.Write("| \n");
                 }
-
-                Path path = new Path(map[0, 0, 0], map[LengthX - 1, LengthY - 1, LengthZ - 1], 908, new Node.Attribute(), Heuristic.TYPE.MANHATTAN, 100);
+                Node.Attribute weightDic = new Node.Attribute()
+                {
+                    Difficulty = 0,
+                    GValue = 1,
+                    HValue = 1,
+                    Resistance = 0,
+                    Temperature = 0,
+                };
+                Path path = new Path(map[0, 0, 0], map[LengthX - 1, LengthY - 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.MANHATTAN, 100);
                 path.Find();
-                foreach (Node node in path.Close)
+                foreach (Node node in path.Closed)
                 {
                     Console.WriteLine(node);
                 }
@@ -360,8 +367,8 @@ namespace TestConsole
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Test.Estimator();
-            //Test.PathFind();
+            //Test.Estimator();
+            Test.PathFind();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

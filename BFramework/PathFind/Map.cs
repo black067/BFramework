@@ -14,19 +14,19 @@ namespace BFramework.PathFind
             LengthY = lengthY;
             LengthZ = lengthZ;
             BlockNumber = LengthX * LengthY * LengthZ;
-            Blocks = new Node[LengthX, LengthY, LengthZ];
+            Nodes = new Node[LengthX, LengthY, LengthZ];
             for (int i = 0; i < LengthX; i++)
             {
                 for (int j = 0; j < LengthY; j++)
                 {
                     for (int k = 0; k < LengthZ; k++)
                     {
-                        Blocks[i, j, k] = new Node(randomWeight ? ExpandedMath.Random.Range(0, 999) : 0, i, j, k);
+                        Nodes[i, j, k] = new Node(randomWeight ? ExpandedMath.Random.Range(0, 999) : 0, i, j, k);
                     }
                 }
             }
 
-            foreach (Node node in Blocks) {
+            foreach (Node node in Nodes) {
                 node.Neighbor = GetNeighbor(node.X, node.Y, node.Z);
             }
         }
@@ -36,13 +36,13 @@ namespace BFramework.PathFind
         public int LengthY { get; set; }
         public int LengthZ { get; set; }
         public int BlockNumber { get; set; }
-        public Node[,,] Blocks { get; set; }
+        public Node[,,] Nodes { get; set; }
         
         public Node this[int x, int y, int z]
         {
             get
             {
-                return Check(x, y, z) ? Blocks[x, y, z] : null;
+                return Check(x, y, z) ? Nodes[x, y, z] : null;
             }
         }
 
@@ -55,7 +55,7 @@ namespace BFramework.PathFind
                 {
                     for (int k = -1; k < 2; k++)
                     {
-                        neightbor[i + 1, j + 1, k + 1] = Check(x + i, y + j, z + k) ? Blocks[x + i, y + j, z + k] : null;
+                        neightbor[i + 1, j + 1, k + 1] = Check(x + i, y + j, z + k) ? Nodes[x + i, y + j, z + k] : null;
                     }
                 }
             }
@@ -64,11 +64,11 @@ namespace BFramework.PathFind
 
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
 
-        public void SetBlock(int weight, int x, int y, int z)
+        public void SetBlock(int difficulty, int x, int y, int z)
         {
             if (Check(x,y,z))
             {
-                Blocks[x, y, z].Weight = weight;
+                Nodes[x, y, z].property.Difficulty = difficulty;
             }
         }
 

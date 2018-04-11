@@ -8,35 +8,34 @@ namespace BFramework.PathFind
 {
     public class Node
     {
-        public struct Mark
-        {
-            public Mark(Node father, int gValue, int hValue, bool closed = false) : this()
-            {
-                Closed = closed;
-                Father = father;
-                GValue = gValue;
-                HValue = hValue;
-                Cost = GValue + HValue;
-            }
-
-            public bool Closed { get; set; }
-            public Node Father { get; set; }
-            public int GValue { get; set; }
-            public int HValue { get; set; }
-            public int Cost { get; set; }
-
-            public void Set(Node father, int gValue, int hValue, int cost, bool closed = false)
-            {
-                Closed = closed;
-                Father = father;
-                Cost = cost;
-            }
-        }
-
         public class Attribute : IEstimable<int>
         {
+            private bool _closed;
+            private bool _opened;
+
+            public Node Parent { get; set; }
+            public bool Closed
+            {
+                get { return _closed; }
+                set
+                {
+                    _closed = value;
+                    _opened = !_closed;
+                }
+            }
+            public bool Opened
+            {
+                get { return _opened; }
+                set
+                {
+                    _opened = value;
+                    _closed = !_opened;
+                }
+            }
+            public int Cost { get; set; }
+
             private static int _count = 5;
-            public int Weight { get; set; }
+            public int Difficulty { get; set; }
             public int GValue { get; set; }
             public int HValue { get; set; }
             public int Resistance { get; set; }
@@ -44,7 +43,7 @@ namespace BFramework.PathFind
 
             public Attribute(Attribute origin)
             {
-                Weight = origin.Weight;
+                Difficulty = origin.Difficulty;
                 GValue = origin.GValue;
                 HValue = origin.HValue;
                 Resistance = origin.Resistance;
@@ -53,7 +52,7 @@ namespace BFramework.PathFind
 
             public Attribute()
             {
-                Weight = 0;
+                Difficulty = 0;
                 GValue = int.MaxValue;
                 HValue = int.MaxValue;
                 Resistance = 0;
@@ -62,7 +61,7 @@ namespace BFramework.PathFind
 
             public void Add(Attribute addition)
             {
-                Weight += addition.Weight;
+                Difficulty += addition.Difficulty;
                 GValue += addition.GValue;
                 HValue += addition.HValue;
                 Resistance += addition.Resistance;
@@ -71,7 +70,7 @@ namespace BFramework.PathFind
 
             public void Multiply(Attribute multiplier)
             {
-                Weight *= multiplier.Weight;
+                Difficulty *= multiplier.Difficulty;
                 GValue *= multiplier.GValue;
                 HValue *= multiplier.HValue;
                 Resistance *= multiplier.Resistance;
@@ -86,7 +85,7 @@ namespace BFramework.PathFind
 
             public void Add(int addition)
             {
-                Weight += addition;
+                Difficulty += addition;
                 GValue += addition;
                 HValue += addition;
                 Resistance += addition;
@@ -110,7 +109,7 @@ namespace BFramework.PathFind
 
             public void Multiply(int multiplier)
             {
-                Weight *= multiplier;
+                Difficulty *= multiplier;
                 GValue *= multiplier;
                 HValue *= multiplier;
                 Resistance *= multiplier;
@@ -119,31 +118,36 @@ namespace BFramework.PathFind
 
             public int Sum()
             {
-                return Weight + GValue + HValue + Resistance + Temperature;
+                return Difficulty + GValue + HValue + Resistance + Temperature;
             }
         }
 
         public Node(int weight, int x, int y, int z)
         {
-            Weight = weight;
+            property = new Attribute() { Difficulty = weight };
             X = x;
             Y = y;
             Z = z;
-            tag = new Mark(null, int.MaxValue, int.MaxValue);
         }
-
-        public Mark tag;
+        
         public Attribute property;
-
-        public int Weight { get; set; }
+        
         public Node[,,] Neighbor { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Z { get; set; }
 
+        public int Difficulty { get { return property.Difficulty; } }
+        public Node Parent { get { return property.Parent; } }
+
+        public void SetCost(ref Estimator<Attribute> estimator)
+        {
+            property.Cost = estimator[property];
+        }
+
         public override string ToString()
         {
-            return string.Format("Block(Weight: {0:D3}, X: {1}, Y: {2}, Z: {3})", Weight, X, Y, Z);
+            return string.Format("Node(Difficulty: {0:D3}, X: {1}, Y: {2}, Z: {3})", Difficulty, X, Y, Z);
         }
     }
 }
