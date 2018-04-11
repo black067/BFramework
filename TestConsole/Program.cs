@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BFramework;
 using BFramework.ShootingGame;
 using BFramework.ExpandedMath;
 using BFramework.PathFind;
+using System.Collections;
 
 namespace TestConsole
 {
@@ -12,7 +14,7 @@ namespace TestConsole
         /// <summary>
         /// 用于测试的类
         /// </summary>
-        class TestClass
+        class TestClass : IEnumerable<int>
         {
             public TestClass(String name, int age)
             {
@@ -44,6 +46,88 @@ namespace TestConsole
                 {
                     _name = value;
                 }
+            }
+
+            public IEnumerator<int> GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        class Attribute : IEstimable<int>
+        {
+            public int Width { get; set; }
+
+            public Attribute(Attribute origin)
+            {
+                Width = origin.Width;
+            }
+
+            public Attribute(int width)
+            {
+                Width = width;
+            }
+
+            public Attribute() : this(5) { }
+
+            public void Add(IEstimable<int> addition)
+            {
+                Add((Attribute)addition);
+            }
+
+            public void Add(Attribute a)
+            {
+                Width += a.Width;
+            }
+
+            public void Add(int addition)
+            {
+                Width += addition;
+            }
+
+            public void Multiply(IEstimable<int> multiplier)
+            {
+                Multiply((Attribute)multiplier);
+            }
+
+            public void Multiply(Attribute multiplier)
+            {
+                Width *= multiplier.Width;
+            }
+
+            public void Multiply(int multiplier)
+            {
+                Width *= multiplier;
+            }
+
+            public Attribute Clone()
+            {
+                return new Attribute();
+            }
+
+            public int Sum()
+            {
+                return Width;
+            }
+
+            IEstimable<int> IEstimable<int>.Clone()
+            {
+                return new Attribute(this);
+            }
+
+            public override string ToString()
+            {
+                return string.Format("Attribute(Width: {0})", Width);
+            }
+
+            public int GetCount()
+            {
+                return 1;
             }
         }
 
@@ -227,7 +311,10 @@ namespace TestConsole
 
             public static void PathFind()
             {
-                Map map = new Map("TestMap", 11, 15, 1, true);
+                int LengthX = 11;
+                int LengthY = 15;
+                int LengthZ = 9;
+                Map map = new Map("TestMap", LengthX, LengthY, LengthZ, true);
 
                 Console.WriteLine(map);
                 Console.Write("#####");
@@ -246,22 +333,24 @@ namespace TestConsole
                     Console.Write("| \n");
                 }
 
-                Path path = new Path(888, map[0, 0, 0], map[10, 14, 0], Heuristic.TYPE.EUCLIDEAN, 100);
-                map.SetBlock(500, 0, 0, 0);
-                map.SetBlock(500, 10, 14, 0);
-                while (true)
+                Path path = new Path(map[0, 0, 0], map[LengthX - 1, LengthY - 1, LengthZ - 1], 908, new Node.Attribute(), Heuristic.TYPE.MANHATTAN, 100);
+                path.Find();
+                foreach (Node node in path.Close)
                 {
-                    path.Status = path.FindByStep();
-                    if (path.Status != Path.STATUS.PROCESSING || path.Steps == path.MaxSteps)
-                    {
-                        break;
-                    }
+                    Console.WriteLine(node);
                 }
-                foreach (Block block in path.Close)
-                {
-                    Console.WriteLine(block);
-                }
+                
                 Console.WriteLine(path.Status);
+            }
+
+            public static void Estimator()
+            {
+                Attribute testClassB = new Attribute(); Attribute testClassB2 = new Attribute();
+                testClassB.Add(testClassB2);
+                Console.WriteLine("A = {0}, B = {1}", testClassB.Width, testClassB2.Width);
+                Estimator<Attribute> estimator = new Estimator<Attribute>(testClassB);
+                Console.WriteLine("A = {0}, B = {1}", testClassB.Width, testClassB2.Width);
+                Console.WriteLine(estimator.Calculate(testClassB2));
             }
         }
 
@@ -271,7 +360,8 @@ namespace TestConsole
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Test.PathFind();
+            Test.Estimator();
+            //Test.PathFind();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

@@ -48,12 +48,14 @@
     <Compile Include="BDelegate.cs" />
     <Compile Include="BehaviourTree.cs" />
     <Compile Include="ExpandedMath\Conditional.cs" />
+    <Compile Include="ExpandedMath\Counter.cs" />
     <Compile Include="ExpandedMath\Random.cs" />
     <Compile Include="ExpandedMath\Limited.cs" />
     <Compile Include="ExpandedMath\Segments.cs" />
     <Compile Include="ExpandedMath\Vector.cs" />
     <Compile Include="ObjectPool.cs" />
-    <Compile Include="PathFind\Block.cs" />
+    <Compile Include="ExpandedMath\Estimator.cs" />
+    <Compile Include="PathFind\Node.cs" />
     <Compile Include="PathFind\Heuristic.cs" />
     <Compile Include="PathFind\Map.cs" />
     <Compile Include="PathFind\Path.cs" />

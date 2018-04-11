@@ -14,20 +14,20 @@ namespace BFramework.PathFind
             LengthY = lengthY;
             LengthZ = lengthZ;
             BlockNumber = LengthX * LengthY * LengthZ;
-            Blocks = new Block[LengthX, LengthY, LengthZ];
+            Blocks = new Node[LengthX, LengthY, LengthZ];
             for (int i = 0; i < LengthX; i++)
             {
                 for (int j = 0; j < LengthY; j++)
                 {
                     for (int k = 0; k < LengthZ; k++)
                     {
-                        Blocks[i, j, k] = new Block(randomWeight ? ExpandedMath.Random.Range(0, 999) : 0, i, j, k);
+                        Blocks[i, j, k] = new Node(randomWeight ? ExpandedMath.Random.Range(0, 999) : 0, i, j, k);
                     }
                 }
             }
 
-            foreach (Block block in Blocks) {
-                block.Neighbor = GetNeighbor(block.X, block.Y, block.Z);
+            foreach (Node node in Blocks) {
+                node.Neighbor = GetNeighbor(node.X, node.Y, node.Z);
             }
         }
 
@@ -36,9 +36,9 @@ namespace BFramework.PathFind
         public int LengthY { get; set; }
         public int LengthZ { get; set; }
         public int BlockNumber { get; set; }
-        public Block[,,] Blocks { get; set; }
+        public Node[,,] Blocks { get; set; }
         
-        public Block this[int x, int y, int z]
+        public Node this[int x, int y, int z]
         {
             get
             {
@@ -46,9 +46,9 @@ namespace BFramework.PathFind
             }
         }
 
-        public Block[,,] GetNeighbor(int x, int y, int z)
+        public Node[,,] GetNeighbor(int x, int y, int z)
         {
-            Block[,,] neightbor = new Block[3,3,3];
+            Node[,,] neightbor = new Node[3,3,3];
             for (int i = -1; i < 2; i++)
             {
                 for (int j = -1; j < 2; j++)

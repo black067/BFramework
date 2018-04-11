@@ -23,7 +23,7 @@ namespace BFramework.PathFind
             return n > 0 ? n : -n;
         }
 
-        public int Manhattan(Block start, Block target)
+        public int Manhattan(Node start, Node target)
         {
             if (target == null)
             {
@@ -32,7 +32,7 @@ namespace BFramework.PathFind
             return Abs(target.X - start.X) + Abs(target.Y - start.Y) + Abs(target.Z - start.Z);
         }
 
-        public int Euclidean(Block start, Block target)
+        public int Euclidean(Node start, Node target)
         {
             if (target == null) { return 0; }
             int dX = target.X - start.X;
@@ -41,7 +41,7 @@ namespace BFramework.PathFind
             return dX * dX + dY * dY + dZ * dZ;
         }
 
-        public int Calculate(Block start, Block target)
+        public int Calculate(Node start, Node target)
         {
             switch (Type)
             {
