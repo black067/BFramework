@@ -7,7 +7,7 @@ namespace BFramework.PathFind
 {
     public class Map
     {
-        public Map(string name, int lengthX, int lengthY, int lengthZ, bool randomWeight = false)
+        public Map(string name, int lengthX, int lengthY, int lengthZ, bool narrowNeighbor = false, bool randomWeight = false)
         {
             Name = name;
             LengthX = lengthX;
@@ -27,7 +27,7 @@ namespace BFramework.PathFind
             }
 
             foreach (Node node in Nodes) {
-                node.Neighbor = GetNeighbor(node.X, node.Y, node.Z);
+                node.Neighbor = GetNeighbor(node.X, node.Y, node.Z, narrowNeighbor);
             }
         }
 
