@@ -19,6 +19,7 @@ namespace BFramework.PathFind
         /// <param name="heuristicType"></param>
         /// <param name="maxStep"></param>
         public Path(
+            Map map,
             Node start, 
             Node end, 
             int walkabilityThreshold, 
@@ -26,6 +27,8 @@ namespace BFramework.PathFind
             Heuristic.TYPE heuristicType = Heuristic.TYPE.EUCLIDEAN, 
             int maxStep = 100)
         {
+            environment = map;
+            Status = STATUS.PROCESSING;
             Steps = 0;
             MaxStep = maxStep;
             WalkabilityThreshold = walkabilityThreshold;
@@ -35,9 +38,12 @@ namespace BFramework.PathFind
             End = end;
             Opened = new List<Node>();
             Closed = new List<Node>();
+            Result = new List<Node>();
             PushToOpened(Start, null);
         }
-        
+
+        public Map environment;
+
         /// <summary>
         /// 记录步数最大值
         /// </summary>
@@ -200,7 +206,7 @@ namespace BFramework.PathFind
                 OnSuccess();
                 return;
             }
-            foreach (Node node in Current.Neighbor)
+            foreach (Node node in environment.GetNeighbor(Current))
             {
                 if (node == null || node.property.Closed || node.Difficulty > WalkabilityThreshold)
                 {
@@ -242,6 +248,7 @@ namespace BFramework.PathFind
         /// </summary>
         public void Reset()
         {
+            Status = STATUS.PROCESSING;
             Steps = 0;
             Opened = new List<Node>();
             Closed = new List<Node>();

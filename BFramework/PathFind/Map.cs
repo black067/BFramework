@@ -77,6 +77,11 @@ namespace BFramework.PathFind
             return neightbor;
         }
 
+        public List<Node> GetNeighbor(Node node, bool narrow = false)
+        {
+            return GetNeighbor(node.X, node.Y, node.Z, narrow);
+        }
+
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
 
         public void SetNode(int x, int y, int z, int difficulty)
