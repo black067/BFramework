@@ -133,13 +133,10 @@ namespace BFramework.PathFind
         {
             Opened.Add(node);
             node.property.Opened = true;
-            int g = Heuristic.Calculate(node, parent);
-            int h = Heuristic.Calculate(node, End);
-            node.property.Parent = parent;
-            node.property.GValue = g;
-            node.property.HValue = h;
+            node.Parent = parent;
+            node.property.GValue = Heuristic.Calculate(node, parent);
+            node.property.HValue = Heuristic.Calculate(node, End);
             node.SetCost(ref _estimator);
-            //System.Console.WriteLine(node.property.Cost);
             Opened.Sort(CompareByCost);
         }
 
@@ -154,26 +151,33 @@ namespace BFramework.PathFind
             {
                 Opened.Remove(node);
             }
-            node.property.Opened = true;
+            node.property.Closed = true;
+            node.property.Opened = false;
         }
 
+        /// <summary>
+        /// 失败时执行动作
+        /// </summary>
         public void OnFail()
         {
             Status = STATUS.FAIL;
         }
 
+        /// <summary>
+        /// 成功时执行动作
+        /// </summary>
         public void OnSuccess()
         {
             Status = STATUS.SUCCESS;
             int length = Closed.Count;
-            End.property.Parent = End.property.Parent ?? Closed[length - 1];
+            End.Parent = End.Parent ?? Closed[length - 2];
             Result = new List<Node>(Closed.Count)
             {
                 End
             };
-            for (int i = 1; i <= length && Result[i - 1].property.Parent != null; i++)
+            for (int i = 1; i <= length && Result[i - 1].Parent != null; i++)
             {
-                Result.Add(Result[i - 1].property.Parent);
+                Result.Add(Result[i - 1].Parent);
             }
         }
 
@@ -185,7 +189,7 @@ namespace BFramework.PathFind
         {
             if (Opened.Count < 1 || Steps == MaxStep)
             {
-                Status = STATUS.FAIL;
+                OnFail();
                 return;
             }
             Current = Opened[0];
@@ -201,19 +205,13 @@ namespace BFramework.PathFind
                 if (node == null || node.property.Closed || node.Difficulty > WalkabilityThreshold)
                 {
                     continue;
-                }/*
-                if (node == End)
-                {
-                    Steps++;
-                    OnSuccess();
-                    return;
-                }*/
+                }
                 if (node.property.Opened)
                 {
                     int gValueNew = Heuristic.Calculate(Current, node);
                     if (gValueNew < node.property.GValue)
                     {
-                        node.property.Parent = Current;
+                        node.Parent = Current;
                         node.property.GValue = gValueNew;
                         node.SetCost(ref _estimator);
                     }
@@ -229,7 +227,7 @@ namespace BFramework.PathFind
         }
 
         /// <summary>
-        /// 检索路径, 直到工作完成
+        /// 检索路径, 直到寻路结束
         /// </summary>
         public void Find()
         {
@@ -237,6 +235,17 @@ namespace BFramework.PathFind
             {
                 FindByStep();
             }
+        }
+
+        /// <summary>
+        /// 重置路径
+        /// </summary>
+        public void Reset()
+        {
+            Steps = 0;
+            Opened = new List<Node>();
+            Closed = new List<Node>();
+            PushToOpened(Start, null);
         }
     }
 }

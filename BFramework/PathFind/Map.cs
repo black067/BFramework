@@ -46,30 +46,50 @@ namespace BFramework.PathFind
             }
         }
 
-        public Node[,,] GetNeighbor(int x, int y, int z)
+        public List<Node> GetNeighbor(int x, int y, int z, bool narrow = false)
         {
-            Node[,,] neightbor = new Node[3,3,3];
-            for (int i = -1; i < 2; i++)
+            List<Node> neightbor = new List<Node>(26);
+            if (!narrow)
             {
-                for (int j = -1; j < 2; j++)
+                for (int i = -1; i < 2; i++)
                 {
-                    for (int k = -1; k < 2; k++)
+                    for (int j = -1; j < 2; j++)
                     {
-                        neightbor[i + 1, j + 1, k + 1] = Check(x + i, y + j, z + k) ? Nodes[x + i, y + j, z + k] : null;
+                        for (int k = -1; k < 2; k++)
+                        {
+                            if (Check(x + i, y + j, z + k))
+                            {
+                                neightbor.Add(Nodes[x + i, y + j, z + k]);
+                            }
+                        }
                     }
                 }
+            }
+            else
+            {
+                if (Check(x + 1, y, z)) neightbor.Add(Nodes[x + 1, y, z]);
+                if (Check(x - 1, y, z)) neightbor.Add(Nodes[x - 1, y, z]);
+                if (Check(x, y + 1, z)) neightbor.Add(Nodes[x, y + 1, z]);
+                if (Check(x, y - 1, z)) neightbor.Add(Nodes[x, y - 1, z]);
+                if (Check(x, y, z + 1)) neightbor.Add(Nodes[x, y, z + 1]);
+                if (Check(x, y, z - 1)) neightbor.Add(Nodes[x, y, z - 1]);
             }
             return neightbor;
         }
 
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
 
-        public void SetBlock(int difficulty, int x, int y, int z)
+        public void SetNode(int x, int y, int z, int difficulty)
         {
             if (Check(x,y,z))
             {
                 Nodes[x, y, z].property.Difficulty = difficulty;
             }
+        }
+
+        public void SetNode(Node node, int difficulty)
+        {
+            SetNode(node.X, node.Y, node.Z, difficulty);
         }
 
         public override string ToString()

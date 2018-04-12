@@ -342,9 +342,9 @@ namespace TestConsole
                 };
                 Path path = new Path(map[0, 0, 0], map[LengthX - 1, LengthY - 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.MANHATTAN, 100);
                 path.Find();
-                foreach (Node node in path.Closed)
+                foreach (Node node in path.Result)
                 {
-                    Console.WriteLine(node);
+                    Console.WriteLine("{0}, {1}",node,node.Parent);
                 }
                 
                 Console.WriteLine(path.Status);
@@ -368,6 +368,7 @@ namespace TestConsole
         static void Main(string[] args)
         {
             //Test.Estimator();
+            int[] A = new int[3];
             Test.PathFind();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();

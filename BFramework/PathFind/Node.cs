@@ -17,20 +17,12 @@ namespace BFramework.PathFind
             public bool Closed
             {
                 get { return _closed; }
-                set
-                {
-                    _closed = value;
-                    _opened = !_closed;
-                }
+                set { _closed = value; }
             }
             public bool Opened
             {
                 get { return _opened; }
-                set
-                {
-                    _opened = value;
-                    _closed = !_opened;
-                }
+                set { _opened = value; }
             }
             public int Cost { get; set; }
 
@@ -53,8 +45,8 @@ namespace BFramework.PathFind
             public Attribute()
             {
                 Difficulty = 0;
-                GValue = int.MaxValue;
-                HValue = int.MaxValue;
+                GValue = 1;
+                HValue = 1;
                 Resistance = 0;
                 Temperature = 0;
             }
@@ -132,13 +124,13 @@ namespace BFramework.PathFind
         
         public Attribute property;
         
-        public Node[,,] Neighbor { get; set; }
+        public List<Node> Neighbor { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Z { get; set; }
 
         public int Difficulty { get { return property.Difficulty; } }
-        public Node Parent { get { return property.Parent; } }
+        public Node Parent { get { return property.Parent; } set { property.Parent = value; } }
 
         public void SetCost(ref Estimator<Attribute> estimator)
         {
