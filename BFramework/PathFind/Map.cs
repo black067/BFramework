@@ -26,11 +26,8 @@ namespace BFramework.PathFind
                     }
                 }
             }
-            foreach (Node node in Nodes)
-            {
-                node.Neighbors = GetNeighbors(node, false);
-                node.NeighborsNarrow = GetNeighbors(node, true);
-            }
+
+            SetNeighbors();
         }
 
         public string Name { get; set; }
@@ -48,40 +45,62 @@ namespace BFramework.PathFind
             }
         }
 
-        public List<Node> GetNeighbors(int x, int y, int z, bool narrowlyDefined = false)
+        public void SetNeighbors(Node node)
         {
-            List<Node> neightbors = new List<Node>(26);
-            if (!narrowlyDefined)
+            int x = node.X, y = node.Y, z = node.Z;
+            Node[,,] neighbors = new Node[3, 3, 3];
+            List<Node> neighborsI = new List<Node>();
+            List<Node> neighborsII = new List<Node>();
+            List<Node> neighborsIII = new List<Node>();
+            Node current;
+            for (int i = -1; i < 2; i++)
             {
-                for (int i = -1; i < 2; i++)
+                for (int j = -1; j < 2; j++)
                 {
-                    for (int j = -1; j < 2; j++)
+                    for (int k = -1; k < 2; k++)
                     {
-                        for (int k = -1; k < 2; k++)
+                        if (Check(x + i, y + j, z + k))
                         {
-                            if (Check(x + i, y + j, z + k))
+                            current = Nodes[x + i, y + j, z + k];
+                            neighbors[i + 1, j + 1, k + 1] = current;
+                            int djk = j - k;
+                            if (i != 0 && j != 0 && k != 0)
                             {
-                                neightbors.Add(Nodes[x + i, y + j, z + k]);
+                                neighborsIII.Add(current);
+                            }
+                            else if ((i == 1 && (djk == 1 || djk == -1)) || (i != 1 && djk == 0))
+                            {
+                                neighborsI.Add(current);
+                            }
+                            else
+                            {
+                                if (i == 1 && j == 1 && k == 1) continue;
+                                neighborsII.Add(current);
                             }
                         }
                     }
                 }
             }
-            else
-            {
-                if (Check(x + 1, y, z)) neightbors.Add(Nodes[x + 1, y, z]);
-                if (Check(x - 1, y, z)) neightbors.Add(Nodes[x - 1, y, z]);
-                if (Check(x, y + 1, z)) neightbors.Add(Nodes[x, y + 1, z]);
-                if (Check(x, y - 1, z)) neightbors.Add(Nodes[x, y - 1, z]);
-                if (Check(x, y, z + 1)) neightbors.Add(Nodes[x, y, z + 1]);
-                if (Check(x, y, z - 1)) neightbors.Add(Nodes[x, y, z - 1]);
-            }
-            return neightbors;
+            node.Neighbors = neighbors;
+            node.NeighborsI = neighborsI;
+            node.NeighborsII = neighborsII;
+            node.NeighborsIII = neighborsIII;
         }
 
-        public List<Node> GetNeighbors(Node node, bool narrowlyDefined = false)
+        public void SetNeighbors(Node[,,] nodes)
         {
-            return GetNeighbors(node.X, node.Y, node.Z, narrowlyDefined);
+            foreach (Node node in nodes)
+            {
+                SetNeighbors(node);
+            }
+        }
+
+        public void SetNeighbors()
+        {
+            foreach (Node node in Nodes)
+            {
+                SetNeighbors(node);
+            }
         }
 
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
@@ -91,6 +110,7 @@ namespace BFramework.PathFind
             if (Check(x,y,z))
             {
                 Nodes[x, y, z].Difficulty = difficulty;
+                Nodes[x, y, z].Resistance = difficulty > 0 ? 1 : 0;
             }
         }
 

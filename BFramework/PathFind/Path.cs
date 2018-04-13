@@ -31,6 +31,7 @@ namespace BFramework.PathFind
             Steps = 0;
             MaxStep = maxStep;
             WalkabilityThreshold = walkabilityThreshold;
+            FulcrumRequirement = 4;
             Estimator = new Estimator<Property>(weightDictionary);
             Heuristic = new Heuristic(heuristicType);
             Start = start;
@@ -67,9 +68,14 @@ namespace BFramework.PathFind
         public bool NeighborGeneralized { get; set; }
 
         /// <summary>
-        /// 寻路时是否考虑空中的节点
+        /// 检索能力, 分为三级, 0: 只检索距离为1的相邻节点, 1: 检索距离小等于1.4的相邻节点, 2: 检索距离小于等于1.7的相邻节点
         /// </summary>
-        public bool Aircraft { get; set; }
+        public int Searchability { get; set; }
+
+        /// <summary>
+        /// 攀附能力, 数值越大, 对支撑的依赖越少
+        /// </summary>
+        public int FulcrumRequirement { get; set; }
 
         /// <summary>
         /// 路径的花费, 是整个路径中所有 Node 的 Cost 之和
@@ -125,6 +131,55 @@ namespace BFramework.PathFind
         /// 工作状态
         /// </summary>
         public STATUS Status { get; set; }
+
+        /// <summary>
+        /// 检查节点是否可以作为支点
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static bool CheckFulcrum(Node node)
+        {
+            return node != null && node.Resistance > 0;
+        }
+
+        public static bool CheckFulcrums(List<Node> nodes) {
+            foreach (Node node in nodes)
+            {
+                if (CheckFulcrum(node)) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 检查相邻节点数组中是否存在支撑点
+        /// </summary>
+        /// <param name="neighbors"></param>
+        /// <param name="fulcrumRequirement"></param>
+        /// <returns></returns>
+        public static bool CheckFulcrums(Node node, int fulcrumRequirement)
+        {
+            if (fulcrumRequirement > 3) { return true; }
+            else if (fulcrumRequirement < 1) { return false; }
+            switch (fulcrumRequirement)
+            {
+                case 1:
+                    return CheckFulcrum(node.Neighbors[1, 0, 1]);
+                case 2:
+                    return CheckFulcrum(node.Neighbors[1, 0, 1]) ||
+                        CheckFulcrum(node.Neighbors[0, 1, 1])||
+                        CheckFulcrum(node.Neighbors[2, 1, 1])||
+                        CheckFulcrum(node.Neighbors[1, 1, 0])||
+                        CheckFulcrum(node.Neighbors[1, 1, 2]);
+                case 3:
+                    return CheckFulcrum(node.Neighbors[1, 0, 1]) ||
+                        CheckFulcrum(node.Neighbors[0, 1, 1]) ||
+                        CheckFulcrum(node.Neighbors[2, 1, 1]) ||
+                        CheckFulcrum(node.Neighbors[1, 1, 0]) ||
+                        CheckFulcrum(node.Neighbors[1, 1, 2]) ||
+                        CheckFulcrum(node.Neighbors[1, 2, 1]);
+            }
+            return false;
+        }
         
         /// <summary>
         /// 比较两个 Node 的开销
@@ -166,6 +221,30 @@ namespace BFramework.PathFind
             }
             node.Closed = true;
             node.Opened = false;
+        }
+
+        public bool CheckNode(Node node)
+        {
+            if (node == null || node.Closed || node.Difficulty > WalkabilityThreshold || !CheckFulcrums(node, FulcrumRequirement))
+            {
+                return false;
+            }
+
+            if (node.Opened)
+            {
+                int gValueNew = Heuristic.Calculate(Current, node);
+                if (gValueNew < node.GValue)
+                {
+                    node.Parent = Current;
+                    node.GValue = gValueNew;
+                    node.SetCost(ref _estimator);
+                }
+            }
+            else
+            {
+                PushToOpened(node, Current);
+            }
+            return true;
         }
 
         /// <summary>
@@ -213,29 +292,18 @@ namespace BFramework.PathFind
                 OnSuccess();
                 return;
             }
-            if (!Aircraft)
+            foreach (Node node in Current.NeighborsI)
             {
-
-            }
-            foreach (Node node in NeighborGeneralized ? Current.Neighbors : Current.NeighborsNarrow)
-            {
-                if (node == null || node.Closed || node.Difficulty > WalkabilityThreshold)
+                if (!CheckNode(node))
                 {
                     continue;
                 }
-                if (node.Opened)
+            }
+            foreach (Node node in Current.NeighborsII)
+            {
+                if (!CheckNode(node))
                 {
-                    int gValueNew = Heuristic.Calculate(Current, node);
-                    if (gValueNew < node.GValue)
-                    {
-                        node.Parent = Current;
-                        node.GValue = gValueNew;
-                        node.SetCost(ref _estimator);
-                    }
-                }
-                else
-                {
-                    PushToOpened(node, Current);
+                    continue;
                 }
             }
             Steps++;

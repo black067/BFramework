@@ -11,6 +11,7 @@ namespace BFramework.PathFind
         {
             _property = new Property();
             _property[Property.KEY.DIFFICULTY] = difficulty;
+            
             X = x;
             Y = y;
             Z = z;
@@ -18,8 +19,10 @@ namespace BFramework.PathFind
         
         private Property _property { get; set; }
         
-        public List<Node> Neighbors { get; set; }
-        public List<Node> NeighborsNarrow { get; set; }
+        public Node[,,] Neighbors { get; set; }
+        public List<Node> NeighborsI { get; set; }
+        public List<Node> NeighborsII { get; set; }
+        public List<Node> NeighborsIII { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Z { get; set; }

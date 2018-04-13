@@ -306,8 +306,8 @@ namespace TestConsole
         {
             //Test.Estimator();
             int[] A = new int[3];
-            //Test.PathFind();
-            Test.Exporter();
+            Test.PathFind();
+            //Test.Exporter();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }
