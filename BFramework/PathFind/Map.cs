@@ -5,15 +5,16 @@ using System.Text;
 
 namespace BFramework.PathFind
 {
+    [Serializable]
     public class Map
     {
-        public Map(string name, int lengthX, int lengthY, int lengthZ, bool narrowNeighbor = false, bool randomWeight = false)
+        public Map(string name, int lengthX, int lengthY, int lengthZ, bool randomWeight = false)
         {
             Name = name;
             LengthX = lengthX;
             LengthY = lengthY;
             LengthZ = lengthZ;
-            BlockNumber = LengthX * LengthY * LengthZ;
+            NodesNumber = LengthX * LengthY * LengthZ;
             Nodes = new Node[LengthX, LengthY, LengthZ];
             for (int i = 0; i < LengthX; i++)
             {
@@ -25,9 +26,10 @@ namespace BFramework.PathFind
                     }
                 }
             }
-
-            foreach (Node node in Nodes) {
-                node.Neighbor = GetNeighbor(node.X, node.Y, node.Z, narrowNeighbor);
+            foreach (Node node in Nodes)
+            {
+                node.Neighbors = GetNeighbors(node, false);
+                node.NeighborsNarrow = GetNeighbors(node, true);
             }
         }
 
@@ -35,7 +37,7 @@ namespace BFramework.PathFind
         public int LengthX { get; set; }
         public int LengthY { get; set; }
         public int LengthZ { get; set; }
-        public int BlockNumber { get; set; }
+        public int NodesNumber { get; set; }
         public Node[,,] Nodes { get; set; }
         
         public Node this[int x, int y, int z]
@@ -46,10 +48,10 @@ namespace BFramework.PathFind
             }
         }
 
-        public List<Node> GetNeighbor(int x, int y, int z, bool narrow = false)
+        public List<Node> GetNeighbors(int x, int y, int z, bool narrowlyDefined = false)
         {
-            List<Node> neightbor = new List<Node>(26);
-            if (!narrow)
+            List<Node> neightbors = new List<Node>(26);
+            if (!narrowlyDefined)
             {
                 for (int i = -1; i < 2; i++)
                 {
@@ -59,7 +61,7 @@ namespace BFramework.PathFind
                         {
                             if (Check(x + i, y + j, z + k))
                             {
-                                neightbor.Add(Nodes[x + i, y + j, z + k]);
+                                neightbors.Add(Nodes[x + i, y + j, z + k]);
                             }
                         }
                     }
@@ -67,19 +69,19 @@ namespace BFramework.PathFind
             }
             else
             {
-                if (Check(x + 1, y, z)) neightbor.Add(Nodes[x + 1, y, z]);
-                if (Check(x - 1, y, z)) neightbor.Add(Nodes[x - 1, y, z]);
-                if (Check(x, y + 1, z)) neightbor.Add(Nodes[x, y + 1, z]);
-                if (Check(x, y - 1, z)) neightbor.Add(Nodes[x, y - 1, z]);
-                if (Check(x, y, z + 1)) neightbor.Add(Nodes[x, y, z + 1]);
-                if (Check(x, y, z - 1)) neightbor.Add(Nodes[x, y, z - 1]);
+                if (Check(x + 1, y, z)) neightbors.Add(Nodes[x + 1, y, z]);
+                if (Check(x - 1, y, z)) neightbors.Add(Nodes[x - 1, y, z]);
+                if (Check(x, y + 1, z)) neightbors.Add(Nodes[x, y + 1, z]);
+                if (Check(x, y - 1, z)) neightbors.Add(Nodes[x, y - 1, z]);
+                if (Check(x, y, z + 1)) neightbors.Add(Nodes[x, y, z + 1]);
+                if (Check(x, y, z - 1)) neightbors.Add(Nodes[x, y, z - 1]);
             }
-            return neightbor;
+            return neightbors;
         }
 
-        public List<Node> GetNeighbor(Node node, bool narrow = false)
+        public List<Node> GetNeighbors(Node node, bool narrowlyDefined = false)
         {
-            return GetNeighbor(node.X, node.Y, node.Z, narrow);
+            return GetNeighbors(node.X, node.Y, node.Z, narrowlyDefined);
         }
 
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
@@ -88,7 +90,7 @@ namespace BFramework.PathFind
         {
             if (Check(x,y,z))
             {
-                Nodes[x, y, z].property.Difficulty = difficulty;
+                Nodes[x, y, z].Difficulty = difficulty;
             }
         }
 

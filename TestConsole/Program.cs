@@ -5,6 +5,7 @@ using BFramework;
 using BFramework.ShootingGame;
 using BFramework.ExpandedMath;
 using BFramework.PathFind;
+using BFramework.Tools;
 using System.Collections;
 
 namespace TestConsole
@@ -58,79 +59,7 @@ namespace TestConsole
                 throw new NotImplementedException();
             }
         }
-
-        class Attribute : IEstimable<int>
-        {
-            public int Width { get; set; }
-
-            public Attribute(Attribute origin)
-            {
-                Width = origin.Width;
-            }
-
-            public Attribute(int width)
-            {
-                Width = width;
-            }
-
-            public Attribute() : this(5) { }
-
-            public void Add(IEstimable<int> addition)
-            {
-                Add((Attribute)addition);
-            }
-
-            public void Add(Attribute a)
-            {
-                Width += a.Width;
-            }
-
-            public void Add(int addition)
-            {
-                Width += addition;
-            }
-
-            public void Multiply(IEstimable<int> multiplier)
-            {
-                Multiply((Attribute)multiplier);
-            }
-
-            public void Multiply(Attribute multiplier)
-            {
-                Width *= multiplier.Width;
-            }
-
-            public void Multiply(int multiplier)
-            {
-                Width *= multiplier;
-            }
-
-            public Attribute Clone()
-            {
-                return new Attribute();
-            }
-
-            public int Sum()
-            {
-                return Width;
-            }
-
-            IEstimable<int> IEstimable<int>.Clone()
-            {
-                return new Attribute(this);
-            }
-
-            public override string ToString()
-            {
-                return string.Format("Attribute(Width: {0})", Width);
-            }
-
-            public int GetCount()
-            {
-                return 1;
-            }
-        }
-
+        
         static class Test
         {
             public static void Random()
@@ -328,36 +257,44 @@ namespace TestConsole
                     Console.Write(string.Format(" Y{0:D2} ", i));
                     for (int j = 0; j < map.LengthX; j++)
                     {
-                        Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, i, 0].property.Difficulty));
+                        Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, i, 0].Difficulty));
                     }
                     Console.Write("| \n");
                 }
-                Node.Attribute weightDic = new Node.Attribute()
-                {
-                    Difficulty = 0,
-                    GValue = 1,
-                    HValue = 1,
-                    Resistance = 0,
-                    Temperature = 0,
-                };
+                Property weightDic = new Property();
+                weightDic[Property.KEY.GVALUE] = 1;
+                weightDic[Property.KEY.HVALUE] = 1;
                 Path path = new Path(map[0, 0, 0], map[LengthX - 1, LengthY - 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.MANHATTAN, 100);
+                path.NeighborGeneralized = true;
                 path.Find();
                 foreach (Node node in path.Result)
                 {
-                    Console.WriteLine("{0}, {1}",node,node.Parent);
+                    Console.WriteLine("{0}, {1}", node, node.Parent);
                 }
-                
+                Exporter<Map>.Save("Test.t", map);
                 Console.WriteLine(path.Status);
             }
 
-            public static void Estimator()
+            public static void Exporter()
             {
-                Attribute testClassB = new Attribute(); Attribute testClassB2 = new Attribute();
-                testClassB.Add(testClassB2);
-                Console.WriteLine("A = {0}, B = {1}", testClassB.Width, testClassB2.Width);
-                Estimator<Attribute> estimator = new Estimator<Attribute>(testClassB);
-                Console.WriteLine("A = {0}, B = {1}", testClassB.Width, testClassB2.Width);
-                Console.WriteLine(estimator.Calculate(testClassB2));
+                Map map;
+                Exporter<Map>.Load("Test.t", out map);
+                Console.WriteLine(map);
+                Console.Write("#####");
+                for (int i = 0; i < map.LengthX; i++)
+                {
+                    Console.Write(string.Format("|  X{0:D2}  ", i));
+                }
+                Console.Write("|\n");
+                for (int i = 0; i < map.LengthY; i++)
+                {
+                    Console.Write(string.Format(" Y{0:D2} ", i));
+                    for (int j = 0; j < map.LengthX; j++)
+                    {
+                        Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, i, 0].Difficulty));
+                    }
+                    Console.Write("| \n");
+                }
             }
         }
 
@@ -369,7 +306,8 @@ namespace TestConsole
         {
             //Test.Estimator();
             int[] A = new int[3];
-            Test.PathFind();
+            //Test.PathFind();
+            Test.Exporter();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

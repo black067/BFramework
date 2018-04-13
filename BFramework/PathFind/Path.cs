@@ -8,7 +8,8 @@ namespace BFramework.PathFind
     /// </summary>
     public class Path
     {
-        Estimator<Node.Attribute> _estimator;
+        Estimator<Property> _estimator;
+
         /// <summary>
         /// 初始化 Path, 需要给定起点, 终点, 通行力阈值, 价值估计权重表, 启发算法类型, 最大计算步数
         /// </summary>
@@ -19,20 +20,18 @@ namespace BFramework.PathFind
         /// <param name="heuristicType"></param>
         /// <param name="maxStep"></param>
         public Path(
-            Map map,
-            Node start, 
-            Node end, 
-            int walkabilityThreshold, 
-            Node.Attribute weightDictionary, 
-            Heuristic.TYPE heuristicType = Heuristic.TYPE.EUCLIDEAN, 
+            Node start,
+            Node end,
+            int walkabilityThreshold,
+            Property weightDictionary,
+            Heuristic.TYPE heuristicType = Heuristic.TYPE.EUCLIDEAN,
             int maxStep = 100)
         {
-            environment = map;
             Status = STATUS.PROCESSING;
             Steps = 0;
             MaxStep = maxStep;
             WalkabilityThreshold = walkabilityThreshold;
-            Estimator = new Estimator<Node.Attribute>(weightDictionary);
+            Estimator = new Estimator<Property>(weightDictionary);
             Heuristic = new Heuristic(heuristicType);
             Start = start;
             End = end;
@@ -41,8 +40,6 @@ namespace BFramework.PathFind
             Result = new List<Node>();
             PushToOpened(Start, null);
         }
-
-        public Map environment;
 
         /// <summary>
         /// 记录步数最大值
@@ -62,7 +59,17 @@ namespace BFramework.PathFind
         /// <summary>
         /// 估值器, 用于估计每个 Node 的消耗
         /// </summary>
-        public Estimator<Node.Attribute> Estimator { get { return _estimator; } private set { _estimator = value; } }
+        public Estimator<Property> Estimator { get { return _estimator; } private set { _estimator = value; } }
+
+        /// <summary>
+        /// 寻路时是否将对角节点纳入相邻节点范围
+        /// </summary>
+        public bool NeighborGeneralized { get; set; }
+
+        /// <summary>
+        /// 寻路时是否考虑空中的节点
+        /// </summary>
+        public bool Aircraft { get; set; }
 
         /// <summary>
         /// 路径的花费, 是整个路径中所有 Node 的 Cost 之和
@@ -127,7 +134,7 @@ namespace BFramework.PathFind
         /// <returns></returns>
         private int CompareByCost(Node node1, Node node2)
         {
-            return node1.property.Cost.CompareTo(node2.property.Cost);
+            return node1.Cost.CompareTo(node2.Cost);
         }
 
         /// <summary>
@@ -138,10 +145,10 @@ namespace BFramework.PathFind
         public void PushToOpened(Node node, Node parent)
         {
             Opened.Add(node);
-            node.property.Opened = true;
+            node.Opened = true;
             node.Parent = parent;
-            node.property.GValue = Heuristic.Calculate(node, parent);
-            node.property.HValue = Heuristic.Calculate(node, End);
+            node.GValue = Heuristic.Calculate(node, parent);
+            node.HValue = Heuristic.Calculate(node, End);
             node.SetCost(ref _estimator);
             Opened.Sort(CompareByCost);
         }
@@ -153,12 +160,12 @@ namespace BFramework.PathFind
         public void PushToClosed(Node node)
         {
             Closed.Add(node);
-            if (node.property.Opened)
+            if (node.Opened)
             {
                 Opened.Remove(node);
             }
-            node.property.Closed = true;
-            node.property.Opened = false;
+            node.Closed = true;
+            node.Opened = false;
         }
 
         /// <summary>
@@ -206,19 +213,23 @@ namespace BFramework.PathFind
                 OnSuccess();
                 return;
             }
-            foreach (Node node in environment.GetNeighbor(Current))
+            if (!Aircraft)
             {
-                if (node == null || node.property.Closed || node.Difficulty > WalkabilityThreshold)
+
+            }
+            foreach (Node node in NeighborGeneralized ? Current.Neighbors : Current.NeighborsNarrow)
+            {
+                if (node == null || node.Closed || node.Difficulty > WalkabilityThreshold)
                 {
                     continue;
                 }
-                if (node.property.Opened)
+                if (node.Opened)
                 {
                     int gValueNew = Heuristic.Calculate(Current, node);
-                    if (gValueNew < node.property.GValue)
+                    if (gValueNew < node.GValue)
                     {
                         node.Parent = Current;
-                        node.property.GValue = gValueNew;
+                        node.GValue = gValueNew;
                         node.SetCost(ref _estimator);
                     }
                 }
@@ -250,6 +261,16 @@ namespace BFramework.PathFind
         {
             Status = STATUS.PROCESSING;
             Steps = 0;
+            foreach (Node node in Closed)
+            {
+                node.Closed = false;
+                node.Opened = false;
+            }
+            foreach (Node node in Opened)
+            {
+                node.Closed = false;
+                node.Opened = false;
+            }
             Opened = new List<Node>();
             Closed = new List<Node>();
             PushToOpened(Start, null);

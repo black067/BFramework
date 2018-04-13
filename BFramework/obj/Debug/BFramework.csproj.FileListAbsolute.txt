@@ -1,12 +1,11 @@
-D:\Projects\BFramework\BFramework\bin\Debug\BFramework.dll
-D:\Projects\BFramework\BFramework\bin\Debug\BFramework.pdb
-D:\Projects\BFramework\BFramework\obj\Debug\BFramework.csproj.CoreCompileInputs.cache
-D:\Projects\BFramework\BFramework\obj\Debug\BFramework.dll
-D:\Projects\BFramework\BFramework\obj\Debug\BFramework.pdb
 C:\Users\black\Projects\BFramework\BFramework\bin\Debug\BFramework.dll
 C:\Users\black\Projects\BFramework\BFramework\bin\Debug\BFramework.pdb
 C:\Users\black\Projects\BFramework\BFramework\obj\Debug\BFramework.csprojResolveAssemblyReference.cache
 C:\Users\black\Projects\BFramework\BFramework\obj\Debug\BFramework.csproj.CoreCompileInputs.cache
 C:\Users\black\Projects\BFramework\BFramework\obj\Debug\BFramework.dll
 C:\Users\black\Projects\BFramework\BFramework\obj\Debug\BFramework.pdb
-D:\Projects\BFramework\BFramework\obj\Debug\BFramework.csprojResolveAssemblyReference.cache
+D:\Projects\BFramework\BFramework\bin\Debug\BFramework.dll
+D:\Projects\BFramework\BFramework\bin\Debug\BFramework.pdb
+D:\Projects\BFramework\BFramework\obj\Debug\BFramework.csproj.CoreCompileInputs.cache
+D:\Projects\BFramework\BFramework\obj\Debug\BFramework.dll
+D:\Projects\BFramework\BFramework\obj\Debug\BFramework.pdb
