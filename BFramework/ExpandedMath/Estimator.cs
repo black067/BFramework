@@ -6,37 +6,55 @@ namespace BFramework.ExpandedMath
     [Serializable]
     public class Estimable
     {
+
+        /// <summary>
+        /// 用于保存键与数值的字典
+        /// </summary>
         public Dictionary<string, int> Dictionary { get; set; }
 
-        public string[] KeysArray { get; set; }
-
+        /// <summary>
+        /// 使用一个已有的字典初始化 Estimable
+        /// </summary>
+        /// <param name="dictionary"></param>
         public Estimable(Dictionary<string, int> dictionary)
         {
             Dictionary = dictionary;
-            KeysArray = Dictionary.Keys.ToArray();
         }
 
+        /// <summary>
+        /// 初始化一个空 Estimable
+        /// </summary>
         public Estimable() : this(new Dictionary<string, int>()) { }
 
+        /// <summary>
+        /// 使用键取得数值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public int this[string key]
         {
             get { return Dictionary[key]; }
             set { Dictionary[key] = value; }
         }
-
-        public int this[int index]
-        {
-            get { return Dictionary[KeysArray[index]]; }
-            set { Dictionary[KeysArray[index]] = value; }
-        }
-
+        
+        /// <summary>
+        /// 获取字典的键值列表
+        /// </summary>
         public Dictionary<string, int>.KeyCollection Keys { get { return Dictionary.Keys; } }
 
+        /// <summary>
+        /// 获取字典的总数量
+        /// </summary>
+        /// <returns></returns>
         public int GetCount()
         {
             return Dictionary.Count;
         }
 
+        /// <summary>
+        /// 将加数中每个键对应的值与自身相应的值相加
+        /// </summary>
+        /// <param name="addition"></param>
         public void Add(Estimable addition)
         {
             foreach (string key in addition.Keys)
@@ -45,6 +63,10 @@ namespace BFramework.ExpandedMath
             }
         }
 
+        /// <summary>
+        /// 将自身每个键对应的值与加数相加
+        /// </summary>
+        /// <param name="addition"></param>
         public void Add(int addition)
         {
             foreach (string key in Keys)
@@ -53,6 +75,10 @@ namespace BFramework.ExpandedMath
             }
         }
 
+        /// <summary>
+        /// 将乘数中每个键对应的值与自身相应的值相乘
+        /// </summary>
+        /// <param name="multiplier"></param>
         public void Multiply(Estimable multiplier)
         {
             foreach (string key in multiplier.Keys)
@@ -61,6 +87,10 @@ namespace BFramework.ExpandedMath
             }
         }
 
+        /// <summary>
+        /// 将自身每个键对应的值与乘数相乘
+        /// </summary>
+        /// <param name="multiplier"></param>
         public void Multiply(int multiplier)
         {
             foreach (string key in Keys)
@@ -69,6 +99,10 @@ namespace BFramework.ExpandedMath
             }
         }
 
+        /// <summary>
+        /// 获取自身所有值的总和
+        /// </summary>
+        /// <returns></returns>
         public int Sum()
         {
             int result = 0;
@@ -79,6 +113,10 @@ namespace BFramework.ExpandedMath
             return result;
         }
 
+        /// <summary>
+        /// 取得一个自身的克隆
+        /// </summary>
+        /// <returns></returns>
         public Estimable Clone()
         {
             Dictionary<string, int> dictionary = new Dictionary<string, int>();

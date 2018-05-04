@@ -1,4 +1,5 @@
-﻿using BFramework.ExpandedMath;
+﻿using System;
+using BFramework.ExpandedMath;
 using System.Collections.Generic;
 
 namespace BFramework.PathFind
@@ -8,7 +9,11 @@ namespace BFramework.PathFind
     /// </summary>
     public class Path
     {
-        Estimator<Property> _estimator;
+        Estimator<Attribute> _estimator;
+        static DIRECTION[] _directions = { DIRECTION.LEFT, DIRECTION.RIGHT, DIRECTION.BACK, DIRECTION.FORWARD, DIRECTION.BOTTOM, DIRECTION.TOP };
+        Dictionary<DIRECTION, bool> _directionState;
+        List<Node> _availableNeighborsCurrent;
+
 
         /// <summary>
         /// 初始化 Path, 需要给定起点, 终点, 通行力阈值, 价值估计权重表, 启发算法类型, 最大计算步数
@@ -23,7 +28,7 @@ namespace BFramework.PathFind
             Node start,
             Node end,
             int walkabilityThreshold,
-            Property weightDictionary,
+            Attribute weightDictionary,
             Heuristic.TYPE heuristicType = Heuristic.TYPE.EUCLIDEAN,
             int maxStep = 100)
         {
@@ -32,7 +37,7 @@ namespace BFramework.PathFind
             MaxStep = maxStep;
             WalkabilityThreshold = walkabilityThreshold;
             FulcrumRequirement = 4;
-            Estimator = new Estimator<Property>(weightDictionary);
+            Estimator = new Estimator<Attribute>(weightDictionary);
             Heuristic = new Heuristic(heuristicType);
             Start = start;
             End = end;
@@ -40,6 +45,13 @@ namespace BFramework.PathFind
             Closed = new List<Node>();
             Result = new List<Node>();
             PushToOpened(Start, null);
+
+            _directionState = new Dictionary<DIRECTION, bool>();
+            for (int i = _directions.Length - 1; i > -1; i--)
+            {
+                _directionState.Add(_directions[i], false);
+            }
+            _availableNeighborsCurrent = new List<Node>(26);
         }
 
         /// <summary>
@@ -60,7 +72,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 估值器, 用于估计每个 Node 的消耗
         /// </summary>
-        public Estimator<Property> Estimator { get { return _estimator; } private set { _estimator = value; } }
+        public Estimator<Attribute> Estimator { get { return _estimator; } private set { _estimator = value; } }
 
         /// <summary>
         /// 寻路时是否将对角节点纳入相邻节点范围
@@ -142,6 +154,11 @@ namespace BFramework.PathFind
             return node != null && node.Resistance > 0;
         }
 
+        /// <summary>
+        /// 检查多个节点中是否存在可以作为支点的节点
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         public static bool CheckFulcrums(List<Node> nodes) {
             foreach (Node node in nodes)
             {
@@ -163,20 +180,20 @@ namespace BFramework.PathFind
             switch (fulcrumRequirement)
             {
                 case 1:
-                    return CheckFulcrum(node.Neighbors[1, 0, 1]);
+                    return CheckFulcrum(node[DIRECTION.BOTTOM]);
                 case 2:
-                    return CheckFulcrum(node.Neighbors[1, 0, 1]) ||
-                        CheckFulcrum(node.Neighbors[0, 1, 1])||
-                        CheckFulcrum(node.Neighbors[2, 1, 1])||
-                        CheckFulcrum(node.Neighbors[1, 1, 0])||
-                        CheckFulcrum(node.Neighbors[1, 1, 2]);
+                    return CheckFulcrum(node[DIRECTION.BOTTOM]) ||
+                        CheckFulcrum(node[DIRECTION.BACK])||
+                        CheckFulcrum(node[DIRECTION.FORWARD]) ||
+                        CheckFulcrum(node[DIRECTION.LEFT]) ||
+                        CheckFulcrum(node[DIRECTION.RIGHT]);
                 case 3:
-                    return CheckFulcrum(node.Neighbors[1, 0, 1]) ||
-                        CheckFulcrum(node.Neighbors[0, 1, 1]) ||
-                        CheckFulcrum(node.Neighbors[2, 1, 1]) ||
-                        CheckFulcrum(node.Neighbors[1, 1, 0]) ||
-                        CheckFulcrum(node.Neighbors[1, 1, 2]) ||
-                        CheckFulcrum(node.Neighbors[1, 2, 1]);
+                    return CheckFulcrum(node[DIRECTION.BOTTOM]) ||
+                        CheckFulcrum(node[DIRECTION.TOP]) ||
+                        CheckFulcrum(node[DIRECTION.BACK]) ||
+                        CheckFulcrum(node[DIRECTION.FORWARD]) ||
+                        CheckFulcrum(node[DIRECTION.LEFT]) ||
+                        CheckFulcrum(node[DIRECTION.RIGHT]);
             }
             return false;
         }
@@ -223,6 +240,11 @@ namespace BFramework.PathFind
             node.Opened = false;
         }
 
+        /// <summary>
+        /// 检查节点
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public bool CheckNode(Node node)
         {
             if (node == null || node.Closed || node.Difficulty > WalkabilityThreshold || !CheckFulcrums(node, FulcrumRequirement))
@@ -274,6 +296,53 @@ namespace BFramework.PathFind
         }
 
         /// <summary>
+        /// 检查节点是否可以通行
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private bool CompareDifficulty(Node node)
+        {
+            return node != null && node.Difficulty < WalkabilityThreshold;
+        }
+
+        /// <summary>
+        /// 对于指定节点, 获取其可以通行的相邻节点
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public List<Node> GetAvailableNeighbors(Node node)
+        {
+            _availableNeighborsCurrent = new List<Node>(26);
+            DIRECTION key;
+            for (int i = _directions.Length - 1; i > -1; i--)
+            {
+                key = _directions[i];
+                _directionState[key] = CompareDifficulty(node[key]);
+                if (_directionState[key])
+                {
+                    _availableNeighborsCurrent.Add(node[key]);
+                }
+            }
+            for (int i = _directions.Length - 1; i > -1; i--)
+            {
+                for (int j = _directions.Length - 1; j > -1; j--)
+                {
+                    if (_directions[j] == _directions[i] || (int)_directions[j] == -(int) _directions[i])
+                    {
+                        continue;
+                    }
+                    if (
+                        (CompareDifficulty(node[_directions[i]]) || CompareDifficulty(node[_directions[j]])) && 
+                        CompareDifficulty(node[_directions[i], _directions[j]]))
+                    {
+                        _availableNeighborsCurrent.Add(node[_directions[i], _directions[j]]);
+                    }
+                }
+            }
+            return _availableNeighborsCurrent;
+        }
+        
+        /// <summary>
         /// 按步检索路径
         /// </summary>
         /// <returns></returns>
@@ -292,14 +361,8 @@ namespace BFramework.PathFind
                 OnSuccess();
                 return;
             }
-            foreach (Node node in Current.NeighborsI)
-            {
-                if (!CheckNode(node))
-                {
-                    continue;
-                }
-            }
-            foreach (Node node in Current.NeighborsII)
+
+            foreach (Node node in GetAvailableNeighbors(Current))
             {
                 if (!CheckNode(node))
                 {
@@ -342,6 +405,30 @@ namespace BFramework.PathFind
             Opened = new List<Node>();
             Closed = new List<Node>();
             PushToOpened(Start, null);
+        }
+        
+        /// <summary>
+        /// 设置起点
+        /// </summary>
+        /// <param name="start"></param>
+        public void SetStart(Node start)
+        {
+            if (Start != null)
+            {
+                Start.Closed = false;
+                Start.Opened = false;
+            }
+            Start = start;
+            Reset();
+        }
+
+        /// <summary>
+        /// 设置终点
+        /// </summary>
+        /// <param name="end"></param>
+        public void SetEnd(Node end)
+        {
+            End = end;
         }
     }
 }

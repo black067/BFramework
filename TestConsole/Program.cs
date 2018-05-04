@@ -241,8 +241,8 @@ namespace TestConsole
             public static void PathFind()
             {
                 int LengthX = 11;
-                int LengthY = 15;
-                int LengthZ = 1;
+                int LengthY = 2;
+                int LengthZ = 15;
                 Map map = new Map("TestMap", LengthX, LengthY, LengthZ, true);
 
                 Console.WriteLine(map);
@@ -252,27 +252,36 @@ namespace TestConsole
                     Console.Write(string.Format("|  X{0:D2}  ", i));
                 }
                 Console.Write("|\n");
-                for (int i = 0; i < map.LengthY; i++)
+                for (int i = 0; i < map.LengthZ; i++)
                 {
-                    Console.Write(string.Format(" Y{0:D2} ", i));
+                    Console.Write(string.Format(" Z{0:D2} ", i));
                     for (int j = 0; j < map.LengthX; j++)
                     {
-                        Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, i, 0].Difficulty));
+                        map.SetNode(j, 0, i, 999);
+                        Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, 1, i].Difficulty));
                     }
                     Console.Write("| \n");
                 }
-                Property weightDic = new Property();
-                weightDic[Property.KEY.GVALUE] = 1;
-                weightDic[Property.KEY.HVALUE] = 1;
-                Path path = new Path(map[0, 0, 0], map[LengthX - 1, LengthY - 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.MANHATTAN, 100);
-                path.NeighborGeneralized = true;
+                BFramework.PathFind.Attribute weightDic = new BFramework.PathFind.Attribute();
+                weightDic["GVALUE"] = 1;
+                weightDic["HVALUE"] = 1;
+                Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.EUCLIDEAN, 100)
+                {
+                    NeighborGeneralized = true,
+                    FulcrumRequirement = 3,
+                };
                 path.Find();
                 foreach (Node node in path.Result)
                 {
                     Console.WriteLine("{0}, {1}", node, node.Parent);
                 }
+                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
                 Exporter<Map>.Save("Test.t", map);
+                Exporter<Node>.Save("TestNode.t", map[0, 1, 0]);
                 Console.WriteLine(path.Status);
+
+                Exporter<Map>.Load("Test.t", out Map testMap);
+                Console.WriteLine("Node Load Test: " + testMap[0, 0, 0].Resistance);
             }
 
             public static void Exporter()

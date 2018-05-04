@@ -5,10 +5,21 @@ using System.Text;
 
 namespace BFramework.PathFind
 {
+    /// <summary>
+    /// 地图类, 保存地形
+    /// </summary>
     [Serializable]
     public class Map
     {
-        public Map(string name, int lengthX, int lengthY, int lengthZ, bool randomWeight = false)
+        /// <summary>
+        /// 根据给定长宽高新建一个地图, 可选择是否随机给节点的通行难度赋值
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="lengthX"></param>
+        /// <param name="lengthY"></param>
+        /// <param name="lengthZ"></param>
+        /// <param name="randomDifficulty"></param>
+        public Map(string name, int lengthX, int lengthY, int lengthZ, bool randomDifficulty = false)
         {
             Name = name;
             LengthX = lengthX;
@@ -22,21 +33,50 @@ namespace BFramework.PathFind
                 {
                     for (int k = 0; k < LengthZ; k++)
                     {
-                        Nodes[i, j, k] = new Node(randomWeight ? ExpandedMath.Random.Range(0, 999) : 0, i, j, k);
+                        Nodes[i, j, k] = new Node(randomDifficulty ? ExpandedMath.Random.Range(0, 999) : 0, i, j, k);
                     }
                 }
             }
-
             SetNeighbors();
         }
 
+        /// <summary>
+        /// 地图名
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 地图在 X 轴方向的长度
+        /// </summary>
         public int LengthX { get; set; }
+
+        /// <summary>
+        /// 地图在 Y 轴方向的长度
+        /// </summary>
         public int LengthY { get; set; }
+
+        /// <summary>
+        /// 地图在 Z 轴方向的长度
+        /// </summary>
         public int LengthZ { get; set; }
+
+        /// <summary>
+        /// 地图中的节点总量
+        /// </summary>
         public int NodesNumber { get; set; }
+
+        /// <summary>
+        /// 地图中的所有节点
+        /// </summary>
         public Node[,,] Nodes { get; set; }
         
+        /// <summary>
+        /// 节点访问器, 根据坐标返回对应的节点
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
         public Node this[int x, int y, int z]
         {
             get
@@ -45,13 +85,14 @@ namespace BFramework.PathFind
             }
         }
 
+        /// <summary>
+        /// 设定节点的相邻节点
+        /// </summary>
+        /// <param name="node"></param>
         public void SetNeighbors(Node node)
         {
             int x = node.X, y = node.Y, z = node.Z;
             Node[,,] neighbors = new Node[3, 3, 3];
-            List<Node> neighborsI = new List<Node>();
-            List<Node> neighborsII = new List<Node>();
-            List<Node> neighborsIII = new List<Node>();
             Node current;
             for (int i = -1; i < 2; i++)
             {
@@ -63,38 +104,16 @@ namespace BFramework.PathFind
                         {
                             current = Nodes[x + i, y + j, z + k];
                             neighbors[i + 1, j + 1, k + 1] = current;
-                            int djk = j - k;
-                            if (i != 0 && j != 0 && k != 0)
-                            {
-                                neighborsIII.Add(current);
-                            }
-                            else if ((i == 1 && (djk == 1 || djk == -1)) || (i != 1 && djk == 0))
-                            {
-                                neighborsI.Add(current);
-                            }
-                            else
-                            {
-                                if (i == 1 && j == 1 && k == 1) continue;
-                                neighborsII.Add(current);
-                            }
                         }
                     }
                 }
             }
             node.Neighbors = neighbors;
-            node.NeighborsI = neighborsI;
-            node.NeighborsII = neighborsII;
-            node.NeighborsIII = neighborsIII;
         }
 
-        public void SetNeighbors(Node[,,] nodes)
-        {
-            foreach (Node node in nodes)
-            {
-                SetNeighbors(node);
-            }
-        }
-
+        /// <summary>
+        /// 设置自身所有节点的相邻节点
+        /// </summary>
         public void SetNeighbors()
         {
             foreach (Node node in Nodes)
@@ -103,22 +122,45 @@ namespace BFramework.PathFind
             }
         }
 
+        /// <summary>
+        /// 根据坐标检查该坐标是否在地图内
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
 
+        /// <summary>
+        /// 设置节点的通行难度
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="difficulty"></param>
         public void SetNode(int x, int y, int z, int difficulty)
         {
             if (Check(x,y,z))
             {
-                Nodes[x, y, z].Difficulty = difficulty;
+                Nodes[x, y, z].Difficulty = difficulty >= 0 ? difficulty : Nodes[x, y, z].Difficulty;
                 Nodes[x, y, z].Resistance = difficulty > 0 ? 1 : 0;
             }
         }
 
+        /// <summary>
+        /// 设置节点通行难度
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="difficulty"></param>
         public void SetNode(Node node, int difficulty)
         {
             SetNode(node.X, node.Y, node.Z, difficulty);
         }
 
+        /// <summary>
+        /// 地图类转化为字符串的方法重载
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("Map(Name: {0}, LengthX: {1}, LengthY: {2}, LengthZ: {3})", Name, LengthX, LengthY, LengthZ);
