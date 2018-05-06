@@ -143,6 +143,25 @@ namespace BFramework.PathFind
         /// 工作状态
         /// </summary>
         public STATUS Status { get; set; }
+        
+        /// <summary>
+        /// 用于便捷访问估值器的权重值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public int this[string key]
+        {
+            get { return Estimator.WeightItem[key]; }
+            set { Estimator.WeightItem[key] = value; }
+        }
+
+        public void SetWeight(string key, int weight)
+        {
+            if (Estimator.WeightItem.Dictionary.ContainsKey(key))
+            {
+                Estimator.WeightItem[key] = weight;
+            }
+        }
 
         /// <summary>
         /// 检查节点是否可以作为支点
@@ -219,7 +238,7 @@ namespace BFramework.PathFind
             Opened.Add(node);
             node.Opened = true;
             node.Parent = parent;
-            node.GValue = Heuristic.Calculate(node, parent);
+            node.GValue = Heuristic.Calculate(node, Start);
             node.HValue = Heuristic.Calculate(node, End);
             node.SetCost(ref _estimator);
             Opened.Sort(CompareByCost);
@@ -254,7 +273,7 @@ namespace BFramework.PathFind
 
             if (node.Opened)
             {
-                int gValueNew = Heuristic.Calculate(Current, node);
+                int gValueNew = Heuristic.Calculate(node, Start);
                 if (gValueNew < node.GValue)
                 {
                     node.Parent = Current;
@@ -283,13 +302,13 @@ namespace BFramework.PathFind
         public void OnSuccess()
         {
             Status = STATUS.SUCCESS;
-            int length = Closed.Count;
-            End.Parent = End.Parent ?? Closed[length - 2];
-            Result = new List<Node>(Closed.Count)
+            int count = Closed.Count;
+            End.Parent = End.Parent ?? Closed[count - 2];
+            Result = new List<Node>(count)
             {
                 End
             };
-            for (int i = 1; i <= length && Result[i - 1].Parent != null; i++)
+            for (int i = 1; i <= count && Result[i - 1].Parent != null; i++)
             {
                 Result.Add(Result[i - 1].Parent);
             }
@@ -313,29 +332,29 @@ namespace BFramework.PathFind
         public List<Node> GetAvailableNeighbors(Node node)
         {
             _availableNeighborsCurrent = new List<Node>(26);
-            DIRECTION key;
+            DIRECTION directionI, directionJ;
             for (int i = _directions.Length - 1; i > -1; i--)
             {
-                key = _directions[i];
-                _directionState[key] = CompareDifficulty(node[key]);
-                if (_directionState[key])
+                directionI = _directions[i];
+                if (CompareDifficulty(node[directionI]))
                 {
-                    _availableNeighborsCurrent.Add(node[key]);
+                    _availableNeighborsCurrent.Add(node[directionI]);
                 }
             }
             for (int i = _directions.Length - 1; i > -1; i--)
             {
+                directionI = _directions[i];
                 for (int j = _directions.Length - 1; j > -1; j--)
                 {
-                    if (_directions[j] == _directions[i] || (int)_directions[j] == -(int) _directions[i])
+                    directionJ = _directions[j];
+                    if (directionJ == directionI || (int)directionJ == -(int) directionI)
                     {
                         continue;
                     }
-                    if (
-                        (CompareDifficulty(node[_directions[i]]) || CompareDifficulty(node[_directions[j]])) && 
-                        CompareDifficulty(node[_directions[i], _directions[j]]))
+                    if ((CompareDifficulty(node[directionI]) || CompareDifficulty(node[directionJ])) && 
+                        CompareDifficulty(node[directionI, directionJ]))
                     {
-                        _availableNeighborsCurrent.Add(node[_directions[i], _directions[j]]);
+                        _availableNeighborsCurrent.Add(node[directionI, directionJ]);
                     }
                 }
             }

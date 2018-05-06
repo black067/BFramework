@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 namespace BFramework.ExpandedMath
 {
     [Serializable]
     public class Estimable
     {
-
         /// <summary>
         /// 用于保存键与数值的字典
         /// </summary>
@@ -33,14 +31,29 @@ namespace BFramework.ExpandedMath
         /// <returns></returns>
         public int this[string key]
         {
-            get { return Dictionary[key]; }
-            set { Dictionary[key] = value; }
+            get
+            {
+                if (!Dictionary.ContainsKey(key))
+                    Dictionary.Add(key, 0);
+                return Dictionary[key];
+            }
+            set
+            {
+                if (!Dictionary.ContainsKey(key))
+                    Dictionary.Add(key, value);
+                Dictionary[key] = value;
+            }
         }
         
         /// <summary>
         /// 获取字典的键值列表
         /// </summary>
         public Dictionary<string, int>.KeyCollection Keys { get { return Dictionary.Keys; } }
+
+        public bool ContainsKey(string key)
+        {
+            return Dictionary.ContainsKey(key);
+        }
 
         /// <summary>
         /// 获取字典的总数量

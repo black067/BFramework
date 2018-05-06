@@ -142,8 +142,7 @@ namespace BFramework.PathFind
         {
             if (Check(x,y,z))
             {
-                Nodes[x, y, z].Difficulty = difficulty >= 0 ? difficulty : Nodes[x, y, z].Difficulty;
-                Nodes[x, y, z].Resistance = difficulty > 0 ? 1 : 0;
+                SetNode(Nodes[x, y, z], difficulty);
             }
         }
 
@@ -154,7 +153,13 @@ namespace BFramework.PathFind
         /// <param name="difficulty"></param>
         public void SetNode(Node node, int difficulty)
         {
-            SetNode(node.X, node.Y, node.Z, difficulty);
+            node.Difficulty = difficulty >= 0 ? difficulty : node.Difficulty;
+            node.Resistance = difficulty > 0 ? 1 : 0;
+        }
+
+        public void SetNode(Node node, Attribute newAttribute)
+        {
+            node.SetAttribute(newAttribute);
         }
 
         /// <summary>

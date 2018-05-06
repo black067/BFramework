@@ -12,6 +12,14 @@ namespace BFramework.Tools
     /// <typeparam name="T"></typeparam>
     public static class Exporter<T>
     {
+        public static string Directory
+        {
+            get
+            {
+                return System.IO.Directory.GetCurrentDirectory();
+            }
+        }
+
         public static void Save(string fileName, T obj)
         {
             FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate);
@@ -22,6 +30,10 @@ namespace BFramework.Tools
 
         public static void Load(string fileName, out T result)
         {
+            if (!File.Exists(fileName))
+            {
+                result = default(T);
+            }
             FileStream fileStream = new FileStream(fileName, FileMode.Open);
             try
             {

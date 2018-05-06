@@ -168,6 +168,14 @@ namespace BFramework.PathFind
             _attribute.Cost = estimator[_attribute];
         }
 
+        public void SetAttribute(Attribute attribute)
+        {
+            foreach (string key in attribute.Keys)
+            {
+                _attribute[key] = attribute[key];
+            }
+        }
+
         /// <summary>
         /// 节点类输出为字符串的方法重载
         /// </summary>
