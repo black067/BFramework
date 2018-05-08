@@ -1,16 +1,16 @@
-﻿
+﻿using BFramework.StateMachines;
 namespace BFramework.ShootingGame
 {
     public class Actuator
     {
+        private class ChangeRequest
+        {
+            public string command;
+            public string start;
+            public string end;
+        }
         public class PostureManager
         {
-            public struct ChangeRequest
-            {
-                public string command;
-                public string start;
-                public string end;
-            }
             public PostureManager()
             {
                 _tags = new string[]
@@ -26,11 +26,11 @@ namespace BFramework.ShootingGame
                 };
                 _actionTransition = new BDelegate<object, string>(Transition);
                 _actionChange = new BDelegate<object, string>(ChangeTo);
-                StateMachine.State transition = new StateMachine.State(_tags[0], _actionTransition);
-                StateMachine.State upright = new StateMachine.State(_tags[1], _actionChange);
-                StateMachine.State squat = new StateMachine.State(_tags[2], _actionChange);
-                StateMachine.State crawl = new StateMachine.State(_tags[3], _actionChange);
-                stateMachine = new StateMachine(transition, upright, squat, crawl)
+                State transition = new State(_tags[0], _actionTransition);
+                State upright = new State(_tags[1], _actionChange);
+                State squat = new State(_tags[2], _actionChange);
+                State crawl = new State(_tags[3], _actionChange);
+                StateMachine = new StateMachine(transition, upright, squat, crawl)
                 {
                     Current = _tags[1],
                     Params = _tags[1]
@@ -43,13 +43,13 @@ namespace BFramework.ShootingGame
                 };
             }
 
-            public StateMachine stateMachine;
-            private string[] _tags;
-            private BDelegate<object, string> _actionTransition;
-            private BDelegate<object, string> _actionChange;
+            public StateMachine StateMachine { get; set; }
+            private string[] _tags { get; set; }
+            private BDelegate<object, string> _actionTransition { get; set; }
+            private BDelegate<object, string> _actionChange { get; set; }
             private ChangeRequest _request;
             private ChangeRequest _requestTemporary;
-            public bool TransitionDone = true;
+            public bool TransitionDone { get; set; } = true;
 
             private string Transition()
             {
@@ -68,13 +68,13 @@ namespace BFramework.ShootingGame
             {
                 _requestTemporary = (ChangeRequest)input;
                 
-                if(_requestTemporary.end == stateMachine.Current)
+                if(_requestTemporary.end == StateMachine.Current)
                 {
-                    return stateMachine.Current;
+                    return StateMachine.Current;
                 }
                 else
                 {
-                    stateMachine.Params = _requestTemporary;
+                    StateMachine.Params = _requestTemporary;
                     TransitionDone = false;
                     TransitAnimationPlay(_requestTemporary);
                     return _tags[0];
@@ -92,8 +92,8 @@ namespace BFramework.ShootingGame
             {
                 if (postureIndex > 0 && postureIndex < 4)
                 {
-                    _request.start = stateMachine.Current;
-                    if (_tags[postureIndex] == stateMachine.Current)
+                    _request.start = StateMachine.Current;
+                    if (_tags[postureIndex] == StateMachine.Current)
                     {
                         _request.end = _tags[1];
                     }
@@ -102,13 +102,13 @@ namespace BFramework.ShootingGame
                         _request.end = _tags[postureIndex];
                     }
                 }
-                stateMachine.Params = _request;
-                stateMachine.Run();
+                StateMachine.Params = _request;
+                StateMachine.Run();
             }
 
             public void ChangeAction(string tag, BDelegate<object, string> action)
             {
-                stateMachine.States[tag].Action = action;
+                StateMachine.States[tag].Action = action;
             }
         }
 
@@ -116,20 +116,8 @@ namespace BFramework.ShootingGame
         {
             PostureMgr = new PostureManager();
         }
-
-        private PostureManager _postureMgr;
-
-        public PostureManager PostureMgr
-        {
-            get
-            {
-                return _postureMgr;
-            }
-            set
-            {
-                _postureMgr = value;
-            }
-        }
+        
+        public PostureManager PostureMgr { get; set; }
 
         public void Work(ref Creature.Command command)
         {

@@ -123,11 +123,14 @@ namespace BFramework.PathFind
         /// 节点是否处于 Closed 列表中
         /// </summary>
         public bool Closed { get { return _attribute.Closed; } set { _attribute.Closed = value; } }
-        
+
+
         /// <summary>
         /// 节点的父节点
         /// </summary>
-        public Node Parent { get { return _attribute.Parent; } set { _attribute.Parent = value; } }
+        public Node Parent { get; set; }// { get { return _attribute.Parent; } set { _attribute.Parent = value; } 
+
+        public string Type { get { return _attribute.NodeType; } set { _attribute.NodeType = value; } }
 
         /// <summary>
         /// 通过该节点的开销

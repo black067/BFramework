@@ -29,11 +29,14 @@ namespace BFramework.PathFind
         /// 记录节点是否处于 Opened 列表中
         /// </summary>
         public bool Opened { get; set; }
-
+        /*
         /// <summary>
         /// 记录节点的父节点
         /// </summary>
         public Node Parent { get; set; }
+        */
+
+        public string NodeType { get; set; }
 
         /// <summary>
         /// 记录节点的开销
@@ -47,7 +50,7 @@ namespace BFramework.PathFind
         {
             Closed = false;
             Opened = false;
-            Parent = null;
+            //Parent = null;
             Cost = int.MaxValue;
 
             Dictionary = new Dictionary<string, int>();

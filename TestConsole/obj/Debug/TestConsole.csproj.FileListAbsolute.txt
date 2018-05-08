@@ -16,3 +16,4 @@ D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csprojResolveAssemblyRe
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CoreCompileInputs.cache
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.exe
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.pdb
+C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CopyComplete

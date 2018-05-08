@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BFramework;
+using BFramework.StateMachines;
 using BFramework.ShootingGame;
 using BFramework.ExpandedMath;
 using BFramework.PathFind;
@@ -161,9 +162,9 @@ namespace TestConsole
             {
                 //状态机测试
                 Console.WriteLine("#############\nStateMachine Test");
-                StateMachine.State s_1 = new StateMachine.State("State 1");
-                StateMachine.State s_2 = new StateMachine.State("State 2");
-                StateMachine.State s_3 = new StateMachine.State("State 3");
+                State s_1 = new State("State 1");
+                State s_2 = new State("State 2");
+                State s_3 = new State("State 3");
                 s_1.Action = new BDelegate<object, string>(delegate (ref Object input)
                 {
                     s_1.StateMachine.Params = "I am State 2";
@@ -214,28 +215,28 @@ namespace TestConsole
                         creature.command.ChangePostureTo = 3;
                     }
                     creature.Update(); creature.Update();
-                    Console.WriteLine(creature.actuator.PostureMgr.stateMachine.Current);
+                    Console.WriteLine(creature.actuator.PostureMgr.StateMachine.Current);
 
                 }
 
                 creature.Update();
-                Console.WriteLine("00 " + creature.actuator.PostureMgr.stateMachine.Current);
+                Console.WriteLine("00 " + creature.actuator.PostureMgr.StateMachine.Current);
                 creature.command.ChangePostureTo = 2;
                 creature.Update();
                 creature.Update();
-                Console.WriteLine("02 " + creature.actuator.PostureMgr.stateMachine.Current);
+                Console.WriteLine("02 " + creature.actuator.PostureMgr.StateMachine.Current);
                 creature.command.ChangePostureTo = 3;
                 creature.Update();
                 creature.Update();
-                Console.WriteLine("04 " + creature.actuator.PostureMgr.stateMachine.Current);
+                Console.WriteLine("04 " + creature.actuator.PostureMgr.StateMachine.Current);
                 creature.command.ChangePostureTo = 1;
                 creature.Update();
                 creature.Update();
-                Console.WriteLine("06 " + creature.actuator.PostureMgr.stateMachine.Current);
+                Console.WriteLine("06 " + creature.actuator.PostureMgr.StateMachine.Current);
                 creature.command.ChangePostureTo = 2;
                 creature.Update();
                 creature.Update();
-                Console.WriteLine("08 " + creature.actuator.PostureMgr.stateMachine.Current);
+                Console.WriteLine("08 " + creature.actuator.PostureMgr.StateMachine.Current);
             }
 
             public static void PathFind()

@@ -52,7 +52,9 @@
     <Compile Include="ExpandedMath\Limited.cs" />
     <Compile Include="ExpandedMath\Segments.cs" />
     <Compile Include="ExpandedMath\Vector.cs" />
-    <Compile Include="ObjectPool.cs" />
+    <Compile Include="StateMachines\State.cs" />
+    <Compile Include="StateMachines\Translation.cs" />
+    <Compile Include="Tools\ObjectPool.cs" />
     <Compile Include="ExpandedMath\Estimator.cs" />
     <Compile Include="PathFind\Attribute.cs" />
     <Compile Include="PathFind\DIRECTION.cs" />
@@ -67,13 +69,14 @@
     <Compile Include="ShootingGame\Equipment.cs" />
     <Compile Include="ShootingGame\Sensor.cs" />
     <Compile Include="ShootingGame\World.cs" />
-    <Compile Include="StateMachine.cs" />
+    <Compile Include="StateMachines\StateMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TetrisGame\Square.cs" />
     <Compile Include="TetrisGame\Tetromino.cs" />
     <Compile Include="TetrisGame\Grid.cs" />
     <Compile Include="TetrisGame\Tetris.cs" />
     <Compile Include="Tools\Exporter.cs" />
+    <Compile Include="Singleton.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

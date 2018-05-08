@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace BFramework
+namespace BFramework.Tools
 {
     /// <summary>
     /// 对象池
@@ -16,38 +17,52 @@ namespace BFramework
         {
             _pool = new Dictionary<object, Queue<object>>(capacity);
             _types = new Dictionary<object, Type>(capacity);
-            _caches = new Dictionary<object, int>(capacity);
+            _thresholds = new Dictionary<object, int>(capacity);
             _tags = new Dictionary<object, object>(capacity);
             Capacity = capacity;
         }
 
-        private Dictionary<Object, Queue<Object>> _pool;
-        private Dictionary<Object, Type> _types;
-        private Dictionary<Object, int> _caches;
-        private Dictionary<Object, Object> _tags;
-        private Object _pointer;
-        public int Capacity;
-        
+        /// <summary>
+        /// 池的实例
+        /// </summary>
+        private Dictionary<Object, Queue<Object>> _pool { get; set; }
+
+        /// <summary>
+        /// 每个队列的类型字典
+        /// </summary>
+        private Dictionary<Object, Type> _types { get; set; }
+
+        /// <summary>
+        /// 记录池中每个队列的缓存阈值字典
+        /// </summary>
+        private Dictionary<Object, int> _thresholds { get; set; }
+
+        /// <summary>
+        /// 记录每个出借对象相应键值的字典
+        /// </summary>
+        private Dictionary<Object, Object> _tags { get; set; }
+        private Object _pointer { get; set; }
+        public int Capacity { get; private set; }
         
         /// <summary>
         /// 池的键值表
         /// </summary>
-        public List<Object> Keys
+        public Dictionary<object, Queue<object>>.KeyCollection Keys
         {
             get
             {
-                return new List<Object>(_pool.Keys);
+                return _pool.Keys;
             }
         }
 
         /// <summary>
         /// 池的类型表
         /// </summary>
-        public List<Type> Types
+        public Dictionary<object,Type>.ValueCollection Types
         {
             get
             {
-                return new List<Type>(_types.Values);
+                return _types.Values;
             }
         }
 
@@ -82,15 +97,15 @@ namespace BFramework
         /// </summary>
         /// <param name="key"></param>
         /// <param name="itemType"></param>
-        /// <param name="cache"></param>
-        public void CreateNewQueue(Object key, Type itemType, int cache = 2, int capacity = 20)
+        /// <param name="threshold"></param>
+        public void CreateNewQueue(Object key, Type itemType, int threshold = 2, int capacity = 20)
         {
             if (_pool.ContainsKey(key))
             {
                 return;
             }
             _pool.Add(key, new Queue<object>(capacity));
-            _caches.Add(key, cache > 1 ? cache : 1);
+            _thresholds.Add(key, threshold > 1 ? threshold : 1);
             _types.Add(key, itemType);
         }
 
@@ -99,14 +114,14 @@ namespace BFramework
         /// </summary>
         /// <param name="key"></param>
         /// <param name="array"></param>
-        /// <param name="cache"></param>
-        public void CreateNewQueue(Object key, Array array, int cache = 2)
+        /// <param name="threshold"></param>
+        public void CreateNewQueue(Object key, Array array, int threshold = 2)
         {
             if (array.Length < 1)
             {
                 return;
             }
-            CreateNewQueue(key, array.GetValue(0).GetType(), cache, array.Length);
+            CreateNewQueue(key, array.GetValue(0).GetType(), threshold, array.Length);
             for (int i = 0, length = array.Length; i < length; i++)
             {
                 _pool[key].Enqueue(array.GetValue(i));
@@ -127,7 +142,7 @@ namespace BFramework
                 {
                     return null;
                 }
-                MarkAsOut(ref _pointer, key);
+                MarkAsOut(_pointer, key);
                 Fill(ref key);
                 return _pointer;
             }
@@ -159,7 +174,7 @@ namespace BFramework
         /// </summary>
         /// <param name="item"></param>
         /// <param name="key"></param>
-        private void MarkAsOut(ref Object item, Object key)
+        private void MarkAsOut(Object item, Object key)
         {
             _tags.Add(item, key);
         }
@@ -170,9 +185,9 @@ namespace BFramework
         /// <param name="key"></param>
         private void Fill(ref Object key)
         {
-            if(_pool[key].Count < _caches[key])
+            if(_pool[key].Count < _thresholds[key])
             {
-                for (int i = _caches[key] - _pool[key].Count; i >= 0; i--)
+                for (int i = _thresholds[key] - _pool[key].Count; i >= 0; i--)
                 {
                     _pool[key].Enqueue(Activator.CreateInstance(_types[key]));
                 }
