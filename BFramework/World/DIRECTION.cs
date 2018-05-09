@@ -1,8 +1,9 @@
 ﻿
-namespace BFramework.PathFind
+namespace BFramework.World
 {
     public enum DIRECTION
     {
+        CENTER = 0,
         LEFT = -1,
         RIGHT = 1,
         BOTTOM = -2,

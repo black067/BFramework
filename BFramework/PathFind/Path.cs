@@ -1,5 +1,6 @@
 ﻿using System;
 using BFramework.ExpandedMath;
+using BFramework.World;
 using System.Collections.Generic;
 
 namespace BFramework.PathFind
@@ -9,7 +10,7 @@ namespace BFramework.PathFind
     /// </summary>
     public class Path
     {
-        Estimator<Attribute> _estimator;
+        Estimator<Properties> _estimator;
         static DIRECTION[] _directions = { DIRECTION.LEFT, DIRECTION.RIGHT, DIRECTION.BACK, DIRECTION.FORWARD, DIRECTION.BOTTOM, DIRECTION.TOP };
         Dictionary<DIRECTION, bool> _directionState;
         List<Node> _availableNeighborsCurrent;
@@ -28,7 +29,7 @@ namespace BFramework.PathFind
             Node start,
             Node end,
             int walkabilityThreshold,
-            Attribute weightDictionary,
+            Properties weightDictionary,
             Heuristic.TYPE heuristicType = Heuristic.TYPE.EUCLIDEAN,
             int maxStep = 100)
         {
@@ -37,7 +38,7 @@ namespace BFramework.PathFind
             MaxStep = maxStep;
             WalkabilityThreshold = walkabilityThreshold;
             FulcrumRequirement = 4;
-            Estimator = new Estimator<Attribute>(weightDictionary);
+            Estimator = new Estimator<Properties>(weightDictionary);
             Heuristic = new Heuristic(heuristicType);
             Start = start;
             End = end;
@@ -72,7 +73,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 估值器, 用于估计每个 Node 的消耗
         /// </summary>
-        public Estimator<Attribute> Estimator { get { return _estimator; } private set { _estimator = value; } }
+        public Estimator<Properties> Estimator { get { return _estimator; } private set { _estimator = value; } }
         
         /// <summary>
         /// 攀附能力, 数值越大, 对支撑的依赖越少
@@ -355,14 +356,14 @@ namespace BFramework.PathFind
                 for (int j = _directions.Length - 1; j > -1; j--)
                 {
                     directionJ = _directions[j];
-                    if (directionJ == directionI || (int)directionJ == -(int) directionI)
+                    if (directionJ == directionI || (int)directionJ == -(int)directionI)
                     {
                         continue;
                     }
-                    if ((CompareDifficulty(node[directionI]) || CompareDifficulty(node[directionJ])) && 
-                        CompareDifficulty(node[directionI, directionJ]))
+                    if ((CompareDifficulty(node[directionI]) || CompareDifficulty(node[directionJ])) &&
+                        CompareDifficulty(node[directionI][directionJ]))
                     {
-                        _availableNeighborsCurrent.Add(node[directionI, directionJ]);
+                        _availableNeighborsCurrent.Add(node[directionI][directionJ]);
                     }
                 }
             }

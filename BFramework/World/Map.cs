@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BFramework.PathFind
+namespace BFramework.World
 {
     /// <summary>
     /// 地图类, 保存地形
@@ -131,11 +131,11 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
 
-        public static void SetNode(Node node, Attribute newAttribute)
+        public static void SetNode(Node node, Properties newAttribute)
         {
             if (newAttribute == null)
             {
-                newAttribute = new Attribute();
+                newAttribute = new Properties();
             }
             node.SetAttribute(newAttribute);
         }

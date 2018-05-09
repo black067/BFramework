@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BFramework.ExpandedMath;
 
-namespace BFramework.PathFind
+namespace BFramework.World
 {
     /// <summary>
     /// 节点类
@@ -19,7 +19,7 @@ namespace BFramework.PathFind
         /// <param name="z"></param>
         public Node(int difficulty, int x, int y, int z)
         {
-            _attribute = new Attribute();
+            _attribute = new Properties();
             _attribute["DIFFICULTY"] = difficulty;
             
             X = x;
@@ -30,7 +30,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 节点的属性
         /// </summary>
-        private Attribute _attribute { get; set; }
+        private Properties _attribute { get; set; }
         
         /// <summary>
         /// 节点的所有相邻节点
@@ -90,27 +90,6 @@ namespace BFramework.PathFind
             {
                 int i = 1, j = 1, k = 1;
                 SwitchDirection(ref direction, ref i, ref j, ref k);
-                return Neighbors[i, j, k];
-            }
-        }
-
-        public Node this[DIRECTION direction0, DIRECTION direction1]
-        {
-            get
-            {
-                int i = 1, j = 1, k = 1;
-                SwitchDirection(ref direction0, ref i, ref j, ref k);
-                if (direction1 != direction0)
-                {
-                    if ((int)direction0 == -(int)direction1)
-                    {
-                        i = 1; j = 1; k = 1;
-                    }
-                    else
-                    {
-                        SwitchDirection(ref direction1, ref i, ref j, ref k);
-                    }
-                }
                 return Neighbors[i, j, k];
             }
         }
@@ -175,12 +154,12 @@ namespace BFramework.PathFind
         /// 设置该节点的通行开销, 需要传入一个对 PathFind.Property 类的估值器( ExpandedMath.Estimator 类)
         /// </summary>
         /// <param name="estimator"></param>
-        public void SetCost(ref Estimator<Attribute> estimator)
+        public void SetCost(ref Estimator<Properties> estimator)
         {
             _attribute.Cost = estimator[_attribute];
         }
 
-        public void SetAttribute(Attribute attribute)
+        public void SetAttribute(Properties attribute)
         {
             Type = attribute.NodeType;
             foreach (string key in attribute.Keys)

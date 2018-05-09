@@ -2,13 +2,13 @@
 using BFramework.ExpandedMath;
 using System.Collections.Generic;
 
-namespace BFramework.PathFind
+namespace BFramework.World
 {
     /// <summary>
     /// 节点属性类, 用于保存节点的属性及估值, 继承自 ExpandedMath.Estimable 类
     /// </summary>
     [Serializable]
-    public class Attribute : Estimable
+    public class Properties : Estimable
     {
         public static List<string> KeysStatic { get; set; }
             = new List<string>()
@@ -66,7 +66,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 实例化属性类
         /// </summary>
-        public Attribute()
+        public Properties()
         {
             IsEmpty = true;
             NodeType = EmptyValue;
@@ -81,7 +81,7 @@ namespace BFramework.PathFind
             }
         }
 
-        public Attribute(bool closed, bool opened, string nodeType, int cost)
+        public Properties(bool closed, bool opened, string nodeType, int cost)
         {
             Closed = closed;
             Opened = opened;

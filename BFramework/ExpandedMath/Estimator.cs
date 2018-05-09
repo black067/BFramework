@@ -146,9 +146,7 @@ namespace BFramework.ExpandedMath
     /// </summary>
     public class Estimator<T> where T : Estimable
     {
-        private T _weightItem;
-        
-        public T WeightItem { get { return _weightItem; } set { _weightItem = value; } }
+        public T WeightItem { get; set; }
 
         public Estimator(T weightItem)
         {

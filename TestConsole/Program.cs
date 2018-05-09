@@ -6,6 +6,7 @@ using BFramework.StateMachines;
 using BFramework.ShootingGame;
 using BFramework.ExpandedMath;
 using BFramework.PathFind;
+using BFramework.World;
 using BFramework.Tools;
 using System.Collections;
 
@@ -253,29 +254,34 @@ namespace TestConsole
                     Console.Write(string.Format("|  X{0:D2}  ", i));
                 }
                 Console.Write("|\n");
+                Properties prefabGround = new Properties
+                {
+                    NodeType = "GROUND"
+                };
+                prefabGround["DIFFICULTY"] = 999;
                 for (int i = 0; i < map.LengthZ; i++)
                 {
                     Console.Write(string.Format(" Z{0:D2} ", i));
                     for (int j = 0; j < map.LengthX; j++)
                     {
-                        map[j, 0, i].Difficulty = 999;
+                        Map.SetNode(map[j, 0, i], prefabGround);
                         Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, 1, i].Difficulty));
                     }
                     Console.Write("| \n");
                 }
-                BFramework.PathFind.Attribute weightDic = new BFramework.PathFind.Attribute();
+                Properties weightDic = new Properties();
                 weightDic["GVALUE"] = 1;
                 weightDic["HVALUE"] = 1;
                 Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.EUCLIDEAN, 1000)
                 {
-                    FulcrumRequirement = 3,
+                    FulcrumRequirement = 4,
                 };
                 path.Find();
                 foreach (Node node in path.Result)
                 {
                     Console.WriteLine("{0}, {1}", node, node.Parent);
                 }
-                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+                Console.WriteLine(Exporter<Map>.Directory);
                 Exporter<Map>.Save("Test.t", map);
                 Exporter<Node>.Save("TestNode.t", map[0, 1, 0]);
                 Console.WriteLine(path.Status);
@@ -303,6 +309,18 @@ namespace TestConsole
                         Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, i, 0].Difficulty));
                     }
                     Console.Write("| \n");
+                }
+            }
+
+            public static void Calculate()
+            {
+                float delta = 0.35f;
+                float last = delta;
+                float current = 0;
+                float deadzone = 0.001f;
+                for (; ; )
+                {
+
                 }
             }
         }
