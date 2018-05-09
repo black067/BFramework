@@ -69,7 +69,7 @@ namespace TestConsole
                 //随机数测试
                 Console.WriteLine("#############\nBRandom.Distribution Test");
                 BFramework.ExpandedMath.Random.Init();
-                int[] arr = BFramework.ExpandedMath.Random.Distribution(50, 1000000);
+                int[] arr = BFramework.ExpandedMath.Random.Distribution(50, 10000);
                 for (int i = arr.Length - 1; i > -1; i--)
                 {
                     Console.WriteLine(arr[i]);
@@ -80,7 +80,14 @@ namespace TestConsole
                     s += arr[i];
                 }
                 Console.WriteLine("Summury = " + s);
-                Console.WriteLine("BRandom.Distribution Test Over\n");
+                Console.WriteLine("#############\nBRandom.Distribution Test End");
+                Console.WriteLine("#############\nBRandom.Range Test");
+                for (int i = 0; i <= 35; i++)
+                {
+                    int n = BFramework.ExpandedMath.Random.Range(0, 999);
+                    Console.WriteLine("RandomNumber[{0}] = {1}", i, n);
+                }
+                Console.WriteLine("BRandom Test Over\n");
             }
 
             public static void ExpandedMath()
@@ -254,17 +261,12 @@ namespace TestConsole
                     Console.Write(string.Format("|  X{0:D2}  ", i));
                 }
                 Console.Write("|\n");
-                Properties prefabGround = new Properties
-                {
-                    NodeType = "GROUND"
-                };
-                prefabGround["DIFFICULTY"] = 999;
                 for (int i = 0; i < map.LengthZ; i++)
                 {
                     Console.Write(string.Format(" Z{0:D2} ", i));
                     for (int j = 0; j < map.LengthX; j++)
                     {
-                        Map.SetNode(map[j, 0, i], prefabGround);
+                        Map.SetNode(map[j, 0, i], Default.Properties.Obstacle);
                         Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, 1, i].Difficulty));
                     }
                     Console.Write("| \n");
@@ -272,22 +274,14 @@ namespace TestConsole
                 Properties weightDic = new Properties();
                 weightDic["GVALUE"] = 1;
                 weightDic["HVALUE"] = 1;
-                Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.EUCLIDEAN, 1000)
-                {
-                    FulcrumRequirement = 4,
-                };
+                Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.WEAK, 900, weightDic, Heuristic.TYPE.EUCLIDEAN, 500);
+                Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], agent);
                 path.Find();
                 foreach (Node node in path.Result)
                 {
-                    Console.WriteLine("{0}, {1}", node, node.Parent);
+                    Console.WriteLine("{0}, {1}", node, path.GetParent(node));
                 }
-                Console.WriteLine(Exporter<Map>.Directory);
-                Exporter<Map>.Save("Test.t", map);
-                Exporter<Node>.Save("TestNode.t", map[0, 1, 0]);
                 Console.WriteLine(path.Status);
-
-                Exporter<Map>.Load("Test.t", out Map testMap);
-                Console.WriteLine("Node Load Test: " + testMap[0, 0, 0].Resistance);
             }
 
             public static void Exporter()
@@ -314,14 +308,23 @@ namespace TestConsole
 
             public static void Calculate()
             {
+                float deltaTime = 0.5f;
                 float delta = 0.35f;
-                float last = delta;
+                float deltaB = 0.2f;
+                float last = 0;
                 float current = 0;
-                float deadzone = 0.001f;
-                for (; ; )
-                {
+                float deadzone = 0.0001f;
 
+                float time = 1;
+                current = delta;
+                for (; current - last >= deadzone; time += deltaTime)
+                {
+                    last = current;
+                    delta *= (1-deltaB);
+                    current += delta;
+                    Console.WriteLine("时间: {0}, 加成: {1}", time, current);
                 }
+                Console.WriteLine("总计: 时间: {0}, 加成: {1}", time, current);
             }
         }
 
@@ -332,9 +335,10 @@ namespace TestConsole
         static void Main(string[] args)
         {
             //Test.Estimator();
-            int[] A = new int[3];
+            //int[] A = new int[3];
             Test.PathFind();
             //Test.Exporter();
+            //Test.Random();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

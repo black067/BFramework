@@ -33,6 +33,8 @@ namespace BFramework.Tools
             if (!File.Exists(fileName))
             {
                 result = default(T);
+                Save(fileName, result);
+                return;
             }
             FileStream fileStream = new FileStream(fileName, FileMode.Open);
             try
@@ -47,6 +49,17 @@ namespace BFramework.Tools
             finally
             {
                 fileStream.Close();
+            }
+        }
+    }
+
+    public static class Exporter
+    {
+        public static string Directory
+        {
+            get
+            {
+                return System.IO.Directory.GetCurrentDirectory();
             }
         }
     }

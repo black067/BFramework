@@ -65,6 +65,23 @@ namespace BFramework.ExpandedMath
         }
 
         /// <summary>
+        /// 逐个键比较大小, 若每个键对应的值都大于等于参数, 返回 true, 否则返回 false
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool CompareTo(Estimable target)
+        {
+            foreach(string key in Keys)
+            {
+                if(this[key] < target[key])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// 将加数中每个键对应的值与自身相应的值相加
         /// </summary>
         /// <param name="addition"></param>

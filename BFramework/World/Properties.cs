@@ -1,46 +1,32 @@
-﻿using System;
-using BFramework.ExpandedMath;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BFramework.World
 {
     /// <summary>
     /// 节点属性类, 用于保存节点的属性及估值, 继承自 ExpandedMath.Estimable 类
     /// </summary>
-    [Serializable]
-    public class Properties : Estimable
+    [System.Serializable]
+    public class Properties : ExpandedMath.Estimable
     {
-        public static List<string> KeysStatic { get; set; }
-            = new List<string>()
-            {
-                "DIFFICULTY",
-                "GVALUE",
-                "HVALUE",
-                "RESISTANCE",
-                "TEMPERATURE"
-            };
-
-        private string _nodeType;
-
         /// <summary>
         /// 空节点的类型值
         /// </summary>
-        public static string EmptyValue { get; } = "EMPTY";
+        public const string EmptyValue = Default.Value.NodeTypeEmpty;
 
         /// <summary>
-        /// 记录节点是否处于 Closed 列表中
+        /// 默认的键值
         /// </summary>
-        public bool Closed { get; set; }
+        public static List<string> KeysStatic { get; set; } = Default.Properties.Keys.ToList();
 
         /// <summary>
-        /// 记录节点是否处于 Opened 列表中
+        /// 节点的类型
         /// </summary>
-        public bool Opened { get; set; }
+        private string _nodeType { get; set; } = EmptyValue;
 
         /// <summary>
-        /// 节点是否为空
+        /// 节点是否可见
         /// </summary>
-        public bool IsEmpty { get; private set; }
+        public bool Visible { get; private set; }
 
         /// <summary>
         /// 节点的类型
@@ -49,31 +35,31 @@ namespace BFramework.World
         {
             get
             {
-                return IsEmpty ? EmptyValue : _nodeType;
+                return _nodeType;
             }
             set
             {
                 _nodeType = value;
-                IsEmpty = _nodeType == EmptyValue;
+                Visible = _nodeType != EmptyValue;
             }
         }
 
         /// <summary>
         /// 记录节点的开销
         /// </summary>
-        public int Cost { get; set; }
+        public int Cost { get; set; } = int.MaxValue;
+
+        /// <summary>
+        /// 实例化空节点属性
+        /// </summary>
+        public Properties() : this(Default.Value.NodeTypeEmpty) { }
         
         /// <summary>
-        /// 实例化属性类
+        /// 实例化空节点属性并声明其种类
         /// </summary>
-        public Properties()
+        /// <param name="typeName"></param>
+        public Properties(string typeName)
         {
-            IsEmpty = true;
-            NodeType = EmptyValue;
-            Closed = false;
-            Opened = false;
-            Cost = int.MaxValue;
-
             Dictionary = new Dictionary<string, int>();
             foreach (string key in KeysStatic)
             {
@@ -81,16 +67,18 @@ namespace BFramework.World
             }
         }
 
-        public Properties(bool closed, bool opened, string nodeType, int cost)
+        /// <summary>
+        /// 实例化节点属性
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <param name="dictionary"></param>
+        public Properties(string typeName, Dictionary<string, int> dictionary)
         {
-            Closed = closed;
-            Opened = opened;
-            NodeType = nodeType;
-            Cost = cost;
-
-            Dictionary = new Dictionary<string, int>();
+            NodeType = typeName;
+            Dictionary = dictionary;
             foreach (string key in KeysStatic)
             {
+                if (Dictionary.ContainsKey(key)) continue;
                 Dictionary.Add(key, 0);
             }
         }

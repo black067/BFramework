@@ -17,23 +17,26 @@ namespace BFramework.PathFind
 
         public TYPE Type { get; set; }
 
-        private int Abs(int n)
+        private static int Abs(int n)
         {
             return n > 0 ? n : -n;
         }
 
-        public int Manhattan(Node start, Node target)
+        public static int Manhattan(Node start, Node target)
         {
             if (target == null)
             {
-                return 0;
+                return int.MaxValue;
             }
             return Abs(target.X - start.X) + Abs(target.Y - start.Y) + Abs(target.Z - start.Z);
         }
 
-        public int Euclidean(Node start, Node target)
+        public static int Euclidean(Node start, Node target)
         {
-            if (target == null) { return 0; }
+            if (target == null)
+            {
+                return int.MaxValue;
+            }
             int dX = target.X - start.X;
             int dY = target.Y - start.Y;
             int dZ = target.Z - start.Z;

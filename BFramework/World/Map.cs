@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace BFramework.World
 {
     /// <summary>
     /// 地图类, 保存地形
     /// </summary>
-    [Serializable]
+    [System.Serializable]
     public class Map
     {
         /// <summary>
@@ -25,7 +21,7 @@ namespace BFramework.World
             LengthX = lengthX;
             LengthY = lengthY;
             LengthZ = lengthZ;
-            NodesNumber = LengthX * LengthY * LengthZ;
+            NodesCount = LengthX * LengthY * LengthZ;
             Nodes = new Node[LengthX, LengthY, LengthZ];
             for (int i = 0; i < LengthX; i++)
             {
@@ -33,7 +29,7 @@ namespace BFramework.World
                 {
                     for (int k = 0; k < LengthZ; k++)
                     {
-                        Nodes[i, j, k] = new Node(randomDifficulty ? ExpandedMath.Random.Range(0, 999) : 0, i, j, k);
+                        Nodes[i, j, k] = new Node(i, j, k, randomDifficulty ? Default.Properties.Random : Default.Properties.Empty);
                     }
                 }
             }
@@ -63,7 +59,7 @@ namespace BFramework.World
         /// <summary>
         /// 地图中的节点总量
         /// </summary>
-        public int NodesNumber { get; set; }
+        public int NodesCount { get; set; }
 
         /// <summary>
         /// 地图中的所有节点
@@ -110,7 +106,6 @@ namespace BFramework.World
             }
             node.Neighbors = neighbors;
         }
-
         /// <summary>
         /// 设置自身所有节点的相邻节点
         /// </summary>
@@ -131,13 +126,13 @@ namespace BFramework.World
         /// <returns></returns>
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
 
-        public static void SetNode(Node node, Properties newAttribute)
+        public static void SetNode(Node node, Properties newProperties)
         {
-            if (newAttribute == null)
+            if (newProperties == null)
             {
-                newAttribute = new Properties();
+                newProperties = new Properties();
             }
-            node.SetAttribute(newAttribute);
+            node.SetProerties(newProperties);
         }
 
         /// <summary>

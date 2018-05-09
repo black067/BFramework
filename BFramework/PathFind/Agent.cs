@@ -9,7 +9,8 @@ namespace BFramework.PathFind
             WEAK = 0,
             NORMAL = 1,
             STRONG = 2,
-            EXTREME = 3
+            EXCELLENT = 3,
+            EXTREME = 4
         }
 
         private readonly static DIRECTION[][] _directions = new DIRECTION[4][] {
@@ -37,6 +38,16 @@ namespace BFramework.PathFind
             }
         };
 
+        public Agent(string name, CLIMBLINGABILITY climblingAbility, int walkCapacity, Properties weightTable, Heuristic.TYPE heuristicType, int stepLimit)
+        {
+            Name = name;
+            ClimblingAbility = climblingAbility;
+            WalkCapacity = walkCapacity;
+            WeightTable = weightTable;
+            HeuristicFunction = new Heuristic(heuristicType);
+            StepsLimit = stepLimit;
+        }
+
         public string Name { get; set; }
 
         public CLIMBLINGABILITY ClimblingAbility { get; set; }
@@ -51,5 +62,15 @@ namespace BFramework.PathFind
 
         public int WalkCapacity { get; set; }
 
+        public Properties WeightTable { get; set; }
+
+        public Heuristic HeuristicFunction { get; set; }
+
+        public int StepsLimit { get; set; }
+
+        public bool BeAbleToPass(Node target)
+        {
+            return WalkCapacity >= target.Difficulty;
+        }
     }
 }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using BFramework.ExpandedMath;
-
+﻿
 namespace BFramework.World
 {
     /// <summary>
     /// 节点类
     /// </summary>
-    [Serializable]
+    [System.Serializable]
     public class Node
     {
         /// <summary>
@@ -17,11 +14,9 @@ namespace BFramework.World
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public Node(int difficulty, int x, int y, int z)
+        public Node(int x, int y, int z, Properties properties)
         {
-            _attribute = new Properties();
-            _attribute["DIFFICULTY"] = difficulty;
-            
+            _properties = properties;
             X = x;
             Y = y;
             Z = z;
@@ -30,7 +25,7 @@ namespace BFramework.World
         /// <summary>
         /// 节点的属性
         /// </summary>
-        private Properties _attribute { get; set; }
+        private Properties _properties { get; set; }
         
         /// <summary>
         /// 节点的所有相邻节点
@@ -64,22 +59,22 @@ namespace BFramework.World
             switch (direction)
             {
                 case DIRECTION.LEFT:
-                    x = 0;
+                    x -= x > 0 ? 1 : 0;
                     break;
                 case DIRECTION.RIGHT:
-                    x = 2;
+                    x += x < 2 ? 1 : 0;
                     break;
                 case DIRECTION.BOTTOM:
-                    y = 0;
+                    y -= y > 0 ? 1 : 0;
                     break;
                 case DIRECTION.TOP:
-                    y = 2;
+                    y += y < 2 ? 1 : 0;
                     break;
                 case DIRECTION.BACK:
-                    z = 0;
+                    z -= z > 0 ? 1 : 0;
                     break;
                 case DIRECTION.FORWARD:
-                    z = 2;
+                    z += z < 2 ? 1 : 0;
                     break;
             }
         }
@@ -94,78 +89,104 @@ namespace BFramework.World
             }
         }
 
+        public Node this[DIRECTION direction0, DIRECTION direction1]
+        {
+            get
+            {
+                int i = 1, j = 1, k = 1;
+                SwitchDirection(ref direction0, ref i, ref j, ref k);
+                SwitchDirection(ref direction1, ref i, ref j, ref k);
+                return Neighbors[i, j, k];
+            }
+        }
+
+        public Node this[DIRECTION direction0, DIRECTION direction1, DIRECTION direction2]
+        {
+            get
+            {
+                int i = 1, j = 1, k = 1;
+                SwitchDirection(ref direction0, ref i, ref j, ref k);
+                SwitchDirection(ref direction1, ref i, ref j, ref k);
+                SwitchDirection(ref direction2, ref i, ref j, ref k);
+                return Neighbors[i, j, k];
+            }
+        }
+
+        public Node this[DIRECTION[] directions]
+        {
+            get
+            {
+                int x = 1, y = 1, z = 1;
+                for(int i = 0, length = directions.Length; i < length; i++)
+                {
+                    SwitchDirection(ref directions[i], ref x, ref y, ref z);
+                }
+                return Neighbors[x, y, z];
+            }
+        }
+
         public int this[string key]
         {
-            get { return _attribute[key]; }
-            set { _attribute[key] = value; }
+            get { return _properties[key]; }
+            set { _properties[key] = value; }
         }
 
         /// <summary>
-        /// 节点是否处于 Opened 列表中
+        /// 节点的可见性
         /// </summary>
-        public bool Opened { get { return _attribute.Opened; } set { _attribute.Opened = value; } }
+        public bool Visible { get { return _properties.Visible; } }
 
         /// <summary>
-        /// 节点是否处于 Closed 列表中
+        /// 节点的类型值
         /// </summary>
-        public bool Closed { get { return _attribute.Closed; } set { _attribute.Closed = value; } }
-
-
-        /// <summary>
-        /// 节点的父节点
-        /// </summary>
-        public Node Parent { get; set; }
-
-        public bool IsEmpty { get { return _attribute.IsEmpty; } }
-
-        public string Type { get { return _attribute.NodeType; } set { _attribute.NodeType = value; } }
+        public string Type { get { return _properties.NodeType; } set { _properties.NodeType = value; } }
 
         /// <summary>
         /// 通过该节点的开销
         /// </summary>
-        public int Cost { get { return _attribute.Cost; } set { _attribute.Cost = value; } }
+        public int Cost { get { return _properties.Cost; } set { _properties.Cost = value; } }
 
         /// <summary>
         /// 该节点的通行难度
         /// </summary>
-        public int Difficulty { get { return _attribute["DIFFICULTY"]; } set { _attribute["DIFFICULTY"] = value; } }
+        public int Difficulty { get { return _properties[Default.Properties.Keys.Difficulty]; } set { _properties[Default.Properties.Keys.Difficulty] = value; } }
 
         /// <summary>
         /// 该节点到其父节点的距离估值
         /// </summary>
-        public int GValue { get { return _attribute["GVALUE"]; } set { _attribute["GVALUE"] = value; } }
+        public int GValue { get { return _properties[Default.Properties.Keys.GValue]; } set { _properties[Default.Properties.Keys.GValue] = value; } }
 
         /// <summary>
         /// 该节点到目标节点的距离估值
         /// </summary>
-        public int HValue { get { return _attribute["HVALUE"]; } set { _attribute["HVALUE"] = value; } }
+        public int HValue { get { return _properties[Default.Properties.Keys.HValue]; } set { _properties[Default.Properties.Keys.HValue] = value; } }
 
         /// <summary>
         /// 该节点的通行阻力
         /// </summary>
-        public int Resistance { get { return _attribute["RESISTANCE"]; } set { _attribute["RESISTANCE"] = value; } }
-
-        /// <summary>
-        /// 该节点处的温度
-        /// </summary>
-        public int Temperature { get { return _attribute["TEMPERATURE"]; } set { _attribute["TEMPERATURE"] = value; } }
+        public int Friction { get { return _properties[Default.Properties.Keys.Friction]; } set { _properties[Default.Properties.Keys.Friction] = value; } }
         
         /// <summary>
-        /// 设置该节点的通行开销, 需要传入一个对 PathFind.Property 类的估值器( ExpandedMath.Estimator 类)
+        /// 设置该节点的通行开销, 需要传入一个对 PathFind.Properties 类的估值器( ExpandedMath.Estimator 类)
         /// </summary>
         /// <param name="estimator"></param>
-        public void SetCost(ref Estimator<Properties> estimator)
+        public void SetCost(ref ExpandedMath.Estimator<Properties> estimator)
         {
-            _attribute.Cost = estimator[_attribute];
+            _properties.Cost = estimator[_properties];
         }
 
-        public void SetAttribute(Properties attribute)
+        public void SetProerties(Properties properties)
         {
-            Type = attribute.NodeType;
-            foreach (string key in attribute.Keys)
+            Type = properties.NodeType;
+            foreach (string key in properties.Keys)
             {
-                _attribute[key] = attribute[key];
+                _properties[key] = properties[key];
             }
+        }
+
+        public Properties GetProperties()
+        {
+            return _properties;
         }
 
         /// <summary>
@@ -174,7 +195,7 @@ namespace BFramework.World
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Node(X: {1}, Y: {2}, Z: {3}, Difficulty: {0:D3})", Difficulty, X, Y, Z);
+            return string.Format("Node(X: {1}, Y: {2}, Z: {3}, Type: {0})", Type, X, Y, Z);
         }
     }
 }

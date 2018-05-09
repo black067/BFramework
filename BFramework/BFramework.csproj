@@ -58,7 +58,7 @@
     <Compile Include="Tools\ObjectPool.cs" />
     <Compile Include="ExpandedMath\Estimator.cs" />
     <Compile Include="World\Properties.cs" />
-    <Compile Include="World\DIRECTION.cs" />
+    <Compile Include="World\ConstValueAndEnum.cs" />
     <Compile Include="World\Node.cs" />
     <Compile Include="PathFind\Heuristic.cs" />
     <Compile Include="World\Map.cs" />
