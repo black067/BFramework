@@ -19,7 +19,14 @@ namespace BFramework.PathFind
                 "RESISTANCE",
                 "TEMPERATURE"
             };
-        
+
+        private string _nodeType;
+
+        /// <summary>
+        /// 空节点的类型值
+        /// </summary>
+        public static string EmptyValue { get; } = "EMPTY";
+
         /// <summary>
         /// 记录节点是否处于 Closed 列表中
         /// </summary>
@@ -29,14 +36,27 @@ namespace BFramework.PathFind
         /// 记录节点是否处于 Opened 列表中
         /// </summary>
         public bool Opened { get; set; }
-        /*
-        /// <summary>
-        /// 记录节点的父节点
-        /// </summary>
-        public Node Parent { get; set; }
-        */
 
-        public string NodeType { get; set; }
+        /// <summary>
+        /// 节点是否为空
+        /// </summary>
+        public bool IsEmpty { get; private set; }
+
+        /// <summary>
+        /// 节点的类型
+        /// </summary>
+        public string NodeType
+        {
+            get
+            {
+                return IsEmpty ? EmptyValue : _nodeType;
+            }
+            set
+            {
+                _nodeType = value;
+                IsEmpty = _nodeType == EmptyValue;
+            }
+        }
 
         /// <summary>
         /// 记录节点的开销
@@ -48,10 +68,25 @@ namespace BFramework.PathFind
         /// </summary>
         public Attribute()
         {
+            IsEmpty = true;
+            NodeType = EmptyValue;
             Closed = false;
             Opened = false;
-            //Parent = null;
             Cost = int.MaxValue;
+
+            Dictionary = new Dictionary<string, int>();
+            foreach (string key in KeysStatic)
+            {
+                Dictionary.Add(key, 0);
+            }
+        }
+
+        public Attribute(bool closed, bool opened, string nodeType, int cost)
+        {
+            Closed = closed;
+            Opened = opened;
+            NodeType = nodeType;
+            Cost = cost;
 
             Dictionary = new Dictionary<string, int>();
             foreach (string key in KeysStatic)

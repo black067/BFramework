@@ -73,17 +73,7 @@ namespace BFramework.PathFind
         /// 估值器, 用于估计每个 Node 的消耗
         /// </summary>
         public Estimator<Attribute> Estimator { get { return _estimator; } private set { _estimator = value; } }
-
-        /// <summary>
-        /// 寻路时是否将对角节点纳入相邻节点范围
-        /// </summary>
-        public bool NeighborGeneralized { get; set; }
-
-        /// <summary>
-        /// 检索能力, 分为三级, 0: 只检索距离为1的相邻节点, 1: 检索距离小等于1.4的相邻节点, 2: 检索距离小于等于1.7的相邻节点
-        /// </summary>
-        public int Searchability { get; set; }
-
+        
         /// <summary>
         /// 攀附能力, 数值越大, 对支撑的依赖越少
         /// </summary>
@@ -113,6 +103,11 @@ namespace BFramework.PathFind
         /// 当前检测到的 Node
         /// </summary>
         public Node Current { get; set; }
+        
+        /// <summary>
+        /// 当前节点的支撑节点
+        /// </summary>
+        public Node CurrentFulcrum { get; set; }
 
         /// <summary>
         /// 待检测的 Node 列表
@@ -166,55 +161,64 @@ namespace BFramework.PathFind
         /// <summary>
         /// 检查节点是否可以作为支点
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public static bool CheckFulcrum(Node node)
-        {
-            return node != null && node.Resistance > 0;
-        }
-
-        /// <summary>
-        /// 检查多个节点中是否存在可以作为支点的节点
-        /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public static bool CheckFulcrums(List<Node> nodes) {
-            foreach (Node node in nodes)
+        public static int CheckFulcrum(params Node[] nodes)
+        {
+            if(nodes != null)
             {
-                if (CheckFulcrum(node)) return true;
+                for (int i = nodes.Length - 1; i > -1; i--)
+                {
+                    if (nodes[i] != null && nodes[i].Resistance > 0)
+                        return i;
+                }
             }
-            return false;
+            return -1;
         }
 
         /// <summary>
         /// 检查相邻节点数组中是否存在支撑点
         /// </summary>
         /// <param name="neighbors"></param>
-        /// <param name="fulcrumRequirement"></param>
+        /// <param name="level"></param>
         /// <returns></returns>
-        public static bool CheckFulcrums(Node node, int fulcrumRequirement)
+        public static Node CheckFulcrums(Node node, int level)
         {
-            if (fulcrumRequirement > 3) { return true; }
-            else if (fulcrumRequirement < 1) { return false; }
-            switch (fulcrumRequirement)
+            if (level > 3) { return node; }
+            else if (level < 1) { return null; }
+            Node[] nodesForCheck = null;
+            switch (level)
             {
                 case 1:
-                    return CheckFulcrum(node[DIRECTION.BOTTOM]);
+                    nodesForCheck = new Node[] { node[DIRECTION.BOTTOM] };
+                    break;
                 case 2:
-                    return CheckFulcrum(node[DIRECTION.BOTTOM]) ||
-                        CheckFulcrum(node[DIRECTION.BACK])||
-                        CheckFulcrum(node[DIRECTION.FORWARD]) ||
-                        CheckFulcrum(node[DIRECTION.LEFT]) ||
-                        CheckFulcrum(node[DIRECTION.RIGHT]);
+                    nodesForCheck = new Node[] {
+                        node[DIRECTION.BOTTOM],
+                        node[DIRECTION.BACK] ,
+                        node[DIRECTION.FORWARD] ,
+                        node[DIRECTION.LEFT] ,
+                        node[DIRECTION.RIGHT] };
+                    break;
                 case 3:
-                    return CheckFulcrum(node[DIRECTION.BOTTOM]) ||
-                        CheckFulcrum(node[DIRECTION.TOP]) ||
-                        CheckFulcrum(node[DIRECTION.BACK]) ||
-                        CheckFulcrum(node[DIRECTION.FORWARD]) ||
-                        CheckFulcrum(node[DIRECTION.LEFT]) ||
-                        CheckFulcrum(node[DIRECTION.RIGHT]);
+                    nodesForCheck = new Node[] {
+                        node[DIRECTION.BOTTOM],
+                        node[DIRECTION.TOP],
+                        node[DIRECTION.BACK] ,
+                        node[DIRECTION.FORWARD] ,
+                        node[DIRECTION.LEFT] ,
+                        node[DIRECTION.RIGHT] };
+                    break;
             }
-            return false;
+            int i = CheckFulcrum(nodesForCheck);
+            if (i >= 0)
+            {
+                return nodesForCheck[i];
+            }
+            else
+            {
+                return null;
+            }
         }
         
         /// <summary>
@@ -266,11 +270,15 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public bool CheckNode(Node node)
         {
-            if (node == null || node.Closed || node.Difficulty > WalkabilityThreshold || !CheckFulcrums(node, FulcrumRequirement))
+            if (node == null || node.Closed || node.Difficulty > WalkabilityThreshold)
             {
                 return false;
             }
-
+            CurrentFulcrum = CheckFulcrums(node, FulcrumRequirement);
+            if (CurrentFulcrum == null)
+            {
+                return false;
+            }
             if (node.Opened)
             {
                 int gValueNew = Heuristic.Calculate(node, Start);

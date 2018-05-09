@@ -241,9 +241,9 @@ namespace TestConsole
 
             public static void PathFind()
             {
-                int LengthX = 11;
+                int LengthX = 6;
                 int LengthY = 2;
-                int LengthZ = 15;
+                int LengthZ = 6;
                 Map map = new Map("TestMap", LengthX, LengthY, LengthZ, true);
 
                 Console.WriteLine(map);
@@ -258,7 +258,7 @@ namespace TestConsole
                     Console.Write(string.Format(" Z{0:D2} ", i));
                     for (int j = 0; j < map.LengthX; j++)
                     {
-                        map.SetNode(j, 0, i, 999);
+                        map[j, 0, i].Difficulty = 999;
                         Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, 1, i].Difficulty));
                     }
                     Console.Write("| \n");
@@ -266,9 +266,8 @@ namespace TestConsole
                 BFramework.PathFind.Attribute weightDic = new BFramework.PathFind.Attribute();
                 weightDic["GVALUE"] = 1;
                 weightDic["HVALUE"] = 1;
-                Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.EUCLIDEAN, 100)
+                Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], 908, weightDic, Heuristic.TYPE.EUCLIDEAN, 1000)
                 {
-                    NeighborGeneralized = true,
                     FulcrumRequirement = 3,
                 };
                 path.Find();

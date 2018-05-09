@@ -131,34 +131,12 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
 
-        /// <summary>
-        /// 设置节点的通行难度
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
-        /// <param name="difficulty"></param>
-        public void SetNode(int x, int y, int z, int difficulty)
+        public static void SetNode(Node node, Attribute newAttribute)
         {
-            if (Check(x,y,z))
+            if (newAttribute == null)
             {
-                SetNode(Nodes[x, y, z], difficulty);
+                newAttribute = new Attribute();
             }
-        }
-
-        /// <summary>
-        /// 设置节点通行难度
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="difficulty"></param>
-        public void SetNode(Node node, int difficulty)
-        {
-            node.Difficulty = difficulty >= 0 ? difficulty : node.Difficulty;
-            node.Resistance = difficulty > 0 ? 1 : 0;
-        }
-
-        public void SetNode(Node node, Attribute newAttribute)
-        {
             node.SetAttribute(newAttribute);
         }
 

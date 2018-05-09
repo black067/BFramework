@@ -135,7 +135,9 @@ namespace BFramework.PathFind
         /// <summary>
         /// 节点的父节点
         /// </summary>
-        public Node Parent { get; set; }// { get { return _attribute.Parent; } set { _attribute.Parent = value; } 
+        public Node Parent { get; set; }
+
+        public bool IsEmpty { get { return _attribute.IsEmpty; } }
 
         public string Type { get { return _attribute.NodeType; } set { _attribute.NodeType = value; } }
 
@@ -180,6 +182,7 @@ namespace BFramework.PathFind
 
         public void SetAttribute(Attribute attribute)
         {
+            Type = attribute.NodeType;
             foreach (string key in attribute.Keys)
             {
                 _attribute[key] = attribute[key];
