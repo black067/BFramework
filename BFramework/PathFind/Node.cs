@@ -52,6 +52,13 @@ namespace BFramework.PathFind
         /// </summary>
         public int Z { get; set; }
 
+        /// <summary>
+        /// 通过给定的方向, 调整坐标的指针
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         private void SwitchDirection(ref DIRECTION direction, ref int x, ref int y, ref int z)
         {
             switch (direction)
