@@ -3,7 +3,6 @@ C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\TestConsole.exe
 C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\TestConsole.pdb
 C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\BFramework.dll
 C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\BFramework.pdb
-C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csprojResolveAssemblyReference.cache
 C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CoreCompileInputs.cache
 C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.exe
 C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.pdb
@@ -17,3 +16,4 @@ D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CoreCompileInput
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.exe
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.pdb
 C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CopyComplete
+C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csprojAssemblyReference.cache
