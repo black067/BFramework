@@ -1,25 +1,39 @@
-﻿using System;
-
+﻿
 namespace BFramework.ExpandedMath
 {
     public static class Random
     {
-        static System.Random _randomCast = new System.Random();
-        static int _seed = 0;
+        private static System.Random _randomCast = new System.Random();
 
         /// <summary>
         /// 随机数生成器种子（只读）
         /// </summary>
-        public static int Seed
+        public static int Seed { get; private set; }
+
+        /// <summary>
+        /// 取得一个随机浮点数
+        /// </summary>
+        public static float Value
         {
             get
             {
-                return _seed;
+                var result = (_randomCast.NextDouble()
+                  * (System.Single.MaxValue - (double)System.Single.MinValue))
+                  + System.Single.MinValue;
+                return (float)result;
             }
-            private set
-            {
-                _seed = value;
-            }
+        }
+
+        /// <summary>
+        /// 返回一个范围内的随机浮点数。
+        /// 返回值 ∈ [min, max)
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static float Range(float min, float max)
+        {
+            return (float)_randomCast.NextDouble() * (max - min) + min;
         }
 
         /// <summary>

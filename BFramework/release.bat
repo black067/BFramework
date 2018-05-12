@@ -1,0 +1,1 @@
+xcopy C:\Users\black\Projects\BFramework\BFramework\bin\ForUnity C:\Users\black\Projects\PathFind\Assets\Plugins\ /Y

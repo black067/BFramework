@@ -1,0 +1,7 @@
+C:\Users\black\Projects\BFramework\TestConsole\bin\ForUnity\TestConsole.exe.config
+C:\Users\black\Projects\BFramework\TestConsole\bin\ForUnity\TestConsole.exe
+C:\Users\black\Projects\BFramework\TestConsole\bin\ForUnity\BFramework.dll
+C:\Users\black\Projects\BFramework\TestConsole\obj\ForUnity\TestConsole.csprojAssemblyReference.cache
+C:\Users\black\Projects\BFramework\TestConsole\obj\ForUnity\TestConsole.csproj.CoreCompileInputs.cache
+C:\Users\black\Projects\BFramework\TestConsole\obj\ForUnity\TestConsole.csproj.CopyComplete
+C:\Users\black\Projects\BFramework\TestConsole\obj\ForUnity\TestConsole.exe

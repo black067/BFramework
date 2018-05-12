@@ -13,10 +13,16 @@ namespace BFramework.PathFind
             EXTREME = 4
         }
 
-        private readonly static DIRECTION[][] _directions = new DIRECTION[4][] {
+        private readonly static DIRECTION[][] _directions = new DIRECTION[5][] {
+            //0, WEAK
             new DIRECTION[1] {
                 DIRECTION.BOTTOM
             },
+            //1, NORMAL
+            new DIRECTION[1] {
+                DIRECTION.BOTTOM
+            },
+            //2, STRONG
             new DIRECTION[5] {
                 DIRECTION.BOTTOM,
                 DIRECTION.LEFT,
@@ -24,7 +30,9 @@ namespace BFramework.PathFind
                 DIRECTION.BACK,
                 DIRECTION.FORWARD
             },
-            new DIRECTION[6] {
+            //3, EXCELLENT
+            new DIRECTION[6]
+            {
                 DIRECTION.BOTTOM,
                 DIRECTION.TOP,
                 DIRECTION.LEFT,
@@ -32,6 +40,7 @@ namespace BFramework.PathFind
                 DIRECTION.BACK,
                 DIRECTION.FORWARD
             },
+            //4, EXTREME
             new DIRECTION[1]
             {
                 DIRECTION.CENTER

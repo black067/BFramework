@@ -166,13 +166,23 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public static Node GetFulcrum(Node node, params DIRECTION[] directions)
         {
-            if(node != null)
+            if (node != null)
             {
                 Node result;
-                result = node[directions];
-                if (result != null && result.Friction > 0)
+                int tempI = -1;
+                int tempF = int.MaxValue;
+                for (int i = directions.Length - 1; i > -1; i--)
                 {
-                    return result;
+                    result = node[directions[i]];
+                    if (result != null && result.Friction > 0 && result.Friction < tempF)
+                    {
+                        tempF = result.Friction;
+                        tempI = i;
+                    }
+                }
+                if (tempI >= 0)
+                {
+                    return node[directions[tempI]];
                 }
             }
             return null;
@@ -265,17 +275,20 @@ namespace BFramework.PathFind
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public bool CheckNode(Node node)
+        public void CheckNode(Node node)
         {
             if (GetState(node) == STATE.CLOSED || !Agent.BeAbleToPass(node))
             {
-                return false;
+                return;
             }
-            
-            CurrentFulcrum = GetFulcrum(node, Agent.ClimblingRequirements);
-            if (CurrentFulcrum == null)
+
+            if(Agent.ClimblingAbility != Agent.CLIMBLINGABILITY.EXTREME)
             {
-                return false;
+                CurrentFulcrum = GetFulcrum(node, Agent.ClimblingRequirements);
+                if (CurrentFulcrum == null)
+                {
+                    return;
+                }
             }
             
             if (GetState(node) == STATE.OPEN)
@@ -292,7 +305,7 @@ namespace BFramework.PathFind
             {
                 PushToOpened(node, Current);
             }
-            return true;
+            return;
         }
 
         /// <summary>
@@ -343,7 +356,8 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public List<Node> GetAvailableNeighbors(Node node)
         {
-            if (MapStatic && _availableNeighborsDictionary.ContainsKey(node))
+            bool containsNode = _availableNeighborsDictionary.ContainsKey(node);
+            if (MapStatic && containsNode)
             {
                 return _availableNeighborsDictionary[node];
             }
@@ -380,7 +394,7 @@ namespace BFramework.PathFind
                     }
                 }
             }
-            _availableNeighborsDictionary.Add(node, _availableNeighborsCurrent);
+            if(!containsNode) _availableNeighborsDictionary.Add(node, _availableNeighborsCurrent);
             return _availableNeighborsCurrent;
         }
 
@@ -390,7 +404,7 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public void FindByStep()
         {
-            if (Opened.Count < 1 || Steps == Agent.StepsLimit)
+            if (Opened.Count < 1 || Steps >= Agent.StepsLimit)
             {
                 OnFail();
                 return;
@@ -406,10 +420,7 @@ namespace BFramework.PathFind
 
             foreach (Node node in GetAvailableNeighbors(Current))
             {
-                if (!CheckNode(node))
-                {
-                    continue;
-                }
+                CheckNode(node);
             }
             Steps++;
             Status = STATUS.PROCESSING;
@@ -435,8 +446,14 @@ namespace BFramework.PathFind
             Status = STATUS.PROCESSING;
             Steps = 0;
             _nodeStates = new Dictionary<Node, STATE>();
+            _nodeParent = new Dictionary<Node, Node>();
             Opened = new List<Node>();
             Closed = new List<Node>();
+            Result = new List<Node>();
+            if (!MapStatic)
+            {
+                _availableNeighborsDictionary = new Dictionary<Node, List<Node>>();
+            }
             PushToOpened(Start, null);
         }
         

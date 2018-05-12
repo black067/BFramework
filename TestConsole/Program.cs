@@ -274,7 +274,7 @@ namespace TestConsole
                 Properties weightDic = new Properties();
                 weightDic["GVALUE"] = 1;
                 weightDic["HVALUE"] = 1;
-                Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.WEAK, 900, weightDic, Heuristic.TYPE.EUCLIDEAN, 500);
+                Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.EXCELLENT, 900, weightDic, Heuristic.TYPE.EUCLIDEAN, 500);
                 Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], agent);
                 path.Find();
                 foreach (Node node in path.Result)
@@ -340,6 +340,9 @@ namespace TestConsole
             //Test.Exporter();
             //Test.Random();
             Console.WriteLine("\nPress any key to exit.");
+            Console.WriteLine((int)4.99999f);
+            Console.WriteLine((int)124.19999f);
+            Console.WriteLine((int)523123.39999f);
             Console.ReadKey();
         }
         

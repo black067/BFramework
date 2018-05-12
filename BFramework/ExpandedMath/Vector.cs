@@ -4,50 +4,45 @@ namespace BFramework.ExpandedMath
 {
     public class Vector
     {
-        private float x;
-        private float y;
-        private float z;
-
-        public static Vector Zero = new Vector(0, 0, 0);
-
+        public float x;
+        public float y;
+        public float z;
+        
         public Vector(float x, float y, float z)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         public Vector(float x, float y) : this(x, y, 0) { }
 
         public Vector() : this(0, 0, 0) { }
 
-        public Vector(Vector vector):this (vector.X, vector.Y, vector.Z) { }
+        public static Vector Zero { get { return new Vector(0, 0, 0); } }
 
-        public static Vector One
-        {
-            get
-            {
-                return new Vector(1, 1, 1);
-            }
-        }
+        public Vector(Vector vector):this (vector.x, vector.y, vector.z) { }
+        
+        public static Vector One { get { return new Vector(1, 1, 1); } }
 
         public override string ToString()
         {
-            return string.Format("Vector({0:0.000}, {1:0.000}, {2:0.000})", X, Y, Z);
+            return string.Format("Vector({0:0.000}, {1:0.000}, {2:0.000})", x, y, z);
         }
 
         public Vector Inverse
         {
             get
             {
-                return new Vector(-X, -Y, -Z);
+                return new Vector(-x, -y, -z);
             }
         }
+
         public float NormSquare
         {
             get
             {
-                return X * X + Y * Y + Z * Z;
+                return x * x + y * y + z * z;
             }
         }
 
@@ -61,34 +56,34 @@ namespace BFramework.ExpandedMath
         public Vector Add(Vector addition)
         {
             Vector result = new Vector(this);
-            result.X += addition.X;
-            result.Y += addition.Y;
-            result.Z += addition.Z;
+            result.x += addition.x;
+            result.y += addition.y;
+            result.z += addition.z;
             return result;
         }
         public Vector Multiply(float multiplier)
         {
             Vector result = new Vector(this);
-            result.X *= multiplier;
-            result.Y *= multiplier;
-            result.Z *= multiplier;
+            result.x *= multiplier;
+            result.y *= multiplier;
+            result.z *= multiplier;
             return result;
         }
         public Vector Dot(Vector multiplier)
         {
             Vector result = new Vector(this);
-            result.X *= multiplier.X;
-            result.Y *= multiplier.Y;
-            result.Z *= multiplier.Z;
+            result.x *= multiplier.x;
+            result.y *= multiplier.y;
+            result.z *= multiplier.z;
             return result;
         }
         public Vector Cross(Vector multiplier)
         {
             return new Vector(this)
             {
-                X = Y * multiplier.Z - Z * multiplier.Y,
-                Y = Z * multiplier.X - X * multiplier.Z,
-                Z = X * multiplier.Y - Y * multiplier.X
+                x = y * multiplier.z - z * multiplier.y,
+                y = z * multiplier.x - x * multiplier.z,
+                z = x * multiplier.y - y * multiplier.x
             };
         }
 
@@ -115,41 +110,6 @@ namespace BFramework.ExpandedMath
         public static Vector operator / (Vector lhs, float rhs)
         {
             return lhs.Multiply(1 / rhs);
-        }
-
-        public int XInt { get; private set; }
-        public int YInt { get; private set; }
-        public int ZInt { get; private set; }
-
-        public float X
-        {
-            get { return x; }
-            set
-            {
-                x = value;
-                int r = (int)x;
-                XInt = x - r >= 0.5f ? (r + 1) : r;
-            }
-        }
-        public float Y
-        {
-            get { return y; }
-            set
-            {
-                y = value;
-                int r = (int)y;
-                YInt = y - r >= 0.5f ? (r + 1) : r;
-            }
-        }
-        public float Z
-        {
-            get { return z; }
-            set
-            {
-                z = value;
-                int r = (int)z;
-                ZInt = z - r >= 0.5f ? (r + 1) : r;
-            }
         }
     }
     

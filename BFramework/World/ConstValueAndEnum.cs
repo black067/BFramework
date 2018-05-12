@@ -48,7 +48,7 @@ namespace BFramework.World
                     {
                         if (fi.IsLiteral && !fi.IsInitOnly)
                         {
-                            result.Add(fi.Name);
+                            result.Add(fi.Name.ToUpper());
                         }
                     }
 
