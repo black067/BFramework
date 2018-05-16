@@ -103,7 +103,7 @@ namespace BFramework.BehaviourTree
 
         public STATUS Update()
         {
-            return _tick[_cognition];
+            return _tick.Execute(_cognition);
         }
 
         private Cognition _cognition;

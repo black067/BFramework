@@ -123,7 +123,7 @@ namespace BFramework.StateMachines
         }
         public void Run(object input)
         {
-            _nextState = States[Current].Action[input];
+            _nextState = States[Current].Action.Execute(input);
             ChangeTo(_nextState);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using BFramework.ExpandedMath;
+using BFramework.DataStructure;
 using BFramework.World;
 using System.Collections.Generic;
 
@@ -50,21 +51,11 @@ namespace BFramework.PathFind
             Start = start;
             End = end;
             Agent = agent;
-
             Estimator = new Estimator<Properties>(agent.WeightTable);
-            Status = STATUS.PROCESSING;
-            Steps = 0;
             MapStatic = mapStatic;
-            Opened = new List<Node>();
-            Closed = new List<Node>();
-            Result = new List<Node>();
-            _nodeStates = new Dictionary<Node, STATE>();
-            _nodeParent = new Dictionary<Node, Node>();
-            _availableNeighborsDictionary = new Dictionary<Node, List<Node>>();
-            PushToOpened(Start, null);
-
+            Reset();
         }
-        
+
         /// <summary>
         /// 记录当前步数
         /// </summary>
@@ -107,7 +98,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 待检测的 Node 列表
         /// </summary>
-        public List<Node> Opened { get; set; }
+        public List<Node> Opened;
 
         /// <summary>
         /// 检测完毕的 Node 列表
@@ -194,7 +185,7 @@ namespace BFramework.PathFind
         /// <param name="node1"></param>
         /// <param name="node2"></param>
         /// <returns></returns>
-        private int CompareByCost(Node node1, Node node2)
+        private int CompareCost(Node node1, Node node2)
         {
             return node1.Cost.CompareTo(node2.Cost);
         }
@@ -224,6 +215,11 @@ namespace BFramework.PathFind
             }
             return _nodeStates[node];
         }
+        
+        private bool OpenedIsEmpty(List<Node> list)
+        {
+            return list.Count < 1;
+        }
 
         /// <summary>
         /// 将指定 Node 添加到开启列表中(需要设置其父节点)
@@ -245,7 +241,7 @@ namespace BFramework.PathFind
             node.HValue = Agent.HeuristicFunction.Calculate(node, End);
             node.SetCost(ref _estimator);
             Opened.Add(node);
-            Opened.Sort(CompareByCost);
+            Opened.Sort(CompareCost);
         }
 
         /// <summary>
@@ -256,10 +252,8 @@ namespace BFramework.PathFind
         {
             if (_nodeStates.ContainsKey(node))
             {
-                if(_nodeStates[node] == STATE.OPEN)
-                {
-                    Opened.Remove(node);
-                }
+                Console.WriteLine("{0:D3} | Push to Closed | Node: {1} | State:{2}", Steps, node, _nodeStates[node]);
+                Opened.Remove(node);
                 _nodeStates[node] = STATE.CLOSED;
             }
             else
@@ -289,6 +283,11 @@ namespace BFramework.PathFind
                 {
                     return;
                 }
+                node[Default.Properties.Keys.Resistance] = CurrentFulcrum.Friction;
+            }
+            else
+            {
+                node[Default.Properties.Keys.Resistance] = 0;
             }
             
             if (GetState(node) == STATE.OPEN)
@@ -417,8 +416,8 @@ namespace BFramework.PathFind
                 OnSuccess();
                 return;
             }
-
-            foreach (Node node in GetAvailableNeighbors(Current))
+            GetAvailableNeighbors(Current);
+            foreach (Node node in _availableNeighborsCurrent)
             {
                 CheckNode(node);
             }

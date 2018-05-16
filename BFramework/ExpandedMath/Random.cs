@@ -25,7 +25,25 @@ namespace BFramework.ExpandedMath
         }
 
         /// <summary>
-        /// 返回一个范围内的随机浮点数。
+        /// 返回一个范围内的随机双精度浮点数. 
+        /// 返回值 ∈ [min, max)
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static double Range(double min, double max)
+        {
+            if (min > max)
+            {
+                double m = max;
+                max = min;
+                min = m;
+            }
+            return _randomCast.NextDouble() * (max - min) + min;
+        }
+
+        /// <summary>
+        /// 返回一个范围内的随机浮点数. 
         /// 返回值 ∈ [min, max)
         /// </summary>
         /// <param name="min"></param>
@@ -33,11 +51,17 @@ namespace BFramework.ExpandedMath
         /// <returns></returns>
         public static float Range(float min, float max)
         {
+            if (min > max)
+            {
+                float m = max;
+                max = min;
+                min = m;
+            }
             return (float)_randomCast.NextDouble() * (max - min) + min;
         }
 
         /// <summary>
-        /// 返回一个范围内的随机整数。
+        /// 返回一个范围内的随机整数. 
         /// 返回值 ∈ [min, max)
         /// </summary>
         /// <param name="min"></param>
@@ -53,43 +77,31 @@ namespace BFramework.ExpandedMath
             }
             return _randomCast.Next(max - min) + min;
         }
-
+        
         /// <summary>
-        /// 根据给定的数量与给定数值，返回一个随机分布的正整数数组，数组所有元素之和等于给定数值
+        /// 根据给定的权重数组, 随机返回一个索引
         /// </summary>
-        /// <param name="number"></param>
-        /// <param name="range"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
-        public static int[] Distribution(int number, int range = 100)
+        public static int GetIndex(params double[] weights)
         {
-            number = number > range ? range : number;
-            int[] array = new int[number];
-            int powerSum = 0;
-            int sum = 0;
-            //随机产生权重并计算权重之和
-            for (int i = number - 1; i > -1; i--)
+            double sum = 0;
+            int length = weights.Length;
+            double[] temp = new double[length];
+            for(int i = 0; i < length; i++)
             {
-                array[i] = _randomCast.Next(1, int.MaxValue);
-                powerSum += array[i];
+                temp[i] = sum;
+                sum += weights[i];
             }
-            //根据随机产生的权重与权重和，重新计算数组元素的数值，并计算新的数组元素和
-            for (int i = number - 1; i > -1; i--)
+            double num = Range(0, sum);
+            int index = 0;
+            for(; index < length - 1; index++)
             {
-                array[i] = range * array[i] / powerSum;
-                sum += array[i];
+                if(num <= temp[index + 1]) { break; }
             }
-            //补偿误差
-            if (sum < range)
-            {
-                for (int i = range - sum - 1; i > -1; i--)
-                {
-                    array[Range(0, number)] ++;
-                }
-            }
-
-            return array;
+            return index;
         }
-
+        
         /// <summary>
         /// 使用种子初始化随机数生成器
         /// </summary>

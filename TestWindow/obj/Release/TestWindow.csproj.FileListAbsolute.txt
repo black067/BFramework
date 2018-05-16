@@ -1,0 +1,10 @@
+C:\Users\black\Projects\BFramework\TestWindow\bin\Release\TestWindow.exe.config
+C:\Users\black\Projects\BFramework\TestWindow\bin\Release\TestWindow.exe
+C:\Users\black\Projects\BFramework\TestWindow\bin\Release\TestWindow.pdb
+C:\Users\black\Projects\BFramework\TestWindow\obj\Release\TestWindow.csprojAssemblyReference.cache
+C:\Users\black\Projects\BFramework\TestWindow\obj\Release\TestWindow.Form.resources
+C:\Users\black\Projects\BFramework\TestWindow\obj\Release\TestWindow.Properties.Resources.resources
+C:\Users\black\Projects\BFramework\TestWindow\obj\Release\TestWindow.csproj.GenerateResource.cache
+C:\Users\black\Projects\BFramework\TestWindow\obj\Release\TestWindow.csproj.CoreCompileInputs.cache
+C:\Users\black\Projects\BFramework\TestWindow\obj\Release\TestWindow.exe
+C:\Users\black\Projects\BFramework\TestWindow\obj\Release\TestWindow.pdb

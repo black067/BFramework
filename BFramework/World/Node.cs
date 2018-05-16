@@ -1,11 +1,11 @@
-﻿
+﻿using System;
 namespace BFramework.World
 {
     /// <summary>
     /// 节点类
     /// </summary>
     [System.Serializable]
-    public class Node
+    public class Node : IComparable<Node>
     {
         /// <summary>
         /// 根据给定的通行难度与坐标建立节点
@@ -195,7 +195,12 @@ namespace BFramework.World
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Node(X: {1}, Y: {2}, Z: {3}, Type: {0})", Type, X, Y, Z);
+            return string.Format("Node({1}, {2}, {3}, Type: {0}, Cost: {4})", Type, X, Y, Z, Cost);
+        }
+
+        public int CompareTo(Node obj)
+        {
+            return Cost.CompareTo(obj.Cost);
         }
     }
 }

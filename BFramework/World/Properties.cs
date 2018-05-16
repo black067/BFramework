@@ -8,6 +8,7 @@ namespace BFramework.World
     [System.Serializable]
     public class Properties : ExpandedMath.Estimable
     {
+        public const string Extension = ".nodeType";
         /// <summary>
         /// 空节点的类型值
         /// </summary>
@@ -60,6 +61,7 @@ namespace BFramework.World
         /// <param name="typeName"></param>
         public Properties(string typeName)
         {
+            NodeType = typeName;
             Dictionary = new Dictionary<string, int>();
             foreach (string key in KeysStatic)
             {
@@ -78,8 +80,8 @@ namespace BFramework.World
             Dictionary = dictionary;
             foreach (string key in KeysStatic)
             {
-                if (Dictionary.ContainsKey(key)) continue;
-                Dictionary.Add(key, 0);
+                if (!Dictionary.ContainsKey(key))
+                    Dictionary.Add(key, 0);
             }
         }
     }

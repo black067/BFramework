@@ -8,6 +8,7 @@ using BFramework.ExpandedMath;
 using BFramework.PathFind;
 using BFramework.World;
 using BFramework.Tools;
+using BFramework.DataStructure;
 using System.Collections;
 
 namespace TestConsole
@@ -69,23 +70,24 @@ namespace TestConsole
                 //随机数测试
                 Console.WriteLine("#############\nBRandom.Distribution Test");
                 BFramework.ExpandedMath.Random.Init();
-                int[] arr = BFramework.ExpandedMath.Random.Distribution(50, 10000);
-                for (int i = arr.Length - 1; i > -1; i--)
+                double[] testWeights = new double[] { 40, 100, 500, 20, 300 };
+                for (int i = 0; i < 10; i++)
                 {
-                    Console.WriteLine(arr[i]);
+                    Console.Write(BFramework.ExpandedMath.Random.GetIndex(testWeights) + "|");
                 }
-                int s = 0;
-                for (int i = arr.Length - 1; i > -1; i--)
-                {
-                    s += arr[i];
-                }
-                Console.WriteLine("Summury = " + s);
-                Console.WriteLine("#############\nBRandom.Distribution Test End");
+                Console.WriteLine("\n#############\nBRandom.Distribution Test End");
                 Console.WriteLine("#############\nBRandom.Range Test");
                 for (int i = 0; i <= 35; i++)
                 {
-                    int n = BFramework.ExpandedMath.Random.Range(0, 999);
+                    int n = BFramework.ExpandedMath.Random.Range(999999, 9999999);
                     Console.WriteLine("RandomNumber[{0}] = {1}", i, n);
+                }
+                Console.WriteLine("\n#############\nBRandom.Range Test End");
+                Console.WriteLine("#############\nBRandom.Value Test");
+                for (int i = 0; i <= 35; i++)
+                {
+                    float n = BFramework.ExpandedMath.Random.Value;
+                    Console.WriteLine("RandomNumber = {0}", n);
                 }
                 Console.WriteLine("BRandom Test Over\n");
             }
@@ -271,23 +273,24 @@ namespace TestConsole
                     }
                     Console.Write("| \n");
                 }
+                
                 Properties weightDic = new Properties();
                 weightDic["GVALUE"] = 1;
                 weightDic["HVALUE"] = 1;
-                Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.EXCELLENT, 900, weightDic, Heuristic.TYPE.EUCLIDEAN, 500);
+                Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.EXCELLENT, 1000, weightDic, Heuristic.TYPE.EUCLIDEAN, 100);
                 Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], agent);
                 path.Find();
+                Console.WriteLine("=========Result=========");
                 foreach (Node node in path.Result)
                 {
-                    Console.WriteLine("{0}, {1}", node, path.GetParent(node));
+                    Console.WriteLine("{0}", node, path.GetParent(node));
                 }
-                Console.WriteLine(path.Status);
+                Console.WriteLine("{0}, Steps = {1}", path.Status, path.Steps);/**/
             }
 
             public static void Exporter()
             {
-                Map map;
-                Exporter<Map>.Load("Test.t", out map);
+                Exporter<Map>.Load("Test.t", out Map map);
                 Console.WriteLine(map);
                 Console.Write("#####");
                 for (int i = 0; i < map.LengthX; i++)
@@ -304,6 +307,114 @@ namespace TestConsole
                     }
                     Console.Write("| \n");
                 }
+            }
+
+            public static void BinaryTree()
+            {
+                Map map = new Map("Test", 10, 2, 11, true);
+                for (int i = 0; i < map.LengthX; i++)
+                {
+                    for (int j = 0; j < map.LengthY; j++)
+                    {
+                        for (int k = 0; k < map.LengthZ; k++)
+                        {
+                            map[i, j, k].Cost = BFramework.ExpandedMath.Random.Range(0, 10000);
+                        }
+                    }
+                }
+
+                BWatch watch = new BWatch();
+                List<Node> nodeList = new List<Node>() { map[0, 0, 0] };
+                foreach (Node node in map.Nodes)
+                {
+                    nodeList.RemoveAt(0);
+                    nodeList.Add(node);
+                    nodeList.Sort(delegate (Node a, Node b) { return a.Cost.CompareTo(b.Cost); });
+                }
+                Console.WriteLine(watch.Click());
+                watch.Refresh();
+                BinaryTree<Node> binaryTree = new BinaryTree<Node>(map[0, 0, 10]);
+                for(int i = 0; i < 10; i++)
+                {
+                    binaryTree.Add(map[0, 0, i]);
+                }
+                
+                Console.WriteLine(watch.Click());
+            }
+
+            public static void Config()
+            {
+                Configuration configuration = Configuration.ReadCSV("TEST.csv");
+                for (int i = 0; i < configuration.NodeTypes.Length; i++)
+                {
+                    Console.Write(i + " ");
+                    for (int j = 0; j < configuration.NodeTypes[i].Length; j++)
+                    {
+                        Console.Write("{0} : {1:D4} | ",configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
+                    }
+                    Console.Write("\n");
+                }
+                Console.WriteLine("done.");
+            }
+
+            public static void BuildDefaultNode()
+            {
+
+                List<Properties> properties = new List<Properties>
+                {
+                    new Properties("BASEROCK", new Dictionary<string, int>
+                    {
+                        { "DIFFICULTY", 999 },
+                        { "FRICTION", 13 },
+                        { "TEMPERATURE", 200 }
+                    }),
+                    new Properties("ROCK", new Dictionary<string, int>
+                    {
+                        { "DIFFICULTY", 999 },
+                        { "FRICTION", 3 },
+                        { "TEMPERATURE", 20 }
+                    }),
+                    new Properties("MUD", new Dictionary<string, int>
+                    {
+                        { "DIFFICULTY", 800 },
+                        { "FRICTION", 7 },
+                        { "TEMPERATURE", 20 }
+                    }),
+
+                    new Properties("GRASS", new Dictionary<string, int>
+                    {
+                        { "DIFFICULTY", 999 },
+                        { "FRICTION", 5 },
+                        { "TEMPERATURE", 20 }
+                    }),
+                };
+                foreach (Properties p in properties)
+                {
+                    Exporter<Properties>.Save(p.NodeType + ".nodeType", p);
+                }
+            }
+
+            public static void Generate()
+            {
+                Generator generator = new Generator();
+                generator.Init("TestGenerator");
+                Configuration configuration = generator.Config;
+                for (int i = 0; i < configuration.NodeTypes.Length; i++)
+                {
+                    Console.Write(i + " ");
+                    for (int j = 0; j < configuration.NodeTypes[i].Length; j++)
+                    {
+                        Console.Write("{0} : {1:D4} | ", configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
+                    }
+                    Console.Write("\n");
+                }
+                foreach(Properties p in generator.Prefab.Values)
+                {
+                    Console.WriteLine(p.NodeType);
+                }
+                generator.Seed = 549021312;
+                Map map = generator.Build("Test", 32, 32, 32);
+                Exporter<Map>.Save(map.Name + ".map", map);
             }
 
             public static void Calculate()
@@ -336,13 +447,13 @@ namespace TestConsole
         {
             //Test.Estimator();
             //int[] A = new int[3];
-            Test.PathFind();
+            //Test.BinaryTree();
+            //Test.PathFind();
             //Test.Exporter();
             //Test.Random();
+            Test.Config();
+            //Test.Generate();
             Console.WriteLine("\nPress any key to exit.");
-            Console.WriteLine((int)4.99999f);
-            Console.WriteLine((int)124.19999f);
-            Console.WriteLine((int)523123.39999f);
             Console.ReadKey();
         }
         

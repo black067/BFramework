@@ -50,50 +50,49 @@ namespace BFramework
             _case = TYPE.NONE;
         }
 
-        /// <summary>
-        /// 根据规定类型的输入获取该对应的输出
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public TOutput this[TInput input]
+        public BDelegate(MethodTwoParams methodTwoParams)
         {
-            get
-            {
-                switch (_case)
-                {
-                    case TYPE.NORMAL:
-                        return _method(input);
-                    case TYPE.REF:
-                        return _methodRef(ref input);
-                    case TYPE.PARAMS:
-                        return _methodParams(input);
-                    case TYPE.NONE:
-                        return _methodNone();
-                }
-                return default(TOutput);
-            }
+            _methodTwoParams = methodTwoParams;
+            _case = TYPE.PARAMSTWO;
         }
-        public TOutput this[TInput[] input]
+
+        public TOutput Execute(TInput input)
         {
-            get
+            switch (_case)
             {
-                switch (_case)
-                {
-                    case TYPE.NORMAL:
-                        return _method(input[0]);
-                    case TYPE.REF:
-                        return _methodRef(ref input[0]);
-                    case TYPE.PARAMS:
-                        return _methodParams(input);
-                    case TYPE.NONE:
-                        return _methodNone();
-                }
-                return default(TOutput);
+                case TYPE.NORMAL:
+                    return _method(input);
+                case TYPE.REF:
+                    return _methodRef(ref input);
+                case TYPE.PARAMS:
+                    return _methodParams(input);
+                case TYPE.NONE:
+                    return _methodNone();
             }
+            return default(TOutput);
+        }
+
+        public TOutput Execute(params TInput[] inputs)
+        {
+            switch (_case)
+            {
+                case TYPE.NORMAL:
+                    return _method(inputs[0]);
+                case TYPE.REF:
+                    return _methodRef(ref inputs[0]);
+                case TYPE.PARAMS:
+                    return _methodParams(inputs);
+                case TYPE.NONE:
+                    return _methodNone();
+                case TYPE.PARAMSTWO:
+                    return _methodTwoParams(inputs[0], inputs[1]);
+            }
+            return default(TOutput);
         }
 
         public delegate TOutput Method(TInput input);
         public delegate TOutput MethodRef(ref TInput input);
+        public delegate TOutput MethodTwoParams(TInput input0, TInput input1);
         public delegate TOutput MethodParams(params TInput[] input);
         public delegate TOutput MethodNone();
 
@@ -103,12 +102,14 @@ namespace BFramework
             REF = 1,
             PARAMS = 2,
             NONE = 3,
+            PARAMSTWO = 4,
         }
         
-        private TYPE _case;
-        private Method _method;
-        private MethodRef _methodRef;
-        private MethodParams _methodParams;
-        private MethodNone _methodNone;
+        private readonly TYPE _case;
+        private readonly Method _method;
+        private readonly MethodRef _methodRef;
+        private readonly MethodTwoParams _methodTwoParams;
+        private readonly MethodParams _methodParams;
+        private readonly MethodNone _methodNone;
     }
 }

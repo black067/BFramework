@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading;
 using System.IO;
-using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace BFramework.Tools
@@ -26,6 +25,12 @@ namespace BFramework.Tools
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             binaryFormatter.Serialize(fileStream, obj);
             fileStream.Close();
+        }
+        
+        public static T Load(string fileName)
+        {
+            Load(fileName, out T result);
+            return result;
         }
 
         public static void Load(string fileName, out T result)

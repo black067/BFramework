@@ -1,6 +1,6 @@
-﻿
-using System.Reflection;
+﻿using System.Reflection;
 using System.Collections.Generic;
+using BFramework.Tools;
 
 namespace BFramework.World
 {
@@ -33,9 +33,10 @@ namespace BFramework.World
             /// </summary>
             public static class Keys
             {
-                public const string Difficulty = "DIFFICULTY";
                 public const string GValue = "GVALUE";
                 public const string HValue = "HVALUE";
+                public const string Resistance = "Resistance";
+                public const string Difficulty = "DIFFICULTY";
                 public const string Friction = "FRICTION";
                 public const string Temperature = "TEMPERATURE";
 
