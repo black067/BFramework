@@ -16,12 +16,11 @@ namespace BFramework.BehaviourTree
     public class Cognition
     {
         private Dictionary<string, string> _memory;
-        private int capacity;
 
         public Cognition(Dictionary<string, string> memory)
         {
             _memory = memory;
-            Capacity = _memory.Count;
+            Count = _memory.Count;
         }
         public Cognition(int capacity) : this(new Dictionary<string, string>(capacity)) { }
 
@@ -48,17 +47,7 @@ namespace BFramework.BehaviourTree
             }
         }
 
-        public int Capacity
-        {
-            get
-            {
-                return capacity;
-            }
-            private set
-            {
-                capacity = value;
-            }
-        }
+        public int Count { get; private set; }
     }
 
     /// <summary>
@@ -107,15 +96,8 @@ namespace BFramework.BehaviourTree
         }
 
         private Cognition _cognition;
-        private STATUS _status = STATUS.INVALID;
         private BDelegate<Cognition, STATUS> _tick;
 
-        public STATUS Status
-        {
-            get
-            {
-                return _status;
-            }
-        }
+        public STATUS Status { get; } = STATUS.INVALID;
     }
 }

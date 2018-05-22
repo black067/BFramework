@@ -134,7 +134,7 @@ namespace TestConsole
 
                 Console.WriteLine("Conditional Number Test Over\n");
             }
-
+            /*
             public static void ObjectPool()
             {
                 //创建对象池
@@ -167,7 +167,7 @@ namespace TestConsole
                 }
                 Console.WriteLine("ObjectPool Test Over\n");
             }
-
+            */
             public static void StateMachine()
             {
                 //状态机测试
@@ -437,6 +437,16 @@ namespace TestConsole
                 }
                 Console.WriteLine("总计: 时间: {0}, 加成: {1}", time, current);
             }
+
+            public static void Reflection()
+            {
+                Node node = new Node(4, 5, 0, new Properties());
+                BDebug.Log(node);
+                Lever leverOfNode = new Lever(node.GetProperties());
+                leverOfNode["DIFFICULTY"] = 124;
+                BDebug.Log(leverOfNode["Cost"], leverOfNode["DIFFICULTY"]);
+
+            }
         }
 
         /// <summary>
@@ -451,8 +461,9 @@ namespace TestConsole
             //Test.PathFind();
             //Test.Exporter();
             //Test.Random();
-            Test.Config();
+            //Test.Config();
             //Test.Generate();
+            Test.Reflection();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

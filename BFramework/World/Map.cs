@@ -7,6 +7,7 @@ namespace BFramework.World
     [System.Serializable]
     public class Map
     {
+        public static readonly string Extension = ".map";
         /// <summary>
         /// 根据给定长宽高新建一个地图, 可选择是否随机给节点的通行难度赋值
         /// </summary>

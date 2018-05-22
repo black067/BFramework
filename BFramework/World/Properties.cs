@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BFramework.ExpandedMath;
 
 namespace BFramework.World
 {
@@ -6,7 +7,7 @@ namespace BFramework.World
     /// 节点属性类, 用于保存节点的属性及估值, 继承自 ExpandedMath.Estimable 类
     /// </summary>
     [System.Serializable]
-    public class Properties : ExpandedMath.Estimable
+    public class Properties : Estimable
     {
         public const string Extension = ".nodeType";
         /// <summary>
@@ -83,6 +84,16 @@ namespace BFramework.World
                 if (!Dictionary.ContainsKey(key))
                     Dictionary.Add(key, 0);
             }
+        }
+
+        public override Estimable Clone()
+        {
+            Dictionary<string, int> dic = new Dictionary<string, int>();
+            foreach(string key in Dictionary.Keys)
+            {
+                dic.Add(key, Dictionary[key]);
+            }
+            return new Estimable(dic);
         }
     }
 }

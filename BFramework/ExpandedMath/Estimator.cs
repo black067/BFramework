@@ -8,7 +8,7 @@ namespace BFramework.ExpandedMath
         /// <summary>
         /// 用于保存键与数值的字典
         /// </summary>
-        public Dictionary<string, int> Dictionary { get; set; }
+        protected Dictionary<string, int> Dictionary { get; set; }
 
         /// <summary>
         /// 使用一个已有的字典初始化 Estimable
@@ -23,25 +23,33 @@ namespace BFramework.ExpandedMath
         /// 初始化一个空 Estimable
         /// </summary>
         public Estimable() : this(new Dictionary<string, int>()) { }
-
+        
         /// <summary>
         /// 使用键取得数值
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
+        [System.Runtime.CompilerServices.IndexerName(Tools.Lever.INDEXEDPROPERTYTAG)]
         public int this[string key]
         {
             get
             {
                 if (!Dictionary.ContainsKey(key))
+                {
                     Dictionary.Add(key, 0);
+                }
                 return Dictionary[key];
             }
             set
             {
                 if (!Dictionary.ContainsKey(key))
+                {
                     Dictionary.Add(key, value);
-                Dictionary[key] = value;
+                }
+                else
+                {
+                    Dictionary[key] = value;
+                }
             }
         }
         
@@ -147,7 +155,7 @@ namespace BFramework.ExpandedMath
         /// 取得一个自身的克隆
         /// </summary>
         /// <returns></returns>
-        public Estimable Clone()
+        public virtual Estimable Clone()
         {
             Dictionary<string, int> dictionary = new Dictionary<string, int>();
             foreach (string key in Keys)
@@ -169,20 +177,12 @@ namespace BFramework.ExpandedMath
         {
             WeightItem = weightItem;
         }
-
-        public int this[T item]
-        {
-            get
-            {
-                return Calculate(item);
-            }
-        }
-
+        
         public int Calculate(T item)
         {
-            Estimable itemNew = WeightItem.Clone();
-            itemNew.Multiply(item);
-            return itemNew.Sum();
+            Estimable weightItem = WeightItem.Clone();
+            weightItem.Multiply(item);
+            return weightItem.Sum();
         }
     }
 }

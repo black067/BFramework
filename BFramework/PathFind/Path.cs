@@ -143,7 +143,7 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public void SetWeight(string key, int weight)
         {
-            if (Estimator.WeightItem.Dictionary.ContainsKey(key))
+            if (Estimator.WeightItem.ContainsKey(key))
             {
                 Estimator.WeightItem[key] = weight;
             }
@@ -182,12 +182,14 @@ namespace BFramework.PathFind
         /// <summary>
         /// 比较两个 Node 的开销
         /// </summary>
-        /// <param name="node1"></param>
-        /// <param name="node2"></param>
+        /// <param name="node"></param>
+        /// <param name="other"></param>
         /// <returns></returns>
-        private int CompareCost(Node node1, Node node2)
+        private int CompareCost(Node node, Node other)
         {
-            return node1.Cost.CompareTo(node2.Cost);
+            int r = node.CompareTo(other);
+            r = r == 0 ? CompareByAngle(node, other) : r;
+            return r;
         }
 
         public Node GetParent(Node child)
@@ -215,7 +217,7 @@ namespace BFramework.PathFind
             }
             return _nodeStates[node];
         }
-        
+
         private bool OpenedIsEmpty(List<Node> list)
         {
             return list.Count < 1;
@@ -252,7 +254,6 @@ namespace BFramework.PathFind
         {
             if (_nodeStates.ContainsKey(node))
             {
-                Console.WriteLine("{0:D3} | Push to Closed | Node: {1} | State:{2}", Steps, node, _nodeStates[node]);
                 Opened.Remove(node);
                 _nodeStates[node] = STATE.CLOSED;
             }
@@ -289,15 +290,18 @@ namespace BFramework.PathFind
             {
                 node[Default.Properties.Keys.Resistance] = 0;
             }
-            
+            node[Default.Properties.Keys.Resistance] += node.Difficulty / 10;
+            //if (node.Y - Current.Y != 0) node[Default.Properties.Keys.Resistance] += 5;
+            //if (node.X - Current.X != 0) node[Default.Properties.Keys.Resistance] += 5;
+            //if (node.Z - Current.Z != 0) node[Default.Properties.Keys.Resistance] += 5;
+
             if (GetState(node) == STATE.OPEN)
             {
-                int gValueNew = Agent.HeuristicFunction.Calculate(node, Start);
-                if (gValueNew < node.GValue)
+                int gValueLocal = Agent.HeuristicFunction.Calculate(node, _nodeParent[node]);
+                int gValueNew = Agent.HeuristicFunction.Calculate(node, Current);
+                if (gValueNew < gValueLocal)
                 {
                     SetParent(node, Current);
-                    node.GValue = gValueNew;
-                    node.SetCost(ref _estimator);
                 }
             }
             else
@@ -401,7 +405,7 @@ namespace BFramework.PathFind
         /// 按步检索路径
         /// </summary>
         /// <returns></returns>
-        public void FindByStep()
+        public void FindSync()
         {
             if (Opened.Count < 1 || Steps >= Agent.StepsLimit)
             {
@@ -433,7 +437,20 @@ namespace BFramework.PathFind
         {
             for (; Status == STATUS.PROCESSING;)
             {
-                FindByStep();
+                FindSync();
+            }
+        }
+
+        /// <summary>
+        /// 检索路径, 且在每一步检索之后执行动作, 直到寻路结束
+        /// </summary>
+        /// <param name="action"></param>
+        public void Find(BDelegate action)
+        {
+            for (; Status == STATUS.PROCESSING;)
+            {
+                FindSync();
+                action.Execute();
             }
         }
 
@@ -455,7 +472,7 @@ namespace BFramework.PathFind
             }
             PushToOpened(Start, null);
         }
-        
+
         /// <summary>
         /// 设置起点
         /// </summary>
@@ -473,6 +490,25 @@ namespace BFramework.PathFind
         public void SetEnd(Node end)
         {
             End = end;
+        }
+
+        private static VectorInt NodeAsVector(Node node)
+        {
+            return new VectorInt(node.X, node.Y, node.Z);
+        }
+        
+        private int CompareByAngle(Node node, Node other)
+        {
+            VectorInt endPosition = NodeAsVector(End);
+            VectorInt startPosition = NodeAsVector(Start);
+            VectorInt startToEnd = endPosition - startPosition;
+            float startToEndLength = startToEnd.Magnitude;
+
+            VectorInt thisToEnd = endPosition - NodeAsVector(node);
+            VectorInt otherToEnd = endPosition - NodeAsVector(other);
+            double cosThita0 = (thisToEnd * startToEnd) / (thisToEnd.Magnitude * startToEndLength);
+            double cosThita1 = (otherToEnd * startToEnd) / (otherToEnd.Magnitude * startToEndLength);
+            return -cosThita0.CompareTo(cosThita1);
         }
     }
 }

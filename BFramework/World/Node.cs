@@ -21,31 +21,46 @@ namespace BFramework.World
             Y = y;
             Z = z;
         }
-        
+
         /// <summary>
         /// 节点的属性
         /// </summary>
-        private Properties _properties { get; set; }
-        
+        private Properties _properties
+        {
+            get; set;
+        }
+
         /// <summary>
         /// 节点的所有相邻节点
         /// </summary>
-        public Node[,,] Neighbors { get; set; }
+        public Node[,,] Neighbors
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 节点在 X 轴上的坐标
         /// </summary>
-        public int X { get; set; }
+        public int X
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 节点在 Y 轴上的坐标
         /// </summary>
-        public int Y { get; set; }
+        public int Y
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 节点在 Z 轴上的坐标
         /// </summary>
-        public int Z { get; set; }
+        public int Z
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 通过给定的方向, 调整坐标的指针
@@ -117,7 +132,7 @@ namespace BFramework.World
             get
             {
                 int x = 1, y = 1, z = 1;
-                for(int i = 0, length = directions.Length; i < length; i++)
+                for (int i = 0, length = directions.Length; i < length; i++)
                 {
                     SwitchDirection(ref directions[i], ref x, ref y, ref z);
                 }
@@ -127,52 +142,124 @@ namespace BFramework.World
 
         public int this[string key]
         {
-            get { return _properties[key]; }
-            set { _properties[key] = value; }
+            get
+            {
+                return _properties[key];
+            }
+            set
+            {
+                _properties[key] = value;
+            }
         }
 
         /// <summary>
         /// 节点的可见性
         /// </summary>
-        public bool Visible { get { return _properties.Visible; } }
+        public bool Visible
+        {
+            get
+            {
+                return _properties.Visible;
+            }
+        }
 
         /// <summary>
         /// 节点的类型值
         /// </summary>
-        public string Type { get { return _properties.NodeType; } set { _properties.NodeType = value; } }
+        public string Type
+        {
+            get
+            {
+                return _properties.NodeType;
+            }
+            set
+            {
+                _properties.NodeType = value;
+            }
+        }
 
         /// <summary>
         /// 通过该节点的开销
         /// </summary>
-        public int Cost { get { return _properties.Cost; } set { _properties.Cost = value; } }
+        public int Cost
+        {
+            get
+            {
+                return _properties.Cost;
+            }
+            set
+            {
+                _properties.Cost = value;
+            }
+        }
 
         /// <summary>
         /// 该节点的通行难度
         /// </summary>
-        public int Difficulty { get { return _properties[Default.Properties.Keys.Difficulty]; } set { _properties[Default.Properties.Keys.Difficulty] = value; } }
+        public int Difficulty
+        {
+            get
+            {
+                return _properties[Default.Properties.Keys.Difficulty];
+            }
+            set
+            {
+                _properties[Default.Properties.Keys.Difficulty] = value;
+            }
+        }
 
         /// <summary>
         /// 该节点到其父节点的距离估值
         /// </summary>
-        public int GValue { get { return _properties[Default.Properties.Keys.GValue]; } set { _properties[Default.Properties.Keys.GValue] = value; } }
+        public int GValue
+        {
+            get
+            {
+                return _properties[Default.Properties.Keys.GValue];
+            }
+            set
+            {
+                _properties[Default.Properties.Keys.GValue] = value;
+            }
+        }
 
         /// <summary>
         /// 该节点到目标节点的距离估值
         /// </summary>
-        public int HValue { get { return _properties[Default.Properties.Keys.HValue]; } set { _properties[Default.Properties.Keys.HValue] = value; } }
+        public int HValue
+        {
+            get
+            {
+                return _properties[Default.Properties.Keys.HValue];
+            }
+            set
+            {
+                _properties[Default.Properties.Keys.HValue] = value;
+            }
+        }
 
         /// <summary>
         /// 该节点的通行阻力
         /// </summary>
-        public int Friction { get { return _properties[Default.Properties.Keys.Friction]; } set { _properties[Default.Properties.Keys.Friction] = value; } }
-        
+        public int Friction
+        {
+            get
+            {
+                return _properties[Default.Properties.Keys.Friction];
+            }
+            set
+            {
+                _properties[Default.Properties.Keys.Friction] = value;
+            }
+        }
+
         /// <summary>
         /// 设置该节点的通行开销, 需要传入一个对 PathFind.Properties 类的估值器( ExpandedMath.Estimator 类)
         /// </summary>
         /// <param name="estimator"></param>
         public void SetCost(ref ExpandedMath.Estimator<Properties> estimator)
         {
-            _properties.Cost = estimator[_properties];
+            _properties.Cost = estimator.Calculate(_properties);
         }
 
         public void SetProerties(Properties properties)
@@ -198,9 +285,9 @@ namespace BFramework.World
             return string.Format("Node({1}, {2}, {3}, Type: {0}, Cost: {4})", Type, X, Y, Z, Cost);
         }
 
-        public int CompareTo(Node obj)
+        public int CompareTo(Node other)
         {
-            return Cost.CompareTo(obj.Cost);
+            return Cost.CompareTo(other.Cost);
         }
     }
 }

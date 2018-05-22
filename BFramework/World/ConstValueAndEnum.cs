@@ -35,7 +35,7 @@ namespace BFramework.World
             {
                 public const string GValue = "GVALUE";
                 public const string HValue = "HVALUE";
-                public const string Resistance = "Resistance";
+                public const string Resistance = "RESISTANCE";
                 public const string Difficulty = "DIFFICULTY";
                 public const string Friction = "FRICTION";
                 public const string Temperature = "TEMPERATURE";

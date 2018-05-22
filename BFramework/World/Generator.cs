@@ -18,7 +18,7 @@ namespace BFramework.World
 
         public Vector[] Offsets { get; set; }
 
-        public BDelegate<int, bool> InitOffset { get; set; }
+        public BDelegate<int> InitOffset { get; set; }
 
         public BDelegate<int, string> GetTypeByNoise { get; set; }
 
@@ -72,14 +72,13 @@ namespace BFramework.World
 
             if (InitOffset == null)
             {
-                InitOffset = new BDelegate<int, bool>(delegate (int seed)
+                InitOffset = new BDelegate<int>(delegate (int seed)
                 {
                     Random.Init(seed);
                     Offsets = new Vector[3];
                     Offsets[0] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
                     Offsets[1] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
                     Offsets[2] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
-                    return true;
                 });
             }
 
@@ -99,7 +98,7 @@ namespace BFramework.World
         
         public Map Build(string name, int width, int height, int length)
         {
-            _offsetInitialized = InitOffset.Execute(Seed);
+            InitOffset.Execute(Seed);
 
             Result = new Map(name, width, height, length);
 
@@ -113,14 +112,13 @@ namespace BFramework.World
                     }
                 }
             }
-            
-            _offsetInitialized = false;
+
             return Result;
         }
 
         public void BuildSynchronizeInit(string name, int width, int height, int length)
         {
-            _offsetInitialized = InitOffset.Execute(Seed);
+            InitOffset.Execute(Seed);
             Result = new Map(name, width, height, length);
             I = 0; J = 0; K = 0;
             Done = false;
