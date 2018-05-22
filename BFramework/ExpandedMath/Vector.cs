@@ -174,6 +174,7 @@ namespace BFramework.ExpandedMath
                 return (float)Math.Sqrt(SqrMagnitude);
             }
         }
+
         public VectorInt Add(VectorInt addition)
         {
             VectorInt result = new VectorInt(this);
@@ -182,6 +183,7 @@ namespace BFramework.ExpandedMath
             result.z += addition.z;
             return result;
         }
+
         public VectorInt Multiply(int multiplier)
         {
             VectorInt result = new VectorInt(this);

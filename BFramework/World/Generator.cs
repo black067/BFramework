@@ -37,7 +37,9 @@ namespace BFramework.World
         private bool _offsetInitialized { get; set; }
 
         public int I { get; private set; }
+
         public int J { get; private set; }
+
         public int K { get; private set; }
 
         public bool Done { get; private set; }
@@ -144,7 +146,7 @@ namespace BFramework.World
 
             return (int)(noise0 + noise1 + noise2 + MinHeight);
         }
-        
+
         public void SetNodeType(Node node)
         {
             string typeName = UseNoise ? 
