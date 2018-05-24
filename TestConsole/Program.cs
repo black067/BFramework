@@ -79,7 +79,7 @@ namespace TestConsole
                 Console.WriteLine("#############\nBRandom.Range Test");
                 for (int i = 0; i <= 35; i++)
                 {
-                    int n = BFramework.ExpandedMath.Random.Range(999999, 9999999);
+                    int n = BFramework.ExpandedMath.Random.Range(99999, 999999);
                     Console.WriteLine("RandomNumber[{0}] = {1}", i, n);
                 }
                 Console.WriteLine("\n#############\nBRandom.Range Test End");
@@ -106,15 +106,14 @@ namespace TestConsole
                 Console.WriteLine(vectorA.Cross(vectorB));
                 Console.WriteLine(vectorA.Dot(vectorB));
 
-                Segments segments = new Segments(45, 15, 841, 200, 478, 104, 684);
-                Console.WriteLine(segments);
-                Console.WriteLine(segments.Count);
-                Console.WriteLine(segments.Max);
-                Console.WriteLine(segments[15]);
-                Console.WriteLine(segments[53]);
-                Console.WriteLine(segments[76]);
-                Console.WriteLine(segments[89]);
-                Console.WriteLine(segments[108]);
+                Segments segments = new Segments(0, 3, 1, 1, 1, 1, 1);
+                Console.WriteLine("var : {0}", segments);
+                Console.WriteLine("Count = {0}", segments.Count);
+                Console.WriteLine("Test{0} = {1}", 0, segments[0]);
+                Console.WriteLine("Test{0} = {1}", 4, segments[4]);
+                Console.WriteLine("Test{0} = {1}", 2, segments[2]);
+                Console.WriteLine("Test{0} = {1}", 5, segments[5]);
+                Console.WriteLine("Test{0} = {1}", 10, segments[10]);
 
                 //限定条件数值
                 Console.WriteLine("#############\nConditional Number Test");
@@ -175,19 +174,19 @@ namespace TestConsole
                 State s_1 = new State("State 1");
                 State s_2 = new State("State 2");
                 State s_3 = new State("State 3");
-                s_1.Action = new BDelegate<object, string>(delegate (ref Object input)
+                s_1.Action = new BDelegate<object, string>(delegate (object input)
                 {
                     s_1.StateMachine.Params = "I am State 2";
                     Console.WriteLine(s_1.Name + " Say: " + input);
                     return s_1.StateMachine.Tags[1];
                 });
-                s_2.Action = new BDelegate<object, string>(delegate (ref Object input)
+                s_2.Action = new BDelegate<object, string>(delegate (object input)
                 {
                     s_2.StateMachine.Params = "I am State 3";
                     Console.WriteLine(s_2.Name + " Say: " + input);
                     return s_2.StateMachine.Tags[2];
                 });
-                s_3.Action = new BDelegate<object, string>(delegate (ref Object input)
+                s_3.Action = new BDelegate<object, string>(delegate (object input)
                 {
                     s_3.StateMachine.Params = "I am State 1";
                     Console.WriteLine(s_3.Name + " Say: " + input);
@@ -198,6 +197,7 @@ namespace TestConsole
                 {
                     machine.Run();
                 }
+
                 Console.WriteLine("StateMachine Test Over\n");
             }
 
@@ -347,14 +347,19 @@ namespace TestConsole
                 Configuration configuration = Configuration.ReadCSV("TEST.csv");
                 for (int i = 0; i < configuration.NodeTypes.Length; i++)
                 {
-                    Console.Write(i + " ");
+                    Console.Write("DataID_{0}: Wights = {1},", i, configuration.HeightOffsets.Weights[i]);
                     for (int j = 0; j < configuration.NodeTypes[i].Length; j++)
                     {
-                        Console.Write("{0} : {1:D4} | ",configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
+                        Console.Write("Type = {0}, Wight = {1:D4}; ",configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
                     }
                     Console.Write("\n");
                 }
                 Console.WriteLine("done.");
+
+                for (int i = 0; i < 16; i++)
+                {
+                    Console.WriteLine(configuration.GetNodeTypeByHeight(i));
+                }
             }
 
             public static void BuildDefaultNode()
@@ -461,9 +466,11 @@ namespace TestConsole
             //Test.PathFind();
             //Test.Exporter();
             //Test.Random();
-            //Test.Config();
+            Test.Config();
             //Test.Generate();
-            Test.Reflection();
+            //Test.Reflection();
+            //Test.StateMachine();
+            //Test.ExpandedMath();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

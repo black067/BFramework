@@ -2,7 +2,7 @@
 namespace BFramework.ExpandedMath
 {
     /// <summary>
-    /// 分段数组, 可以用于产生权重表
+    /// 分段数组
     /// </summary>
     [System.Serializable]
     public class Segments

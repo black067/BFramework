@@ -10,21 +10,39 @@ namespace BFramework.World
     public class Configuration
     {
         public const string Extension = ".config";
-        public Configuration(string name, string[][] nodeTypes, Segments[] weights)
+        public Configuration(string name, string[][] nodeTypes, Segments[] weights, int[] heightOffsets)
         {
             Name = name;
             NodeTypes = nodeTypes;
             Weights = weights;
             Height = Weights.Length;
+            HeightOffsets = new Segments(heightOffsets);
         }
 
-        public string Name { get; set; }
-        
-        public string[][] NodeTypes { get; private set; }
+        public string Name
+        {
+            get; set;
+        }
 
-        public Segments[] Weights { get; private set; }
+        public string[][] NodeTypes
+        {
+            get; private set;
+        }
 
-        public int Height { get; private set; }
+        public Segments[] Weights
+        {
+            get; private set;
+        }
+
+        public int Height
+        {
+            get; private set;
+        }
+
+        public Segments HeightOffsets
+        {
+            get; private set;
+        }
 
         public const int MaxHeight = 2048;
 
@@ -36,12 +54,16 @@ namespace BFramework.World
 
         public int Seed { get; set; } = 20180516;
 
-        public string GetNodeTypeByHeight(int height)
+        public string GetNodeTypeByHeight(int offset)
         {
-            if(height >= Height) { return Default.Value.NodeTypeEmpty; }
-            return NodeTypes[height][Weights[height].GetRandomIndex()];
+            if (offset < 0)
+            {
+                return Default.Value.NodeTypeEmpty;
+            }
+            int i = HeightOffsets[offset];
+            return NodeTypes[i][Weights[i].GetRandomIndex()];
         }
-        
+
         public static Configuration ReadCSV(string path)
         {
             path = Directory.GetCurrentDirectory() + "\\" + path;
@@ -49,26 +71,31 @@ namespace BFramework.World
             StreamReader reader = new StreamReader(fileStream);
             List<string[]> nodeTypes = new List<string[]>();
             List<Segments> weights = new List<Segments>();
-            for(int i = 0; i < MaxHeight && !reader.EndOfStream; i++)
+            List<int> heightOffsets = new List<int>();
+            for (int i = 0; i < MaxHeight && !reader.EndOfStream; i++)
             {
                 string str = reader.ReadLine();
-                if (reader.EndOfStream) break;
+                if (reader.EndOfStream)
+                    break;
                 List<string> nodeTypesSplitted = new List<string>();
-                foreach (string item in str.Split(','))
+                string[] typeSplitted = str.Split(',');
+                string item = typeSplitted[0];
+                heightOffsets.Add(int.Parse(item));
+                for (int j = 1, length = typeSplitted.Length; j < length; j++)
                 {
+                    item = typeSplitted[j];
                     if (item != "" && item != " " && item != "\t" && item != "\n")
                         nodeTypesSplitted.Add(item);
                 }
                 nodeTypes.Add(nodeTypesSplitted.ToArray());
 
                 string[] weightSplitted = reader.ReadLine().Split(',');
-
-                int[] weightsTemp = new int[weightSplitted.Length];
-                for(int j = 0; j < weightSplitted.Length; j++)
+                int[] weightsTemp = new int[weightSplitted.Length - 1];
+                for (int k = 1; k < weightSplitted.Length; k++)
                 {
-                    if (int.TryParse(weightSplitted[j], out int r))
+                    if (int.TryParse(weightSplitted[k], out int r))
                     {
-                        weightsTemp[j] = r;
+                        weightsTemp[k - 1] = r;
                     }
                 }
                 weights.Add(new Segments(weightsTemp));
@@ -76,8 +103,8 @@ namespace BFramework.World
             reader.Dispose();
             fileStream.Close();
             string name = Path.GetFileNameWithoutExtension(path);
-            Configuration result = new Configuration(name, nodeTypes.ToArray(), weights.ToArray());
-            string serializeFilePath = name + ".config";
+            Configuration result = new Configuration(name, nodeTypes.ToArray(), weights.ToArray(), heightOffsets.ToArray());
+            string serializeFilePath = name + Extension;
             Exporter<Configuration>.Save(serializeFilePath, result);
             return result;
         }

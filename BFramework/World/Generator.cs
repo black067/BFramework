@@ -72,28 +72,9 @@ namespace BFramework.World
                 }
             }
 
-            if (InitOffset == null)
-            {
-                InitOffset = new BDelegate<int>(delegate (int seed)
-                {
-                    Random.Init(seed);
-                    Offsets = new Vector[3];
-                    Offsets[0] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
-                    Offsets[1] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
-                    Offsets[2] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
-                });
-            }
+            InitOffset = InitOffset ?? new BDelegate<int>(DefaultOffsetInit);
 
-            if(GetTypeByNoise == null)
-            {
-                GetTypeByNoise = new BDelegate<int, string>(delegate (int height, int noiseHeight)
-                {
-                    if (height > noiseHeight) { return Properties.EmptyValue; }
-                    else if (height == noiseHeight) { return "GRASS"; }
-                    else if (height < noiseHeight && height > noiseHeight - 5) { return "MUD"; }
-                    else { return "ROCK"; }
-                });
-            }
+            GetTypeByNoise = GetTypeByNoise ?? new BDelegate<int, string>(DefaultGetType);
 
             _initialized = true;
         }
@@ -126,7 +107,21 @@ namespace BFramework.World
             Done = false;
         }
 
-        int GenerateWaveHeight(float x, float y, float z)
+        private string DefaultGetType(int height, int noiseHeight)
+        {
+            return Config.GetNodeTypeByHeight(noiseHeight - height);
+        }
+
+        private void DefaultOffsetInit(int seed)
+        {
+            Random.Init(seed);
+            Offsets = new Vector[3];
+            Offsets[0] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
+            Offsets[1] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
+            Offsets[2] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
+        }
+        
+        private int GenerateWaveHeight(float x, float y, float z)
         {
             float x0 = (x + Offsets[0].x) * Frequency;
             float y0 = (y + Offsets[0].y) * Frequency;
@@ -151,7 +146,7 @@ namespace BFramework.World
         {
             string typeName = UseNoise ? 
                 GetTypeByNoise.Execute(node.Y, GenerateWaveHeight(node.X, node.Y, node.Z)) : 
-                Config.GetNodeTypeByHeight(node.Y);
+                Config.GetNodeTypeByHeight(Config.MinHeight - node.Y);
 
             node.SetProerties(Prefab.ContainsKey(typeName) ? 
                 Prefab[typeName] : 

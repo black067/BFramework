@@ -25,11 +25,6 @@ namespace BFramework.StateMachines
         }
 
         /// <summary>
-        /// 状态机中所有状态
-        /// </summary>
-        private Dictionary<string, State> _states;
-        
-        /// <summary>
         /// 添加状态节点
         /// </summary>
         /// <param name="state"></param>
@@ -39,11 +34,6 @@ namespace BFramework.StateMachines
             Tags.Add(state.Name);
             state.Initiate(this);
         }
-
-        /// <summary>
-        /// 当前状态节点
-        /// </summary>
-        private string _current;
 
         /// <summary>
         /// 下一个状态
@@ -56,23 +46,12 @@ namespace BFramework.StateMachines
         private object _params;
 
         /// <summary>
-        /// 用于记录状态节点的名称
-        /// </summary>
-        private List<string> _tags;
-
-        /// <summary>
         /// 当前状态节点
         /// </summary>
         public string Current
         {
-            get
-            {
-                return _current;
-            }
-            set
-            {
-                _current = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -94,25 +73,16 @@ namespace BFramework.StateMachines
         /// </summary>
         public Dictionary<string, State> States
         {
-            get
-            {
-                return _states;
-            }
-            private set { _states = value; }
+            get;
+            private set;
         }
         /// <summary>
         /// 用于记录状态节点的名称
         /// </summary>
         public List<string> Tags
         {
-            get
-            {
-                return _tags;
-            }
-            private set
-            {
-                _tags = value;
-            }
+            get;
+            private set;
         }
         /// <summary>
         /// 执行当前状态节点
@@ -121,22 +91,38 @@ namespace BFramework.StateMachines
         {
             Run(Params);
         }
+
         public void Run(object input)
         {
-            _nextState = States[Current].Action.Execute(input);
-            ChangeTo(_nextState);
+            _nextState = States[Current].Act(input);
+            if (_nextState != Current && States.ContainsKey(_nextState))
+            {
+                Current = _nextState;
+            }
         }
 
         /// <summary>
-        /// 改变状态节点
+        /// 添加状态转换
         /// </summary>
-        /// <param name="name"></param>
-        public void ChangeTo(string name)
+        /// <param name="fromState"></param>
+        /// <param name="targetState"></param>
+        /// <param name="conditionMethod"></param>
+        /// <param name="callbackMethod"></param>
+        /// <returns></returns>
+        public Translation AddTranslation(string fromState, string targetState, BDelegate<object, bool>.Method conditionMethod, BDelegate<object, string>.Method callbackMethod)
         {
-            if (name != Current && States.ContainsKey(name))
-            {
-                Current = name;
-            }
+            return States[fromState].AddTranslation(targetState, conditionMethod, callbackMethod);
+        }
+
+        /// <summary>
+        /// 移除状态转换
+        /// </summary>
+        /// <param name="stateName"></param>
+        /// <param name="translationName"></param>
+        /// <returns></returns>
+        public Translation RemoveTranslation(string stateName, string translationName)
+        {
+            return States[stateName].RemoveTranslation(translationName);
         }
     }
 }

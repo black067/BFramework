@@ -135,7 +135,7 @@ namespace BFramework.ExpandedMath
             hashCode = hashCode * -1521134295 + Min.GetHashCode();
             return hashCode;
         }
-
+        
         public static Limited operator + (Limited lhs, Limited rhs)
         {
             return new Limited(lhs)
@@ -201,7 +201,7 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value / rhs
             };
         }
-
+        
         public static bool operator == (Limited lhs, Limited rhs)
         {
             return lhs.Min == rhs.Min && lhs.Max == rhs.Max && lhs.Value == rhs.Value;
@@ -389,7 +389,7 @@ namespace BFramework.ExpandedMath
             hashCode = hashCode * -1521134295 + Min.GetHashCode();
             return hashCode;
         }
-
+        
         public static LimitedInt operator +(LimitedInt lhs, LimitedInt rhs)
         {
             return new LimitedInt(lhs)

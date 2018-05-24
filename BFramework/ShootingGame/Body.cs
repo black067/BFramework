@@ -34,20 +34,13 @@ namespace BFramework.ShootingGame
             }
         }
 
-        private float _health;
         public Dictionary<string, Component> Components;
         public List<string> Tags;
 
         public float Health
         {
-            get
-            {
-                return _health;
-            }
-            set
-            {
-                _health = value;
-            }
+            get;
+            set;
         }
     }
 }

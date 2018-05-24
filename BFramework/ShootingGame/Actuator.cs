@@ -24,12 +24,11 @@ namespace BFramework.ShootingGame
                     //3
                     Creature.Attribute.POSTURE.CRAWL.ToString(),
                 };
-                _actionTransition = new BDelegate<object, string>(Transition);
-                _actionChange = new BDelegate<object, string>(ChangeTo);
-                State transition = new State(_tags[0], _actionTransition);
-                State upright = new State(_tags[1], _actionChange);
-                State squat = new State(_tags[2], _actionChange);
-                State crawl = new State(_tags[3], _actionChange);
+
+                State transition = new State(_tags[0], new BDelegate<object, string>(Transition));
+                State upright = new State(_tags[1], ChangeTo);
+                State squat = new State(_tags[2], ChangeTo);
+                State crawl = new State(_tags[3], ChangeTo);
                 StateMachine = new StateMachine(transition, upright, squat, crawl)
                 {
                     Current = _tags[1],
@@ -43,12 +42,21 @@ namespace BFramework.ShootingGame
                 };
             }
 
-            public StateMachine StateMachine { get; set; }
-            private string[] _tags { get; set; }
-            private BDelegate<object, string> _actionTransition { get; set; }
-            private BDelegate<object, string> _actionChange { get; set; }
+            public StateMachine StateMachine
+            {
+                get; set;
+            }
+            private string[] _tags
+            {
+                get; set;
+            }
+            public BDelegate AnimationPlayer
+            {
+                get; set;
+            }
+
             private ChangeRequest _request;
-            private ChangeRequest _requestTemporary;
+
             public bool TransitionDone { get; set; } = true;
 
             private string Transition()
@@ -64,26 +72,32 @@ namespace BFramework.ShootingGame
                 }
             }
 
-            private string ChangeTo(ref object input)
+            private string ChangeTo(object input)
             {
-                _requestTemporary = (ChangeRequest)input;
-                
-                if(_requestTemporary.end == StateMachine.Current)
+                ChangeRequest request = (ChangeRequest)input;
+
+                if (request.end == StateMachine.Current)
                 {
                     return StateMachine.Current;
                 }
                 else
                 {
-                    StateMachine.Params = _requestTemporary;
+                    StateMachine.Params = request;
                     TransitionDone = false;
-                    TransitAnimationPlay(_requestTemporary);
+                    TransitAnimationPlay(request);
                     return _tags[0];
                 }
             }
-            
+
+            public string Action(object reqObject)
+            {
+                ChangeRequest request = reqObject as ChangeRequest;
+                return StateMachine.Current;
+            }
+
             private void TransitAnimationPlay(ChangeRequest request)
             {
-                //此处添加播放动画的动作
+                AnimationPlayer.Execute();
                 System.Console.WriteLine("From " + request.start + " change to " + request.end);
                 TransitionDone = true;
             }
@@ -116,17 +130,15 @@ namespace BFramework.ShootingGame
         {
             PostureMgr = new PostureManager();
         }
-        
-        public PostureManager PostureMgr { get; set; }
+
+        public PostureManager PostureMgr
+        {
+            get; set;
+        }
 
         public void Work(ref Creature.Command command)
         {
             PostureMgr.Run(command.ChangePostureTo);
-        }
-
-        private bool Animation()
-        {
-            return true;
         }
     }
 }

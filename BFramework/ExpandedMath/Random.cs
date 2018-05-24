@@ -12,15 +12,13 @@ namespace BFramework.ExpandedMath
 
         /// <summary>
         /// 取得一个随机浮点数
+        /// 返回值 ∈ [min, max)
         /// </summary>
-        public static float Value
+        public static float  Value
         {
             get
             {
-                var result = (_randomCast.NextDouble()
-                  * (System.Single.MaxValue - (double)System.Single.MinValue))
-                  + System.Single.MinValue;
-                return (float)result;
+                return (float)_randomCast.NextDouble();
             }
         }
 

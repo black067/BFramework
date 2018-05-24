@@ -8,7 +8,7 @@ namespace BFramework.Tools
 {
     /// <summary>
     /// 由字符串快速设置/获取某个实例的属性值, 若实例有索引器, 需要标记为
-    /// [System.Runtime.CompilerServices.IndexerName(Tools.Lever.IndexedPropertyString)]
+    /// [System.Runtime.CompilerServices.IndexerName(Tools.Lever.INDEXEDPROPERTYTAG)]
     /// </summary>
     public class Lever
     {

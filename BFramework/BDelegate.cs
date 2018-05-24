@@ -1,7 +1,7 @@
 ﻿
 namespace BFramework
 {
-    enum DELEGATETYPE
+    enum BDelegateTYPE
     {
         NONE = 0,
         NORMAL = 1,
@@ -10,37 +10,13 @@ namespace BFramework
         PARAMSTWO = 4,
         RETURN = -1
     }
-
-    public interface IDelegate
-    {
-        void Execute();
-        void Execute(params object[] args);
-    }
-
-    public interface IDelegate<T>
-    {
-        void Execute(T input);
-        void Execute(params T[] inputs);
-        void Execute(T input0, T input1);
-        void Execute(ref T input);
-        T Execute();
-    }
-
-    public interface IDelegate<TIn, TOut>
-    {
-        TOut Execute(TIn input);
-        TOut Execute(params TIn[] inputs);
-        TOut Execute(TIn input0, TIn input1);
-        TOut Execute(ref TIn input);
-        TOut Execute();
-    }
     
     /// <summary>
     /// 指定输入类型及输出类型的委托
     /// </summary>
     /// <typeparam name="TIn"></typeparam>
     /// <typeparam name="TOut"></typeparam>
-    public class BDelegate<TIn, TOut> : IDelegate<TIn, TOut>
+    public class BDelegate<TIn, TOut>
     {
         /// <summary>
         /// 添加 TInput 输入 方法
@@ -49,7 +25,7 @@ namespace BFramework
         public BDelegate(Method method)
         {
             _method = method;
-            _case = DELEGATETYPE.NORMAL;
+            _case = BDelegateTYPE.NORMAL;
         }
         
         /// <summary>
@@ -59,7 +35,7 @@ namespace BFramework
         public BDelegate(MethodRef methodRef)
         {
             _methodRef = methodRef;
-            _case = DELEGATETYPE.REF;
+            _case = BDelegateTYPE.REF;
         }
 
         /// <summary>
@@ -69,7 +45,7 @@ namespace BFramework
         public BDelegate(MethodParams methodParams)
         {
             _methodParams = methodParams;
-            _case = DELEGATETYPE.PARAMS;
+            _case = BDelegateTYPE.PARAMS;
         }
 
         /// <summary>
@@ -79,18 +55,18 @@ namespace BFramework
         public BDelegate(MethodNone methodVoid)
         {
             _methodNone = methodVoid;
-            _case = DELEGATETYPE.NONE;
+            _case = BDelegateTYPE.NONE;
         }
 
         public BDelegate(MethodTwoParams methodTwoParams)
         {
             _methodTwoParams = methodTwoParams;
-            _case = DELEGATETYPE.PARAMSTWO;
+            _case = BDelegateTYPE.PARAMSTWO;
         }
 
         public TOut Execute()
         {
-            if (_case != DELEGATETYPE.NONE) return default(TOut);
+            if (_case != BDelegateTYPE.NONE) return default(TOut);
             return _methodNone();
         }
 
@@ -98,13 +74,13 @@ namespace BFramework
         {
             switch (_case)
             {
-                case DELEGATETYPE.NORMAL:
+                case BDelegateTYPE.NORMAL:
                     return _method(input);
-                case DELEGATETYPE.REF:
+                case BDelegateTYPE.REF:
                     return _methodRef(ref input);
-                case DELEGATETYPE.PARAMS:
+                case BDelegateTYPE.PARAMS:
                     return _methodParams(input);
-                case DELEGATETYPE.NONE:
+                case BDelegateTYPE.NONE:
                     return _methodNone();
             }
             return default(TOut);
@@ -112,7 +88,7 @@ namespace BFramework
 
         public TOut Execute(ref TIn input)
         {
-            if (_case != DELEGATETYPE.REF) return default(TOut);
+            if (_case != BDelegateTYPE.REF) return default(TOut);
             return _methodRef(ref input);
         }
 
@@ -120,15 +96,15 @@ namespace BFramework
         {
             switch (_case)
             {
-                case DELEGATETYPE.NORMAL:
+                case BDelegateTYPE.NORMAL:
                     return _method(inputs[0]);
-                case DELEGATETYPE.REF:
+                case BDelegateTYPE.REF:
                     return _methodRef(ref inputs[0]);
-                case DELEGATETYPE.PARAMS:
+                case BDelegateTYPE.PARAMS:
                     return _methodParams(inputs);
-                case DELEGATETYPE.NONE:
+                case BDelegateTYPE.NONE:
                     return _methodNone();
-                case DELEGATETYPE.PARAMSTWO:
+                case BDelegateTYPE.PARAMSTWO:
                     return _methodTwoParams(inputs[0], inputs[1]);
             }
             return default(TOut);
@@ -143,15 +119,15 @@ namespace BFramework
         {
             switch (d._case)
             {
-                case DELEGATETYPE.NONE:
+                case BDelegateTYPE.NONE:
                     return d._methodNone;
-                case DELEGATETYPE.NORMAL:
+                case BDelegateTYPE.NORMAL:
                     return d._method;
-                case DELEGATETYPE.REF:
+                case BDelegateTYPE.REF:
                     return d._methodRef;
-                case DELEGATETYPE.PARAMS:
+                case BDelegateTYPE.PARAMS:
                     return d._methodParams;
-                case DELEGATETYPE.PARAMSTWO:
+                case BDelegateTYPE.PARAMSTWO:
                     return d._methodTwoParams;
             }
             return d._method;
@@ -163,7 +139,7 @@ namespace BFramework
         public delegate TOut MethodParams(params TIn[] input);
         public delegate TOut MethodNone();
         
-        private readonly DELEGATETYPE _case;
+        private readonly BDelegateTYPE _case;
         private readonly Method _method;
         private readonly MethodRef _methodRef;
         private readonly MethodTwoParams _methodTwoParams;
@@ -171,7 +147,7 @@ namespace BFramework
         private readonly MethodNone _methodNone;
     }
 
-    public class BDelegate : IDelegate
+    public class BDelegate
     {
         public BDelegate(Method method)
         {
@@ -205,66 +181,66 @@ namespace BFramework
         private MethodParams _methodParams;
     }
     
-    public class BDelegate<T> : IDelegate<T>
+    public class BDelegate<T>
     {
         public BDelegate(Method method)
         {
             _method = method;
-            _case = DELEGATETYPE.NORMAL;
+            _case = BDelegateTYPE.NORMAL;
         }
 
         public BDelegate(MethodRef method)
         {
             _methodRef = method;
-            _case = DELEGATETYPE.REF;
+            _case = BDelegateTYPE.REF;
         }
 
         public BDelegate(MethodParams method)
         {
             _methodParams = method;
-            _case = DELEGATETYPE.PARAMS;
+            _case = BDelegateTYPE.PARAMS;
         }
         public BDelegate(MethodTwoParams method)
         {
             _methodTwoParams = method;
-            _case = DELEGATETYPE.PARAMSTWO;
+            _case = BDelegateTYPE.PARAMSTWO;
         }
         public BDelegate(ReturnT method)
         {
             _methodReturnT = method;
-            _case = DELEGATETYPE.RETURN;
+            _case = BDelegateTYPE.RETURN;
         }
 
         public void Execute(T input)
         {
-            if (_case == DELEGATETYPE.NORMAL)
+            if (_case == BDelegateTYPE.NORMAL)
                 _method(input);
         }
 
         public void Execute(ref T input)
         {
-            if (_case == DELEGATETYPE.REF)
+            if (_case == BDelegateTYPE.REF)
                 _methodRef(ref input);
         }
 
         public void Execute(params T[] inputs)
         {
-            if (_case == DELEGATETYPE.PARAMSTWO && inputs.Length == 2)
+            if (_case == BDelegateTYPE.PARAMSTWO && inputs.Length == 2)
             {
                 _methodTwoParams(inputs[0], inputs[1]);
             }
-            else if (_case == DELEGATETYPE.PARAMS) { _methodParams(inputs); }
+            else if (_case == BDelegateTYPE.PARAMS) { _methodParams(inputs); }
         }
 
         public T Execute()
         {
-            if (_case != DELEGATETYPE.RETURN) return default(T);
+            if (_case != BDelegateTYPE.RETURN) return default(T);
             return _methodReturnT();
         }
 
         public void Execute(T input0, T input1)
         {
-            if (_case != DELEGATETYPE.PARAMSTWO) return;
+            if (_case != BDelegateTYPE.PARAMSTWO) return;
             _methodTwoParams(input0, input1);
         }
 
@@ -272,15 +248,15 @@ namespace BFramework
         {
             switch (d._case)
             {
-                case DELEGATETYPE.NORMAL:
+                case BDelegateTYPE.NORMAL:
                     return d._method;
-                case DELEGATETYPE.REF:
+                case BDelegateTYPE.REF:
                     return d._methodRef;
-                case DELEGATETYPE.PARAMS:
+                case BDelegateTYPE.PARAMS:
                     return d._methodParams;
-                case DELEGATETYPE.PARAMSTWO:
+                case BDelegateTYPE.PARAMSTWO:
                     return d._methodTwoParams;
-                case DELEGATETYPE.RETURN:
+                case BDelegateTYPE.RETURN:
                     return d._methodReturnT;
             }
             return d._method;
@@ -294,7 +270,7 @@ namespace BFramework
         public delegate T ReturnT();
         
 
-        private readonly DELEGATETYPE _case;
+        private readonly BDelegateTYPE _case;
         private readonly Method _method;
         private readonly MethodRef _methodRef;
         private readonly MethodTwoParams _methodTwoParams;
