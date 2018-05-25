@@ -119,16 +119,18 @@ namespace BFramework.PathFind
             return dist;
         }
 
-        public int Calculate(Node start, Node target)
+        public static double Calculate(Node start, Node target, TYPE type)
         {
-            switch (Type)
+            switch (type)
             {
                 case TYPE.MANHATTAN:
                     return Manhattan(start, target);
                 case TYPE.EUCLIDEAN:
                     return Euclidean(start, target);
+                case TYPE.OCTILE:
+                    return Octile(start, target);
             }
-            return int.MaxValue;
+            return double.MaxValue;
         }
 
     }

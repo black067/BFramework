@@ -4,12 +4,12 @@ namespace BFramework.ExpandedMath.Distributions
     [System.Serializable]
     public class HighOrderEquation
     {
-        public HighOrderEquation(params int[] args)
+        public HighOrderEquation(params double[] args)
         {
-            Order = args;
+            Multiplier = args;
         }
 
-        public int[] Order { get; set; }
+        public double[] Multiplier { get; set; }
 
         private double Pow(double x, int n)
         {
@@ -26,9 +26,9 @@ namespace BFramework.ExpandedMath.Distributions
             get
             {
                 double result = 0;
-                for(int i = Order.Length - 1; i > -1; i--)
+                for(int i = Multiplier.Length - 1; i > -1; i--)
                 {
-                    result += Pow(x, Order[i]);
+                    result += Multiplier[i] == 0 ? 0 : (Multiplier[i] * Pow(x, i));
                 }
                 return result;
             }

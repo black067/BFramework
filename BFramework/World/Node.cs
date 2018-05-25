@@ -140,7 +140,7 @@ namespace BFramework.World
             }
         }
 
-        public int this[string key]
+        public double this[string key]
         {
             get
             {
@@ -181,7 +181,7 @@ namespace BFramework.World
         /// <summary>
         /// 通过该节点的开销
         /// </summary>
-        public int Cost
+        public double Cost
         {
             get
             {
@@ -196,7 +196,7 @@ namespace BFramework.World
         /// <summary>
         /// 该节点的通行难度
         /// </summary>
-        public int Difficulty
+        public double Difficulty
         {
             get
             {
@@ -211,7 +211,7 @@ namespace BFramework.World
         /// <summary>
         /// 该节点到其父节点的距离估值
         /// </summary>
-        public int GValue
+        public double GValue
         {
             get
             {
@@ -226,7 +226,7 @@ namespace BFramework.World
         /// <summary>
         /// 该节点到目标节点的距离估值
         /// </summary>
-        public int HValue
+        public double HValue
         {
             get
             {
@@ -241,7 +241,7 @@ namespace BFramework.World
         /// <summary>
         /// 该节点的通行阻力
         /// </summary>
-        public int Friction
+        public double Friction
         {
             get
             {

@@ -1,0 +1,11 @@
+C:\Users\black\Projects\BFramework\WorldConfigBuild\bin\Release\WorldConfigBuild.exe
+C:\Users\black\Projects\BFramework\WorldConfigBuild\bin\Release\WorldConfigBuild.pdb
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.csprojAssemblyReference.cache
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.MainForm.resources
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.Properties.Resources.resources
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.csproj.GenerateResource.cache
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.csproj.CoreCompileInputs.cache
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.exe
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.pdb
+C:\Users\black\Projects\BFramework\WorldConfigBuild\bin\Release\BFramework.dll
+C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.csproj.CopyComplete

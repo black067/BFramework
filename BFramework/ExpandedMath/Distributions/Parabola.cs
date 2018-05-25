@@ -1,11 +1,12 @@
 ﻿
 namespace BFramework.ExpandedMath.Distributions
 {
+    [System.Serializable]
     public class Parabola : HighOrderEquation
     {
-        public Parabola(int a, int b, int c = 0)
+        public Parabola(double a, double b, double c = 0)
         {
-            Order = new int[] { a, b, c };
+            Multiplier = new double[] { a, b, c };
         }
     }
 }

@@ -130,7 +130,7 @@ namespace BFramework.PathFind
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public int this[string key]
+        public double this[string key]
         {
             get { return Estimator.WeightItem[key]; }
             set { Estimator.WeightItem[key] = value; }
@@ -160,20 +160,20 @@ namespace BFramework.PathFind
             if (node != null)
             {
                 Node result;
-                int tempI = -1;
-                int tempF = int.MaxValue;
+                int tempIndex = -1;
+                double tempFriction = double.MaxValue;
                 for (int i = directions.Length - 1; i > -1; i--)
                 {
                     result = node[directions[i]];
-                    if (result != null && result.Friction > 0 && result.Friction < tempF)
+                    if (result != null && result.Friction > 0 && result.Friction < tempFriction)
                     {
-                        tempF = result.Friction;
-                        tempI = i;
+                        tempFriction = result.Friction;
+                        tempIndex = i;
                     }
                 }
-                if (tempI >= 0)
+                if (tempIndex >= 0)
                 {
-                    return node[directions[tempI]];
+                    return node[directions[tempIndex]];
                 }
             }
             return null;
@@ -239,8 +239,8 @@ namespace BFramework.PathFind
                 _nodeStates.Add(node, STATE.OPEN);
             }
             SetParent(node, parent);
-            node.GValue = Agent.HeuristicFunction.Calculate(node, Start);
-            node.HValue = Agent.HeuristicFunction.Calculate(node, End);
+            node.GValue = Agent.Compute(node, Start);
+            node.HValue = Agent.Compute(node, End);
             node.SetCost(ref _estimator);
             Opened.Add(node);
             Opened.Sort(CompareCost);
@@ -297,8 +297,8 @@ namespace BFramework.PathFind
 
             if (GetState(node) == STATE.OPEN)
             {
-                int gValueLocal = Agent.HeuristicFunction.Calculate(node, _nodeParent[node]);
-                int gValueNew = Agent.HeuristicFunction.Calculate(node, Current);
+                double gValueLocal = Agent.Compute(node, _nodeParent[node]);
+                double gValueNew = Agent.Compute(node, Current);
                 if (gValueNew < gValueLocal)
                 {
                     SetParent(node, Current);

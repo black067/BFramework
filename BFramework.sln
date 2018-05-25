@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BFramework", "BFramework\BF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldConfigBuild", "WorldConfigBuild\WorldConfigBuild.csproj", "{2D6CA820-BB09-495D-AA38-7CAB64897B66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,12 @@ Global
 		{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}.ForUnity|Any CPU.Build.0 = Debug|Any CPU
 		{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CB723CF-DA60-4CFD-AE85-E061AAC9AC56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D6CA820-BB09-495D-AA38-7CAB64897B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D6CA820-BB09-495D-AA38-7CAB64897B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D6CA820-BB09-495D-AA38-7CAB64897B66}.ForUnity|Any CPU.ActiveCfg = Release|Any CPU
+		{2D6CA820-BB09-495D-AA38-7CAB64897B66}.ForUnity|Any CPU.Build.0 = Release|Any CPU
+		{2D6CA820-BB09-495D-AA38-7CAB64897B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D6CA820-BB09-495D-AA38-7CAB64897B66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

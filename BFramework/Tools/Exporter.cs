@@ -19,11 +19,18 @@ namespace BFramework.Tools
             }
         }
 
-        public static void Save(string fileName, T obj)
+        public static string Save(T item)
+        {
+            string name = string.Format("{0}.{1}", item.GetHashCode(), item.GetType().Name);
+            Save(name, item);
+            return name;
+        }
+
+        public static void Save(string fileName, T item)
         {
             FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate);
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            binaryFormatter.Serialize(fileStream, obj);
+            binaryFormatter.Serialize(fileStream, item);
             fileStream.Close();
         }
         

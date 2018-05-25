@@ -8,13 +8,13 @@ namespace BFramework.ExpandedMath
         /// <summary>
         /// 用于保存键与数值的字典
         /// </summary>
-        protected Dictionary<string, int> Dictionary { get; set; }
+        protected Dictionary<string, double> Dictionary { get; set; }
 
         /// <summary>
         /// 使用一个已有的字典初始化 Estimable
         /// </summary>
         /// <param name="dictionary"></param>
-        public Estimable(Dictionary<string, int> dictionary)
+        public Estimable(Dictionary<string, double> dictionary)
         {
             Dictionary = dictionary;
         }
@@ -22,7 +22,7 @@ namespace BFramework.ExpandedMath
         /// <summary>
         /// 初始化一个空 Estimable
         /// </summary>
-        public Estimable() : this(new Dictionary<string, int>()) { }
+        public Estimable() : this(new Dictionary<string, double>()) { }
         
         /// <summary>
         /// 使用键取得数值
@@ -30,7 +30,7 @@ namespace BFramework.ExpandedMath
         /// <param name="key"></param>
         /// <returns></returns>
         [System.Runtime.CompilerServices.IndexerName(Tools.Lever.INDEXEDPROPERTYTAG)]
-        public int this[string key]
+        public double this[string key]
         {
             get
             {
@@ -56,7 +56,7 @@ namespace BFramework.ExpandedMath
         /// <summary>
         /// 获取字典的键值列表
         /// </summary>
-        public Dictionary<string, int>.KeyCollection Keys { get { return Dictionary.Keys; } }
+        public Dictionary<string, double>.KeyCollection Keys { get { return Dictionary.Keys; } }
 
         public bool ContainsKey(string key)
         {
@@ -141,9 +141,9 @@ namespace BFramework.ExpandedMath
         /// 获取自身所有值的总和
         /// </summary>
         /// <returns></returns>
-        public int Sum()
+        public double Sum()
         {
-            int result = 0;
+            double result = 0;
             foreach (string key in Keys)
             {
                 result += this[key];
@@ -157,7 +157,7 @@ namespace BFramework.ExpandedMath
         /// <returns></returns>
         public virtual Estimable Clone()
         {
-            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+            Dictionary<string, double> dictionary = new Dictionary<string, double>();
             foreach (string key in Keys)
             {
                 dictionary.Add(key, this[key]);
@@ -178,7 +178,7 @@ namespace BFramework.ExpandedMath
             WeightItem = weightItem;
         }
         
-        public int Calculate(T item)
+        public double Calculate(T item)
         {
             Estimable weightItem = WeightItem.Clone();
             weightItem.Multiply(item);

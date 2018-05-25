@@ -49,7 +49,7 @@ namespace BFramework.World
         /// <summary>
         /// 记录节点的开销
         /// </summary>
-        public int Cost { get; set; } = int.MaxValue;
+        public double Cost { get; set; } = double.MaxValue;
 
         /// <summary>
         /// 实例化空节点属性
@@ -63,7 +63,7 @@ namespace BFramework.World
         public Properties(string typeName)
         {
             NodeType = typeName;
-            Dictionary = new Dictionary<string, int>();
+            Dictionary = new Dictionary<string, double>();
             foreach (string key in KeysStatic)
             {
                 Dictionary.Add(key, 0);
@@ -75,7 +75,7 @@ namespace BFramework.World
         /// </summary>
         /// <param name="typeName"></param>
         /// <param name="dictionary"></param>
-        public Properties(string typeName, Dictionary<string, int> dictionary)
+        public Properties(string typeName, Dictionary<string, double> dictionary)
         {
             NodeType = typeName;
             Dictionary = dictionary;
@@ -88,7 +88,7 @@ namespace BFramework.World
 
         public override Estimable Clone()
         {
-            Dictionary<string, int> dic = new Dictionary<string, int>();
+            Dictionary<string, double> dic = new Dictionary<string, double>();
             foreach(string key in Dictionary.Keys)
             {
                 dic.Add(key, Dictionary[key]);

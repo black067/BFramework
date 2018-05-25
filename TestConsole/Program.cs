@@ -249,7 +249,7 @@ namespace TestConsole
                 Console.WriteLine("08 " + creature.actuator.PostureMgr.StateMachine.Current);
             }
 
-            public static void PathFind()
+            public static void DoPathfinding()
             {
                 int LengthX = 6;
                 int LengthY = 2;
@@ -288,7 +288,7 @@ namespace TestConsole
                 Console.WriteLine("{0}, Steps = {1}", path.Status, path.Steps);/**/
             }
 
-            public static void Exporter()
+            public static void ToolsExporter()
             {
                 Exporter<Map>.Load("Test.t", out Map map);
                 Console.WriteLine(map);
@@ -342,7 +342,7 @@ namespace TestConsole
                 Console.WriteLine(watch.Click());
             }
 
-            public static void Config()
+            public static void TranslateConfigCSV()
             {
                 Configuration configuration = Configuration.ReadCSV("TEST.csv");
                 for (int i = 0; i < configuration.NodeTypes.Length; i++)
@@ -367,35 +367,57 @@ namespace TestConsole
 
                 List<Properties> properties = new List<Properties>
                 {
-                    new Properties("BASEROCK", new Dictionary<string, int>
+                    new Properties("BASEROCK", new Dictionary<string, double>
                     {
                         { "DIFFICULTY", 999 },
                         { "FRICTION", 13 },
                         { "TEMPERATURE", 200 }
                     }),
-                    new Properties("ROCK", new Dictionary<string, int>
+                    new Properties("ROCK", new Dictionary<string, double>
                     {
                         { "DIFFICULTY", 999 },
                         { "FRICTION", 3 },
                         { "TEMPERATURE", 20 }
                     }),
-                    new Properties("MUD", new Dictionary<string, int>
+                    new Properties("MUD", new Dictionary<string, double>
                     {
                         { "DIFFICULTY", 800 },
                         { "FRICTION", 7 },
                         { "TEMPERATURE", 20 }
                     }),
 
-                    new Properties("GRASS", new Dictionary<string, int>
+                    new Properties("GRASS", new Dictionary<string, double>
                     {
                         { "DIFFICULTY", 999 },
-                        { "FRICTION", 5 },
+                        { "FRICTION", 4 },
+                        { "TEMPERATURE", 20 }
+                    }),
+
+                    new Properties("WATER", new Dictionary<string, double>
+                    {
+                        { "DIFFICULTY", 300 },
+                        { "FRICTION", 2 },
+                        { "TEMPERATURE", 20 }
+                    }),
+
+                    new Properties("ROAD", new Dictionary<string, double>
+                    {
+                        { "DIFFICULTY", 999 },
+                        { "FRICTION", 1 },
+                        { "TEMPERATURE", 20 }
+                    }),
+
+                    new Properties("RANDOM", new Dictionary<string, double>
+                    {
+                        { "DIFFICULTY", 600 },
+                        { "FRICTION", 2 },
                         { "TEMPERATURE", 20 }
                     }),
                 };
+
                 foreach (Properties p in properties)
                 {
-                    Exporter<Properties>.Save(p.NodeType + ".nodeType", p);
+                    Exporter<Properties>.Save(p.NodeType + Properties.Extension, p);
                 }
             }
 
@@ -406,20 +428,27 @@ namespace TestConsole
                 Configuration configuration = generator.Config;
                 for (int i = 0; i < configuration.NodeTypes.Length; i++)
                 {
-                    Console.Write(i + " ");
+                    Console.Write("DataID_{0}: Wights = {1},", i, configuration.HeightOffsets.Weights[i]);
                     for (int j = 0; j < configuration.NodeTypes[i].Length; j++)
                     {
-                        Console.Write("{0} : {1:D4} | ", configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
+                        Console.Write("Type = {0}, Wight = {1:D4}; ", configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
                     }
                     Console.Write("\n");
                 }
-                foreach(Properties p in generator.Prefab.Values)
+                foreach (Properties p in generator.Prefab.Values)
                 {
                     Console.WriteLine(p.NodeType);
                 }
                 generator.Seed = 549021312;
                 Map map = generator.Build("Test", 32, 32, 32);
-                Exporter<Map>.Save(map.Name + ".map", map);
+                Exporter<Map>.Save(map.Name + Map.Extension, map);
+
+                Properties as_table = new Properties();
+                as_table[Default.Properties.Keys.GValue] = 1;
+                as_table[Default.Properties.Keys.HValue] = 1;
+                Agent agent = new Agent("AS_Agent", Agent.CLIMBLINGABILITY.NORMAL, 500, as_table, Heuristic.TYPE.MANHATTAN, 1000);
+                string path = Exporter.Directory + "\\Agents\\" + agent.Name + Agent.Extension;
+                Exporter<Agent>.Save(path, agent);
             }
 
             public static void Calculate()
@@ -460,17 +489,7 @@ namespace TestConsole
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            //Test.Estimator();
-            //int[] A = new int[3];
-            //Test.BinaryTree();
-            //Test.PathFind();
-            //Test.Exporter();
-            //Test.Random();
-            Test.Config();
-            //Test.Generate();
-            //Test.Reflection();
-            //Test.StateMachine();
-            //Test.ExpandedMath();
+            Test.Generate();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

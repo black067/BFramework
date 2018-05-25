@@ -65,7 +65,7 @@ namespace BFramework.World
                 get
                 {
                     return
-                        new World.Properties(Value.NodeTypeEmpty, new Dictionary<string, int>
+                        new World.Properties(Value.NodeTypeEmpty, new Dictionary<string, double>
                         {
                             { "DIFFICULTY", 0 },
                             { "GVALUE", 0 },
@@ -84,7 +84,7 @@ namespace BFramework.World
                 get
                 {
                     return
-                        new World.Properties("OBSTACLE", new Dictionary<string, int>
+                        new World.Properties("OBSTACLE", new Dictionary<string, double>
                         {
                             { "DIFFICULTY", 999 },
                             { "GVALUE", 0 },
@@ -103,7 +103,7 @@ namespace BFramework.World
                 get
                 {
                     return
-                        new World.Properties("RANDOM", new Dictionary<string, int>
+                        new World.Properties("RANDOM", new Dictionary<string, double>
                         {
                             { "DIFFICULTY", ExpandedMath.Random.Range(0, 999) },
                             { "GVALUE", 0 },

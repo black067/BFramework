@@ -2,6 +2,7 @@
 
 namespace BFramework.PathFind
 {
+    [System.Serializable]
     public class Agent
     {
         public enum CLIMBLINGABILITY
@@ -12,6 +13,8 @@ namespace BFramework.PathFind
             EXCELLENT = 3,
             EXTREME = 4
         }
+
+        public const string Extension = ".agent";
 
         private readonly static DIRECTION[][] _directions = new DIRECTION[5][] {
             //0, WEAK
@@ -53,13 +56,19 @@ namespace BFramework.PathFind
             ClimblingAbility = climblingAbility;
             WalkCapacity = walkCapacity;
             WeightTable = weightTable;
-            HeuristicFunction = new Heuristic(heuristicType);
+            HeuristicType = heuristicType;
             StepsLimit = stepLimit;
         }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get; set;
+        }
 
-        public CLIMBLINGABILITY ClimblingAbility { get; set; }
+        public CLIMBLINGABILITY ClimblingAbility
+        {
+            get; set;
+        }
 
         public DIRECTION[] ClimblingRequirements
         {
@@ -69,13 +78,31 @@ namespace BFramework.PathFind
             }
         }
 
-        public int WalkCapacity { get; set; }
+        public int WalkCapacity
+        {
+            get; set;
+        }
 
-        public Properties WeightTable { get; set; }
+        public Properties WeightTable
+        {
+            get; set;
+        }
 
-        public Heuristic HeuristicFunction { get; set; }
+        public Heuristic.TYPE HeuristicType
+        {
+            get; set;
+        }
 
-        public int StepsLimit { get; set; }
+        public int StepsLimit
+        {
+            get; set;
+        }
+
+        public double Compute(Node node, Node target)
+        {
+            return Heuristic.Calculate(node, target, HeuristicType);
+        }
+
 
         public bool BeAbleToPass(Node target)
         {
