@@ -7,7 +7,7 @@ namespace BFramework.ExpandedMath
         public float x;
         public float y;
         public float z;
-        
+
         public Vector(float x, float y, float z)
         {
             this.x = x;
@@ -19,17 +19,33 @@ namespace BFramework.ExpandedMath
 
         public Vector() : this(0, 0, 0) { }
 
-        public static Vector Zero { get { return new Vector(0, 0, 0); } }
+        public Vector(Vector vector) : this(vector.x, vector.y, vector.z) { }
 
-        public Vector(Vector vector):this (vector.x, vector.y, vector.z) { }
-        
-        public static Vector One { get { return new Vector(1, 1, 1); } }
+
+        public static Vector Zero
+        {
+            get
+            {
+                return new Vector(0, 0, 0);
+            }
+        }
+
+        public static Vector One
+        {
+            get
+            {
+                return new Vector(1, 1, 1);
+            }
+        }
 
         public override string ToString()
         {
             return string.Format("Vector({0:0.000}, {1:0.000}, {2:0.000})", x, y, z);
         }
 
+        /// <summary>
+        /// 逆向量
+        /// </summary>
         public Vector Inverse
         {
             get
@@ -38,7 +54,10 @@ namespace BFramework.ExpandedMath
             }
         }
 
-        public float NormSquare
+        /// <summary>
+        /// 向量长度的平方(不开根号)
+        /// </summary>
+        public float SqrMagnitude
         {
             get
             {
@@ -46,11 +65,14 @@ namespace BFramework.ExpandedMath
             }
         }
 
-        public float Norm
+        /// <summary>
+        /// 向量的长度
+        /// </summary>
+        public float Magnitude
         {
             get
             {
-                return (float)Math.Sqrt(NormSquare);
+                return (float)Math.Sqrt(SqrMagnitude);
             }
         }
         public Vector Add(Vector addition)
@@ -83,27 +105,27 @@ namespace BFramework.ExpandedMath
             };
         }
 
-        public static Vector operator + (Vector lhs, Vector rhs)
+        public static Vector operator +(Vector lhs, Vector rhs)
         {
             return lhs.Add(rhs);
         }
-        public static Vector operator - (Vector lhs, Vector rhs)
+        public static Vector operator -(Vector lhs, Vector rhs)
         {
-            return lhs.Add(- rhs);
+            return lhs.Add(-rhs);
         }
-        public static Vector operator - (Vector rhs)
+        public static Vector operator -(Vector rhs)
         {
             return rhs.Inverse;
         }
-        public static float operator * (Vector lhs, Vector rhs)
+        public static float operator *(Vector lhs, Vector rhs)
         {
             return lhs.Dot(rhs);
         }
-        public static Vector operator * (Vector lhs, float rhs)
+        public static Vector operator *(Vector lhs, float rhs)
         {
             return lhs.Multiply(rhs);
         }
-        public static Vector operator / (Vector lhs, float rhs)
+        public static Vector operator /(Vector lhs, float rhs)
         {
             return lhs.Multiply(1 / rhs);
         }
@@ -131,11 +153,23 @@ namespace BFramework.ExpandedMath
 
         public VectorInt() : this(0, 0, 0) { }
 
-        public static VectorInt Zero { get { return new VectorInt(0, 0, 0); } }
+        public static VectorInt Zero
+        {
+            get
+            {
+                return new VectorInt(0, 0, 0);
+            }
+        }
 
         public VectorInt(VectorInt vector) : this(vector.x, vector.y, vector.z) { }
 
-        public static VectorInt One { get { return new VectorInt(1, 1, 1); } }
+        public static VectorInt One
+        {
+            get
+            {
+                return new VectorInt(1, 1, 1);
+            }
+        }
 
         public override string ToString()
         {

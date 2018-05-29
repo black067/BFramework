@@ -285,11 +285,18 @@ namespace TestConsole
                 {
                     Console.WriteLine("{0}", node, path.GetParent(node));
                 }
-                Console.WriteLine("{0}, Steps = {1}", path.Status, path.Steps);/**/
+                Console.WriteLine("{0}, Steps = {1}", path.State, path.Steps);/**/
             }
 
             public static void ToolsExporter()
             {
+                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+                //Exporter<Properties>.Save("CC/C.property", new Properties());
+
+                Exporter<Properties>.Load("A.property", out Properties p);
+                //p = p ?? new Properties();
+                Console.WriteLine(p.NodeType);
+                /*
                 Exporter<Map>.Load("Test.t", out Map map);
                 Console.WriteLine(map);
                 Console.Write("#####");
@@ -306,7 +313,7 @@ namespace TestConsole
                         Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, i, 0].Difficulty));
                     }
                     Console.Write("| \n");
-                }
+                }*/
             }
 
             public static void BinaryTree()
@@ -447,7 +454,7 @@ namespace TestConsole
                 as_table[Default.Properties.Keys.GValue] = 1;
                 as_table[Default.Properties.Keys.HValue] = 1;
                 Agent agent = new Agent("AS_Agent", Agent.CLIMBLINGABILITY.NORMAL, 500, as_table, Heuristic.TYPE.MANHATTAN, 1000);
-                string path = Exporter.Directory + "\\Agents\\" + agent.Name + Agent.Extension;
+                string path = System.IO.Directory.GetCurrentDirectory() + "\\Agents\\" + agent.Name + Agent.Extension;
                 Exporter<Agent>.Save(path, agent);
             }
 
@@ -489,7 +496,8 @@ namespace TestConsole
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Test.Generate();
+            Test.ToolsExporter();
+            //Test.Generate();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

@@ -282,7 +282,7 @@ namespace BFramework.World
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Node({1}, {2}, {3}, Type: {0}, Cost: {4})", Type, X, Y, Z, Cost);
+            return string.Format("Node({0}, {1}, {2})", X, Y, Z);
         }
 
         public int CompareTo(Node other)

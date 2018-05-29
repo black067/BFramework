@@ -11,14 +11,7 @@ namespace BFramework.PathFind
             EUCLIDEAN,
             OCTILE,
         }
-
-        public Heuristic(TYPE type = TYPE.EUCLIDEAN)
-        {
-            Type = type;
-        }
-
-        public TYPE Type { get; set; }
-
+        
         private static int Abs(int n)
         {
             return n > 0 ? n : -n;
@@ -83,7 +76,7 @@ namespace BFramework.PathFind
         {
             if (target == null)
             {
-                return int.MaxValue;
+                return 0;
             }
             return Abs(target.X - start.X) + Abs(target.Y - start.Y) + Abs(target.Z - start.Z);
         }
@@ -92,7 +85,7 @@ namespace BFramework.PathFind
         {
             if (target == null)
             {
-                return int.MaxValue;
+                return 0;
             }
             int dX = target.X - start.X;
             int dY = target.Y - start.Y;
@@ -106,7 +99,7 @@ namespace BFramework.PathFind
 
         public static double Octile(Node start, Node target)
         {
-            if (target == null) { return int.MaxValue; }
+            if (target == null) { return 0; }
             int[] sorted = Sort3(Abs(start.X - target.Y), Abs(start.Y - target.Y), Abs(start.Z - target.Z));
             int max = sorted[0], mid = sorted[1], min = sorted[2];
             double dist = 0;

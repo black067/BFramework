@@ -11,14 +11,6 @@ namespace BFramework.Tools
     /// <typeparam name="T"></typeparam>
     public static class Exporter<T>
     {
-        public static string Directory
-        {
-            get
-            {
-                return System.IO.Directory.GetCurrentDirectory();
-            }
-        }
-
         public static string Save(T item)
         {
             string name = string.Format("{0}.{1}", item.GetHashCode(), item.GetType().Name);
@@ -26,11 +18,19 @@ namespace BFramework.Tools
             return name;
         }
 
-        public static void Save(string fileName, T item)
+        public static void Save(string path, T item)
         {
-            FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate);
+            string purePath = Path.GetDirectoryName(path);
+            if (purePath.Length > 0 && !Directory.Exists(purePath))
+            {
+                Directory.CreateDirectory(purePath);
+            }
+            FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate);
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            binaryFormatter.Serialize(fileStream, item);
+            if (item != null)
+            {
+                binaryFormatter.Serialize(fileStream, item);
+            }
             fileStream.Close();
         }
         
@@ -40,15 +40,20 @@ namespace BFramework.Tools
             return result;
         }
 
-        public static void Load(string fileName, out T result)
+        public static void Load(string path, out T result)
         {
-            if (!File.Exists(fileName))
+            string purePath = Path.GetDirectoryName(path);
+            if (purePath.Length > 0 && !Directory.Exists(purePath))
+            {
+                Directory.CreateDirectory(purePath);
+            }
+            if (!File.Exists(path))
             {
                 result = default(T);
-                Save(fileName, result);
+                Save(path, result);
                 return;
             }
-            FileStream fileStream = new FileStream(fileName, FileMode.Open);
+            FileStream fileStream = new FileStream(path, FileMode.Open);
             try
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
@@ -56,7 +61,7 @@ namespace BFramework.Tools
             }
             catch (Exception)
             {
-                throw;
+                result = default(T);
             }
             finally
             {
@@ -67,12 +72,28 @@ namespace BFramework.Tools
 
     public static class Exporter
     {
-        public static string Directory
+        public static void Save(string path, string text)
         {
-            get
+            string purePath = Path.GetDirectoryName(path);
+            if (purePath.Length > 0 && !Directory.Exists(purePath))
             {
-                return System.IO.Directory.GetCurrentDirectory();
+                Directory.CreateDirectory(purePath);
             }
+            if (!File.Exists(path))
+            {
+                FileStream file = File.Create(path);
+                file.Close();
+            }
+            StreamWriter writer = new StreamWriter(path, true);
+            StringReader reader = new StringReader(text);
+            for (string line = reader.ReadLine(); line != null;
+                line = reader.ReadLine())
+            {
+                writer.WriteLine(line);
+            }
+            reader.Close();
+            writer.Flush();
+            writer.Close();
         }
     }
 }

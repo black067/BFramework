@@ -7,11 +7,24 @@ using System.Collections.Generic;
 namespace BFramework.PathFind
 {
     /// <summary>
-    /// 路径类
+    /// 用于路径规划的路径类, 进行路径规划时调用其 Find() 方法
     /// </summary>
     public class Path
     {
-        private enum STATE
+        /// <summary>
+        /// 用于记录工作状态的枚举
+        /// </summary>
+        public enum STATE
+        {
+            FAIL = -1,
+            PROCESSING = 0,
+            SUCCESS = 1,
+        }
+        
+        /// <summary>
+        /// 用于记录节点状态的枚举
+        /// </summary>
+        private enum NODESTATE
         {
             CLOSED = -1,
             NONE = 0,
@@ -26,13 +39,66 @@ namespace BFramework.PathFind
             DIRECTION.BOTTOM,
             DIRECTION.TOP
         };
-        
-        private Dictionary<Node, Node> _nodeParent { get; set; }
-        private List<Node> _availableNeighborsCurrent { get; set; }
+
+        /// <summary>
+        /// 记录节点与其父节点关系的字典
+        /// </summary>
+        private Dictionary<Node, Node> _nodeParent
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 记录节点状态的字典
+        /// </summary>
+        private Dictionary<Node, NODESTATE> _nodeStates
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 当前节点的有效邻节点指针
+        /// </summary>
+        private List<Node> _availableNeighborsCurrent
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 估值器
+        /// </summary>
         private Estimator<Properties> _estimator;
-        private Dictionary<Node, List<Node>> _availableNeighborsDictionary { get; set; }
-        private Dictionary<Node, STATE> _nodeStates { get; set; }
-        
+
+        /// <summary>
+        /// 估值器, 用于估计每个 Node 的消耗
+        /// </summary>
+        public Estimator<Properties> Estimator
+        {
+            get
+            {
+                return _estimator;
+            }
+            private set
+            {
+                _estimator = value;
+            }
+        }
+
+        /// <summary>
+        /// 地图是否为静态
+        /// </summary>
+        public bool MapStatic
+        {
+            get; set;
+        }
+        /// <summary>
+        /// 可用的邻节点字典，仅当地图为静态时使用
+        /// </summary>
+        private Dictionary<Node, List<Node>> _availableNeighborsDictionary
+        {
+            get; set;
+        }
+
         /// <summary>
         /// 初始化 Path, 需要给定起点, 终点, 通行力阈值, 价值估计权重表, 启发算法类型, 最大计算步数
         /// </summary>
@@ -59,41 +125,58 @@ namespace BFramework.PathFind
         /// <summary>
         /// 记录当前步数
         /// </summary>
-        public int Steps { get; set; }
-        
-        /// <summary>
-        /// 估值器, 用于估计每个 Node 的消耗
-        /// </summary>
-        public Estimator<Properties> Estimator { get { return _estimator; } private set { _estimator = value; } }
-        
-        public Agent Agent { get; set; }
+        public int Steps
+        {
+            get; set;
+        }
 
-        public bool MapStatic { get; set; }
+        /// <summary>
+        /// 代理
+        /// </summary>
+        public Agent Agent
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 路径的花费, 是整个路径中所有 Node 的 Cost 之和
         /// </summary>
-        public float Cost { get; set; }
-        
+        public float Cost
+        {
+            get; set;
+        }
+
         /// <summary>
         /// 起点
         /// </summary>
-        public Node Start { get; set; }
+        public Node Start
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 终点
         /// </summary>
-        public Node End { get; set; }
+        public Node End
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 当前检测到的 Node
         /// </summary>
-        public Node Current { get; set; }
-        
+        public Node Current
+        {
+            get; set;
+        }
+
         /// <summary>
         /// 当前节点的支撑节点
         /// </summary>
-        public Node CurrentFulcrum { get; set; }
+        public Node CurrentFulcrum
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 待检测的 Node 列表
@@ -103,28 +186,27 @@ namespace BFramework.PathFind
         /// <summary>
         /// 检测完毕的 Node 列表
         /// </summary>
-        public List<Node> Closed { get; set; }
-        
+        public List<Node> Closed
+        {
+            get; set;
+        }
+
         /// <summary>
         /// 路径检索的最终结果
         /// </summary>
-        public List<Node> Result { get; private set; }
-
-        /// <summary>
-        /// 用于记录工作状态的枚举类
-        /// </summary>
-        public enum STATUS
+        public List<Node> Result
         {
-            FAIL = -1,
-            PROCESSING = 0,
-            SUCCESS = 1,
+            get; private set;
         }
 
         /// <summary>
         /// 工作状态
         /// </summary>
-        public STATUS Status { get; set; }
-        
+        public STATE State
+        {
+            get; set;
+        }
+
         /// <summary>
         /// 访问估值器的权重值
         /// </summary>
@@ -132,8 +214,14 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public double this[string key]
         {
-            get { return Estimator.WeightItem[key]; }
-            set { Estimator.WeightItem[key] = value; }
+            get
+            {
+                return Estimator.WeightItem[key];
+            }
+            set
+            {
+                Estimator.WeightItem[key] = value;
+            }
         }
 
         /// <summary>
@@ -188,8 +276,7 @@ namespace BFramework.PathFind
         private int CompareCost(Node node, Node other)
         {
             int r = node.CompareTo(other);
-            r = r == 0 ? CompareByAngle(node, other) : r;
-            return r;
+            return r == 0 ? CompareByAngle(node, other) : r;
         }
 
         public Node GetParent(Node child)
@@ -209,11 +296,11 @@ namespace BFramework.PathFind
             }
         }
 
-        private STATE GetState(Node node)
+        private NODESTATE GetState(Node node)
         {
             if (!_nodeStates.ContainsKey(node))
             {
-                _nodeStates.Add(node, STATE.NONE);
+                _nodeStates.Add(node, NODESTATE.NONE);
             }
             return _nodeStates[node];
         }
@@ -232,16 +319,23 @@ namespace BFramework.PathFind
         {
             if (_nodeStates.ContainsKey(node))
             {
-                _nodeStates[node] = STATE.OPEN;
+                _nodeStates[node] = NODESTATE.OPEN;
             }
             else
             {
-                _nodeStates.Add(node, STATE.OPEN);
+                _nodeStates.Add(node, NODESTATE.OPEN);
             }
             SetParent(node, parent);
-            node.GValue = Agent.Compute(node, Start);
+            double parentG = 0;
+            if (parent != null)
+            {
+                parentG = parent.GValue;
+            }
+            node.GValue = parentG + Agent.Compute(node, parent);
             node.HValue = Agent.Compute(node, End);
+            node[Default.Properties.Keys.DynamicWeight] = node.HValue * Steps / Agent.StepsLimit;
             node.SetCost(ref _estimator);
+
             Opened.Add(node);
             Opened.Sort(CompareCost);
         }
@@ -255,11 +349,11 @@ namespace BFramework.PathFind
             if (_nodeStates.ContainsKey(node))
             {
                 Opened.Remove(node);
-                _nodeStates[node] = STATE.CLOSED;
+                _nodeStates[node] = NODESTATE.CLOSED;
             }
             else
             {
-                _nodeStates.Add(node, STATE.CLOSED);
+                _nodeStates.Add(node, NODESTATE.CLOSED);
             }
 
             Closed.Add(node);
@@ -272,12 +366,12 @@ namespace BFramework.PathFind
         /// <returns></returns>
         public void CheckNode(Node node)
         {
-            if (GetState(node) == STATE.CLOSED || !Agent.BeAbleToPass(node))
+            if (GetState(node) == NODESTATE.CLOSED || !Agent.BeAbleToPass(node))
             {
                 return;
             }
 
-            if(Agent.ClimblingAbility != Agent.CLIMBLINGABILITY.EXTREME)
+            if (Agent.ClimblingAbility != Agent.CLIMBLINGABILITY.EXTREME)
             {
                 CurrentFulcrum = GetFulcrum(node, Agent.ClimblingRequirements);
                 if (CurrentFulcrum == null)
@@ -291,17 +385,15 @@ namespace BFramework.PathFind
                 node[Default.Properties.Keys.Resistance] = 0;
             }
             node[Default.Properties.Keys.Resistance] += node.Difficulty / 10;
-            //if (node.Y - Current.Y != 0) node[Default.Properties.Keys.Resistance] += 5;
-            //if (node.X - Current.X != 0) node[Default.Properties.Keys.Resistance] += 5;
-            //if (node.Z - Current.Z != 0) node[Default.Properties.Keys.Resistance] += 5;
 
-            if (GetState(node) == STATE.OPEN)
+            if (GetState(node) == NODESTATE.OPEN)
             {
                 double gValueLocal = Agent.Compute(node, _nodeParent[node]);
                 double gValueNew = Agent.Compute(node, Current);
                 if (gValueNew < gValueLocal)
                 {
                     SetParent(node, Current);
+                    node.GValue = Current.GValue + gValueNew;
                 }
             }
             else
@@ -316,7 +408,7 @@ namespace BFramework.PathFind
         /// </summary>
         public void OnFail()
         {
-            Status = STATUS.FAIL;
+            State = STATE.FAIL;
         }
 
         /// <summary>
@@ -324,7 +416,7 @@ namespace BFramework.PathFind
         /// </summary>
         public void OnSuccess()
         {
-            Status = STATUS.SUCCESS;
+            State = STATE.SUCCESS;
             int count = Closed.Count;
             if (!_nodeParent.ContainsKey(End))
             {
@@ -375,7 +467,7 @@ namespace BFramework.PathFind
                 }
             }
 
-            if(Agent.ClimblingAbility == Agent.CLIMBLINGABILITY.WEAK)
+            if (Agent.ClimblingAbility == Agent.CLIMBLINGABILITY.WEAK)
             {
                 return _availableNeighborsCurrent;
             }
@@ -397,7 +489,8 @@ namespace BFramework.PathFind
                     }
                 }
             }
-            if(!containsNode) _availableNeighborsDictionary.Add(node, _availableNeighborsCurrent);
+            if (!containsNode)
+                _availableNeighborsDictionary.Add(node, _availableNeighborsCurrent);
             return _availableNeighborsCurrent;
         }
 
@@ -426,42 +519,44 @@ namespace BFramework.PathFind
                 CheckNode(node);
             }
             Steps++;
-            Status = STATUS.PROCESSING;
+            State = STATE.PROCESSING;
             return;
         }
 
         /// <summary>
         /// 检索路径, 直到寻路结束
         /// </summary>
-        public void Find()
+        public STATE Find()
         {
-            for (; Status == STATUS.PROCESSING;)
+            for (; State == STATE.PROCESSING;)
             {
                 FindSync();
             }
+            return State;
         }
 
         /// <summary>
         /// 检索路径, 且在每一步检索之后执行动作, 直到寻路结束
         /// </summary>
         /// <param name="action"></param>
-        public void Find(BDelegate action)
+        public STATE Find(BDelegate action)
         {
-            for (; Status == STATUS.PROCESSING;)
+            for (; State == STATE.PROCESSING;)
             {
                 FindSync();
                 action.Execute();
             }
+            return State;
         }
 
         /// <summary>
-        /// 重置路径
+        /// 重置/初始化路径
         /// </summary>
         public void Reset()
         {
-            Status = STATUS.PROCESSING;
+            State = STATE.PROCESSING;
             Steps = 0;
-            _nodeStates = new Dictionary<Node, STATE>();
+            _nodeStates = new Dictionary<Node, NODESTATE>();
             _nodeParent = new Dictionary<Node, Node>();
             Opened = new List<Node>();
             Closed = new List<Node>();
@@ -492,11 +587,22 @@ namespace BFramework.PathFind
             End = end;
         }
 
+        /// <summary>
+        /// 将节点坐标转化为整数三维向量
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private static VectorInt NodeAsVector(Node node)
         {
             return new VectorInt(node.X, node.Y, node.Z);
         }
-        
+
+        /// <summary>
+        /// 比较两个节点之间的角度
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
         private int CompareByAngle(Node node, Node other)
         {
             VectorInt endPosition = NodeAsVector(End);
@@ -504,10 +610,10 @@ namespace BFramework.PathFind
             VectorInt startToEnd = endPosition - startPosition;
             float startToEndLength = startToEnd.Magnitude;
 
-            VectorInt thisToEnd = endPosition - NodeAsVector(node);
-            VectorInt otherToEnd = endPosition - NodeAsVector(other);
-            double cosThita0 = (thisToEnd * startToEnd) / (thisToEnd.Magnitude * startToEndLength);
-            double cosThita1 = (otherToEnd * startToEnd) / (otherToEnd.Magnitude * startToEndLength);
+            VectorInt startToNode = NodeAsVector(node) - startPosition;
+            VectorInt startToOther = NodeAsVector(other) - startPosition;
+            double cosThita0 = (startToNode * startToEnd) / (startToNode.Magnitude * startToEndLength);
+            double cosThita1 = (startToOther * startToEnd) / (startToOther.Magnitude * startToEndLength);
             return -cosThita0.CompareTo(cosThita1);
         }
     }

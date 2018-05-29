@@ -14,9 +14,14 @@ namespace BFramework.Tools
             _time0 = DateTime.Now;
         }
 
-        public long Click()
+        /// <summary>
+        /// 返回从计时器新建/上一次刷新到现在的时间
+        /// </summary>
+        /// <returns></returns>
+        public double Click()
         {
-            return (DateTime.Now - _time0).Ticks;
+            TimeSpan span = new TimeSpan((DateTime.Now - _time0).Ticks);
+            return span.TotalMilliseconds;
         }
 
         public void Refresh()
@@ -24,11 +29,27 @@ namespace BFramework.Tools
             _time0 = DateTime.Now;
         }
 
+        public static string Now
+        {
+            get
+            {
+                DateTime now = DateTime.Now;
+                return string.Format("[{0}-{1}-{2}-{3}-{4}-{5}]", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            }
+        }
+
         public override string ToString()
         {
-            long d = Click();
+            double d = Click();
             Refresh();
-            return string.Format("Delta time: {0}", d);
+            return string.Format("Delta time: {0} ms", d);
+        }
+
+        public string ToString(string format)
+        {
+            TimeSpan span = new TimeSpan((DateTime.Now - _time0).Ticks);
+            Refresh();
+            return string.Format("Delta time: {0}", string.Format(format, span));
         }
     }
 }
