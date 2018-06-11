@@ -1,8 +1,8 @@
 ﻿using System;
 using BFramework.ExpandedMath;
-using BFramework.DataStructure;
 using BFramework.World;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BFramework.PathFind
 {
@@ -24,7 +24,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 用于记录节点状态的枚举
         /// </summary>
-        private enum NODESTATE
+        public enum NODESTATE
         {
             CLOSED = -1,
             NONE = 0,
@@ -43,7 +43,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 记录节点与其父节点关系的字典
         /// </summary>
-        private Dictionary<Node, Node> _nodeParent
+        public Dictionary<Node, Node> Parents
         {
             get; set;
         }
@@ -51,7 +51,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 记录节点状态的字典
         /// </summary>
-        private Dictionary<Node, NODESTATE> _nodeStates
+        public Dictionary<Node, NODESTATE> NodeStates
         {
             get; set;
         }
@@ -243,7 +243,7 @@ namespace BFramework.PathFind
         /// <param name="node"></param>
         /// <param name="directions"></param>
         /// <returns></returns>
-        public static Node GetFulcrum(Node node, params DIRECTION[] directions)
+        public static Node GetFulcrum(Agent agent, Node node, params DIRECTION[] directions)
         {
             if (node != null)
             {
@@ -253,7 +253,7 @@ namespace BFramework.PathFind
                 for (int i = directions.Length - 1; i > -1; i--)
                 {
                     result = node[directions[i]];
-                    if (result != null && result.Friction > 0 && result.Friction < tempFriction)
+                    if (result != null && agent.BeAbleToStand(result) && result.Friction < tempFriction)
                     {
                         tempFriction = result.Friction;
                         tempIndex = i;
@@ -281,33 +281,57 @@ namespace BFramework.PathFind
 
         public Node GetParent(Node child)
         {
-            return (child != null && _nodeParent.ContainsKey(child)) ? _nodeParent[child] : null;
+            return (child != null && Parents.ContainsKey(child)) ? Parents[child] : null;
         }
 
         public void SetParent(Node node, Node parent)
         {
-            if (_nodeParent.ContainsKey(node))
+            if (Parents.ContainsKey(node))
             {
-                _nodeParent[node] = parent;
+                Parents[node] = parent;
             }
             else
             {
-                _nodeParent.Add(node, parent);
+                Parents.Add(node, parent);
             }
         }
 
         private NODESTATE GetState(Node node)
         {
-            if (!_nodeStates.ContainsKey(node))
+            if (!NodeStates.ContainsKey(node))
             {
-                _nodeStates.Add(node, NODESTATE.NONE);
+                NodeStates.Add(node, NODESTATE.NONE);
             }
-            return _nodeStates[node];
+            return NodeStates[node];
         }
 
-        private bool OpenedIsEmpty(List<Node> list)
+        private void BinaryInsert(List<Node> list, Node item)
         {
-            return list.Count < 1;
+            int startIndex = 0;
+            int endIndex = list.Count - 1;
+            int currentIndex = 0;
+            int compareResult;
+            for (; startIndex <= endIndex; )
+            {
+                currentIndex = (startIndex + endIndex) / 2;
+                compareResult = CompareCost(list[currentIndex], item);
+                if (compareResult == 0)
+                {
+                    break;
+                }
+                else if (compareResult < 0)
+                {
+                    //起点后移
+                    startIndex = currentIndex + 1;
+                }
+                else
+                {
+                    //终点前移
+                    endIndex = currentIndex - 1;
+                }
+
+            }
+            list.Insert(startIndex <= endIndex ? endIndex : currentIndex, item);
         }
 
         /// <summary>
@@ -315,29 +339,30 @@ namespace BFramework.PathFind
         /// </summary>
         /// <param name="node"></param>
         /// <param name="parent"></param>
-        public void PushToOpened(Node node, Node parent)
+        public void PushToOpenset(Node node, Node parent)
         {
-            if (_nodeStates.ContainsKey(node))
+            if (NodeStates.ContainsKey(node))
             {
-                _nodeStates[node] = NODESTATE.OPEN;
+                NodeStates[node] = NODESTATE.OPEN;
             }
             else
             {
-                _nodeStates.Add(node, NODESTATE.OPEN);
+                NodeStates.Add(node, NODESTATE.OPEN);
             }
             SetParent(node, parent);
-            double parentG = 0;
-            if (parent != null)
-            {
-                parentG = parent.GValue;
-            }
-            node.GValue = parentG + Agent.Compute(node, parent);
+            node.GValue = Agent.Compute(node, parent) + (parent == null ? 0 : parent.GValue);
             node.HValue = Agent.Compute(node, End);
             node[Default.Properties.Keys.DynamicWeight] = node.HValue * Steps / Agent.StepsLimit;
             node.SetCost(ref _estimator);
 
-            Opened.Add(node);
-            Opened.Sort(CompareCost);
+            if (Opened.Count < 1)
+            {
+                Opened.Add(node);
+            }
+            else
+            {
+                BinaryInsert(Opened, node);
+            }
         }
 
         /// <summary>
@@ -346,14 +371,14 @@ namespace BFramework.PathFind
         /// <param name="node"></param>
         public void PushToClosed(Node node)
         {
-            if (_nodeStates.ContainsKey(node))
+            if (NodeStates.ContainsKey(node))
             {
                 Opened.Remove(node);
-                _nodeStates[node] = NODESTATE.CLOSED;
+                NodeStates[node] = NODESTATE.CLOSED;
             }
             else
             {
-                _nodeStates.Add(node, NODESTATE.CLOSED);
+                NodeStates.Add(node, NODESTATE.CLOSED);
             }
 
             Closed.Add(node);
@@ -373,7 +398,7 @@ namespace BFramework.PathFind
 
             if (Agent.ClimblingAbility != Agent.CLIMBLINGABILITY.EXTREME)
             {
-                CurrentFulcrum = GetFulcrum(node, Agent.ClimblingRequirements);
+                CurrentFulcrum = GetFulcrum(Agent, node, Agent.ClimblingRequirements);
                 if (CurrentFulcrum == null)
                 {
                     return;
@@ -388,8 +413,8 @@ namespace BFramework.PathFind
 
             if (GetState(node) == NODESTATE.OPEN)
             {
-                double gValueLocal = Agent.Compute(node, _nodeParent[node]);
-                double gValueNew = Agent.Compute(node, Current);
+                double gValueLocal = Agent.Compute(node, Parents[node]);//Heuristic.ComputeNeighborDistance(node, _parents[node]);
+                double gValueNew = Agent.Compute(node, Current);//Heuristic.ComputeNeighborDistance(node, Current);
                 if (gValueNew < gValueLocal)
                 {
                     SetParent(node, Current);
@@ -398,7 +423,7 @@ namespace BFramework.PathFind
             }
             else
             {
-                PushToOpened(node, Current);
+                PushToOpenset(node, Current);
             }
             return;
         }
@@ -418,7 +443,7 @@ namespace BFramework.PathFind
         {
             State = STATE.SUCCESS;
             int count = Closed.Count;
-            if (!_nodeParent.ContainsKey(End))
+            if (!Parents.ContainsKey(End))
             {
                 SetParent(End, Closed[count - 2]);
             }
@@ -427,10 +452,10 @@ namespace BFramework.PathFind
                 End
             };
             Node node = End;
-            for (int i = 1; i <= count && _nodeParent[node] != null; i++)
+            for (int i = 1; i <= count && Parents[node] != null; i++)
             {
                 node = Result[i - 1];
-                Result.Add(_nodeParent[node]);
+                Result.Add(Parents[node]);
             }
         }
 
@@ -549,6 +574,28 @@ namespace BFramework.PathFind
             return State;
         }
 
+        public double GetResultLength()
+        {
+            if (State != STATE.SUCCESS)
+            {
+                return 0;
+            }
+            double length = 0;
+            Node current = Result[0], parent = Result[1];
+            bool xEqual, yEqual, zEqual;
+            for (; parent != null;)
+            {
+                xEqual = current.X == parent.X;
+                yEqual = current.Y == parent.Y;
+                zEqual = current.Z == parent.Z;
+                int b = (xEqual ? 1 : 0) + (yEqual ? 2 : 0) + (zEqual ? 4 : 0);
+                length += (b == 3 || b == 5 || b == 6) ? 1 : Heuristic.sqrt2;
+                current = parent;
+                parent = GetParent(current);
+            }
+            return length;
+        }
+
         /// <summary>
         /// 重置/初始化路径
         /// </summary>
@@ -556,8 +603,8 @@ namespace BFramework.PathFind
         {
             State = STATE.PROCESSING;
             Steps = 0;
-            _nodeStates = new Dictionary<Node, NODESTATE>();
-            _nodeParent = new Dictionary<Node, Node>();
+            NodeStates = new Dictionary<Node, NODESTATE>();
+            Parents = new Dictionary<Node, Node>();
             Opened = new List<Node>();
             Closed = new List<Node>();
             Result = new List<Node>();
@@ -565,7 +612,7 @@ namespace BFramework.PathFind
             {
                 _availableNeighborsDictionary = new Dictionary<Node, List<Node>>();
             }
-            PushToOpened(Start, null);
+            PushToOpenset(Start, null);
         }
 
         /// <summary>

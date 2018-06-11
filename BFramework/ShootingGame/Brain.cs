@@ -12,12 +12,4 @@ namespace BFramework.ShootingGame
 
         }
     }
-
-    public class BBrain : Brain
-    {
-        public override void Work(ref Creature.Attribute attributes, ref Creature.Command command)
-        {
-
-        }
-    }
 }

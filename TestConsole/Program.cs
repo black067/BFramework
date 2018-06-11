@@ -5,6 +5,7 @@ using BFramework;
 using BFramework.StateMachines;
 using BFramework.ShootingGame;
 using BFramework.ExpandedMath;
+using BFramework.ExpandedMath.Distributions;
 using BFramework.PathFind;
 using BFramework.World;
 using BFramework.Tools;
@@ -268,7 +269,7 @@ namespace TestConsole
                     Console.Write(string.Format(" Z{0:D2} ", i));
                     for (int j = 0; j < map.LengthX; j++)
                     {
-                        Map.SetNode(map[j, 0, i], Default.Properties.Obstacle);
+                        Map.SetNode(map[j, 0, i], Default.Properties.Random);
                         Console.Write(string.Format("|  {0:D3}  ", map.Nodes[j, 1, i].Difficulty));
                     }
                     Console.Write("| \n");
@@ -277,7 +278,7 @@ namespace TestConsole
                 Properties weightDic = new Properties();
                 weightDic["GVALUE"] = 1;
                 weightDic["HVALUE"] = 1;
-                Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.EXCELLENT, 1000, weightDic, Heuristic.TYPE.EUCLIDEAN, 100);
+                Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.EXCELLENT, 1000, 20, weightDic, Heuristic.TYPE.EUCLIDEAN, 100);
                 Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], agent);
                 path.Find();
                 Console.WriteLine("=========Result=========");
@@ -316,7 +317,7 @@ namespace TestConsole
                 }*/
             }
 
-            public static void BinaryTree()
+            public static void BinaryTreeT1()
             {
                 Map map = new Map("Test", 10, 2, 11, true);
                 for (int i = 0; i < map.LengthX; i++)
@@ -352,15 +353,15 @@ namespace TestConsole
             public static void TranslateConfigCSV()
             {
                 Configuration configuration = Configuration.ReadCSV("TEST.csv");
-                for (int i = 0; i < configuration.NodeTypes.Length; i++)
-                {
-                    Console.Write("DataID_{0}: Wights = {1},", i, configuration.HeightOffsets.Weights[i]);
-                    for (int j = 0; j < configuration.NodeTypes[i].Length; j++)
-                    {
-                        Console.Write("Type = {0}, Wight = {1:D4}; ",configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
-                    }
-                    Console.Write("\n");
-                }
+                //for (int i = 0; i < configuration.NodeTypes.Length; i++)
+                //{
+                //    Console.Write("DataID_{0}: Wights = {1},", i, configuration.HeightOffsets.Weights[i]);
+                //    for (int j = 0; j < configuration.NodeTypes[i].Length; j++)
+                //    {
+                //        Console.Write("Type = {0}, Wight = {1:D4}; ",configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
+                //    }
+                //    Console.Write("\n");
+                //}
                 Console.WriteLine("done.");
 
                 for (int i = 0; i < 16; i++)
@@ -372,59 +373,12 @@ namespace TestConsole
             public static void BuildDefaultNode()
             {
 
-                List<Properties> properties = new List<Properties>
-                {
-                    new Properties("BASEROCK", new Dictionary<string, double>
-                    {
-                        { "DIFFICULTY", 999 },
-                        { "FRICTION", 13 },
-                        { "TEMPERATURE", 200 }
-                    }),
-                    new Properties("ROCK", new Dictionary<string, double>
-                    {
-                        { "DIFFICULTY", 999 },
-                        { "FRICTION", 3 },
-                        { "TEMPERATURE", 20 }
-                    }),
-                    new Properties("MUD", new Dictionary<string, double>
-                    {
-                        { "DIFFICULTY", 800 },
-                        { "FRICTION", 7 },
-                        { "TEMPERATURE", 20 }
-                    }),
-
-                    new Properties("GRASS", new Dictionary<string, double>
-                    {
-                        { "DIFFICULTY", 999 },
-                        { "FRICTION", 4 },
-                        { "TEMPERATURE", 20 }
-                    }),
-
-                    new Properties("WATER", new Dictionary<string, double>
-                    {
-                        { "DIFFICULTY", 300 },
-                        { "FRICTION", 2 },
-                        { "TEMPERATURE", 20 }
-                    }),
-
-                    new Properties("ROAD", new Dictionary<string, double>
-                    {
-                        { "DIFFICULTY", 999 },
-                        { "FRICTION", 1 },
-                        { "TEMPERATURE", 20 }
-                    }),
-
-                    new Properties("RANDOM", new Dictionary<string, double>
-                    {
-                        { "DIFFICULTY", 600 },
-                        { "FRICTION", 2 },
-                        { "TEMPERATURE", 20 }
-                    }),
-                };
+                List<Properties> properties = Default.Properties.GetPrefabs();
 
                 foreach (Properties p in properties)
                 {
                     Exporter<Properties>.Save(p.NodeType + Properties.Extension, p);
+                    Console.WriteLine("type: {0}, D: {1}",p.NodeType,p["DIFFICULTY"]);
                 }
             }
 
@@ -433,27 +387,20 @@ namespace TestConsole
                 Generator generator = new Generator();
                 generator.Init("TestGenerator");
                 Configuration configuration = generator.Config;
-                for (int i = 0; i < configuration.NodeTypes.Length; i++)
-                {
-                    Console.Write("DataID_{0}: Wights = {1},", i, configuration.HeightOffsets.Weights[i]);
-                    for (int j = 0; j < configuration.NodeTypes[i].Length; j++)
-                    {
-                        Console.Write("Type = {0}, Wight = {1:D4}; ", configuration.NodeTypes[i][j], configuration.Weights[i].Weights[j]);
-                    }
-                    Console.Write("\n");
-                }
                 foreach (Properties p in generator.Prefab.Values)
                 {
                     Console.WriteLine(p.NodeType);
                 }
-                generator.Seed = 549021312;
+                DateTime now = DateTime.Now;
+                string format = string.Format("{0}{1}{2}{3}",now.Year, now.Month, now.Day, now.Hour);
+                generator.Seed = int.Parse(format);
                 Map map = generator.Build("Test", 32, 32, 32);
                 Exporter<Map>.Save(map.Name + Map.Extension, map);
 
                 Properties as_table = new Properties();
                 as_table[Default.Properties.Keys.GValue] = 1;
                 as_table[Default.Properties.Keys.HValue] = 1;
-                Agent agent = new Agent("AS_Agent", Agent.CLIMBLINGABILITY.NORMAL, 500, as_table, Heuristic.TYPE.MANHATTAN, 1000);
+                Agent agent = new Agent("AS_Agent", Agent.CLIMBLINGABILITY.NORMAL, 500, 20, as_table, Heuristic.TYPE.MANHATTAN, 1000);
                 string path = System.IO.Directory.GetCurrentDirectory() + "\\Agents\\" + agent.Name + Agent.Extension;
                 Exporter<Agent>.Save(path, agent);
             }
@@ -488,6 +435,91 @@ namespace TestConsole
                 BDebug.Log(leverOfNode["Cost"], leverOfNode["DIFFICULTY"]);
 
             }
+
+            public static void HighOrderEq()
+            {
+                double x_start = 0, x_end = 70, x_highest = 35;
+                double t_highest = 0.25, t_end = 0.5, t_start = 0;
+                double z_end = 0, z_highest = 20, z_start = 0;
+                double[] a_x = new double[6];
+                double[] a_z = new double[5];
+                HighOrderEquation X = new HighOrderEquation();
+            }
+
+            public static void ListInsert()
+            {
+                List<int> list = new List<int>();
+                int[] testNum = new int[] { 123, 90, 453, 239, 604, 1990, 22, 3294, 532, 875, 755 };
+                int count = 0;
+                if (list.Count < 1)
+                {
+                    list.Add(89);
+                }
+                for (int i = 0, length = testNum.Length; i < length; i++)
+                {
+                    int j;
+                    bool isInserted = false;
+                    for (j = list.Count - 1; j > -1; j--)
+                    {
+                        count++;
+                        if (testNum[i] > list[j])
+                        {
+                            list.Insert(j + 1, testNum[i]);
+                            isInserted = true;
+                            break;
+                        }
+                    }
+                    if (!isInserted)
+                    {
+                        list.Insert(0, testNum[i]);
+                    }
+                    Console.WriteLine("TempCount[{0}] = {1}", i, count);
+                }
+                foreach (int item in list)
+                {
+                    Console.WriteLine(item);
+                }
+                Console.WriteLine("Count = {0}",count);
+
+                SortedList<int, Node> nodes = new SortedList<int, Node>();
+            }
+
+            public static void HeuristicSort()
+            {
+                int t1 = 3, t2 = 3, t3 = 3;
+                int[] result = Heuristic.Sort3(t1, t2, t3);
+                Console.WriteLine("result : {0}, {1}, {2}", result[0], result[1], result[2]);
+            }
+
+            public static void BinaryTreeT2()
+            {
+                BinaryTree<int> tree = new BinaryTree<int>();
+                tree.Add(5);
+                tree.Add(2);
+                tree.Add(7);
+                tree.Add(10);
+                tree.Add(8);
+                tree.Add(6);
+                Stack<int> r = new Stack<int>();
+                Console.WriteLine("PreOrder");
+                tree.PreOrder(tree.Root, ref r);
+                for(;r.Count > 0;)
+                {
+                    Console.WriteLine(r.Pop());
+                }
+                Console.WriteLine("InOrder");
+                tree.InOrder(tree.Root, ref r);
+                for(;r.Count > 0;)
+                {
+                    Console.WriteLine(r.Pop());
+                }
+                Console.WriteLine("PostOrder");
+                tree.PostOrder(tree.Root, ref r);
+                for (; r.Count > 0;)
+                {
+                    Console.WriteLine(r.Pop());
+                }
+            }
         }
 
         /// <summary>
@@ -496,8 +528,10 @@ namespace TestConsole
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Test.ToolsExporter();
+            //Test.ToolsExporter();
             //Test.Generate();
+            //Test.HeuristicSort();
+            Test.BinaryTreeT2();
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

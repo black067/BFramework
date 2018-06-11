@@ -8,6 +8,7 @@ namespace BFramework
         REF = 2,
         PARAMS = 3,
         PARAMSTWO = 4,
+        PARAMSTHREE = 5,
         RETURN = -1
     }
     
@@ -63,6 +64,11 @@ namespace BFramework
             _methodTwoParams = methodTwoParams;
             _case = BDelegateTYPE.PARAMSTWO;
         }
+        public BDelegate(MethodThreeParams methodThreeParams)
+        {
+            _methodThreeParams = methodThreeParams;
+            _case = BDelegateTYPE.PARAMSTHREE;
+        }
 
         public TOut Execute()
         {
@@ -106,13 +112,28 @@ namespace BFramework
                     return _methodNone();
                 case BDelegateTYPE.PARAMSTWO:
                     return _methodTwoParams(inputs[0], inputs[1]);
+                case BDelegateTYPE.PARAMSTHREE:
+                    return _methodThreeParams(inputs[0], inputs[1], inputs[2]);
             }
             return default(TOut);
         }
 
         public TOut Execute(TIn input0, TIn input1)
         {
+            if (_case != BDelegateTYPE.PARAMSTWO)
+            {
+                return default(TOut);
+            }
             return _methodTwoParams(input0, input1);
+        }
+
+        public TOut Execute(TIn input0, TIn input1, TIn input2)
+        {
+            if (_case != BDelegateTYPE.PARAMSTHREE)
+            {
+                return default(TOut);
+            }
+            return _methodThreeParams(input0, input1, input2);
         }
 
         public static explicit operator System.Delegate(BDelegate<TIn, TOut> d)
@@ -136,6 +157,7 @@ namespace BFramework
         public delegate TOut Method(TIn input);
         public delegate TOut MethodRef(ref TIn input);
         public delegate TOut MethodTwoParams(TIn input0, TIn input1);
+        public delegate TOut MethodThreeParams(TIn input0, TIn Input1, TIn Input2);
         public delegate TOut MethodParams(params TIn[] input);
         public delegate TOut MethodNone();
         
@@ -143,6 +165,7 @@ namespace BFramework
         private readonly Method _method;
         private readonly MethodRef _methodRef;
         private readonly MethodTwoParams _methodTwoParams;
+        private readonly MethodThreeParams _methodThreeParams;
         private readonly MethodParams _methodParams;
         private readonly MethodNone _methodNone;
     }

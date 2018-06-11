@@ -62,11 +62,12 @@ namespace BFramework.PathFind
             }
         };
 
-        public Agent(string name, CLIMBLINGABILITY climblingAbility, int walkCapacity, Properties weightTable, Heuristic.TYPE heuristicType, int stepLimit)
+        public Agent(string name, CLIMBLINGABILITY climblingAbility, int walkCapacity, int fulcrumHardnessCapacity, Properties weightTable, Heuristic.TYPE heuristicType, int stepLimit)
         {
             Name = name;
             ClimblingAbility = climblingAbility;
             WalkCapacity = walkCapacity;
+            FulcrumHardnessCapacity = fulcrumHardnessCapacity;
             WeightTable = weightTable;
             HeuristicType = heuristicType;
             StepsLimit = stepLimit;
@@ -103,6 +104,14 @@ namespace BFramework.PathFind
         /// 通行阈值
         /// </summary>
         public int WalkCapacity
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 对支点的硬度要求
+        /// </summary>
+        public int FulcrumHardnessCapacity
         {
             get; set;
         }
@@ -151,6 +160,11 @@ namespace BFramework.PathFind
         public bool BeAbleToPass(Node target)
         {
             return WalkCapacity >= target.Difficulty;
+        }
+
+        public bool BeAbleToStand(Node node)
+        {
+            return node[Default.Properties.Keys.Hardness] > FulcrumHardnessCapacity;
         }
     }
 }

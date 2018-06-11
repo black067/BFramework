@@ -54,6 +54,7 @@
     <Compile Include="BehaviourTree.cs" />
     <Compile Include="DataStructure\BinaryTree.cs" />
     <Compile Include="DataStructure\RBTree.cs" />
+    <Compile Include="DataStructure\SortedList.cs" />
     <Compile Include="ExpandedMath\BPNet.cs" />
     <Compile Include="ExpandedMath\Conditional.cs" />
     <Compile Include="ExpandedMath\Distributions\HighOrderEquation.cs" />

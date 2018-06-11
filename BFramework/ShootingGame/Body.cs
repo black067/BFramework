@@ -13,7 +13,7 @@ namespace BFramework.ShootingGame
                 this.crucial = crucial;
                 this.health = health;
                 this.defense = defense;
-                this.disabled = false;
+                disabled = false;
             }
             public string name;
             public bool crucial;

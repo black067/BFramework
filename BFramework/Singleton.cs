@@ -8,7 +8,7 @@ namespace BFramework
     /// </summary>
     public interface ISingleton
     {
-        void OnInitiated();
+        void OnInitialized();
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ namespace BFramework
 
             item = ctor.Invoke(null) as T;
 
-            item.OnInitiated();
+            item.OnInitialized();
 
             return item;
         }

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using BFramework.Tools;
 
 namespace BFramework.DataStructure
 {
-    public class BinaryTree<T> where T : class, IComparable<T>
+    public class BinaryTree<T> where T : IComparable<T>
     {
         public class Node : IComparable<Node>
         {
@@ -166,7 +167,11 @@ namespace BFramework.DataStructure
                 for (; ; )
                 {
                     compareResult = temp.CompareTo(node);
-                    if (compareResult >= 0)
+                    if (compareResult == 0)
+                    {
+                        return;
+                    }
+                    else if (compareResult > 0)
                     {
                         if (temp.Left != null) { temp = temp.Left; }
                         else { node.SetParent(temp, true); break; }
@@ -180,11 +185,58 @@ namespace BFramework.DataStructure
             }
         }
 
-        public void PreOrder()
+        /// <summary>
+        /// 先序遍历, 将结果保存到堆栈中
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="result"></param>
+        public void PreOrder(Node node, ref Stack<T> result)
         {
-
+            if(node == null)
+            {
+                return;
+            }
+            result.Push(node.Data);
+            PreOrder(node.Left, ref result);
+            PreOrder(node.Right, ref result);
         }
 
+        /// <summary>
+        /// 中序遍历, 将结果保存到堆栈中
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="result"></param>
+        public void InOrder(Node node, ref Stack<T> result)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            InOrder(node.Left, ref result);
+            result.Push(node.Data);
+            InOrder(node.Right, ref result);
+        }
+
+        /// <summary>
+        /// 后序遍历, 将结果保存到堆栈中
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="result"></param>
+        public void PostOrder(Node node, ref Stack<T> result)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            PostOrder(node.Left, ref result);
+            PostOrder(node.Right, ref result);
+            result.Push(node.Data);
+        }
+
+        /// <summary>
+        /// 查找最小值
+        /// </summary>
+        /// <returns></returns>
         public Node GetMin()
         {
             Node min = Root;
@@ -196,6 +248,10 @@ namespace BFramework.DataStructure
             return min;
         }
 
+        /// <summary>
+        /// 查找最大值
+        /// </summary>
+        /// <returns></returns>
         public Node GetMax()
         {
             Node max = Root;
@@ -207,6 +263,11 @@ namespace BFramework.DataStructure
             return max;
         }
 
+        /// <summary>
+        /// 根据键查找节点
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public Node Find(T key)
         {
             Node current = Root;
@@ -245,7 +306,6 @@ namespace BFramework.DataStructure
         public void Remove(Node node)
         {
             Node parent = node.Parent;
-            Console.WriteLine(GetState(node));
             switch (node.State_P)
             {
                 case Node.STATE_POSITIVE.LEAF:

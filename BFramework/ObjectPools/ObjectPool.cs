@@ -68,7 +68,7 @@ namespace BFramework.ObjectPools
     public class SafePool<T> : Pool<T>, ISingleton where T : IPoolable, new()
     {
         #region 实现接口 ISingleton
-        public virtual void OnInitiated() { }
+        public virtual void OnInitialized() { }
 
         protected SafePool()
         {

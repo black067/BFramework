@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace BFramework.World
 {
     /// <summary>
@@ -62,11 +63,18 @@ namespace BFramework.World
         /// </summary>
         public int NodesCount { get; set; }
 
+        [System.NonSerialized]
+        private Node[,,] _nodes;
+
         /// <summary>
         /// 地图中的所有节点
         /// </summary>
-        public Node[,,] Nodes { get; set; }
+        public Node[,,] Nodes { get { return _nodes; } set { _nodes = value; } }
         
+        public List<string> PrefabNodeTypes { get; set; }
+
+        public int[,,] NodeTypes { get; set; }
+
         /// <summary>
         /// 节点访问器, 根据坐标返回对应的节点
         /// </summary>

@@ -10,12 +10,12 @@ namespace BFramework.World
     public class Configuration
     {
         public const string Extension = ".config";
-        public Configuration(string name, string[][] nodeTypes, Segments[] weights, int[] heightOffsets)
+        public Configuration(string name, List<string[]> nodeTypes, List<Segments> weights, int[] heightOffsets)
         {
             Name = name;
             NodeTypes = nodeTypes;
             Weights = weights;
-            Height = Weights.Length;
+            Height = Weights.Count;
             HeightOffsets = new Segments(heightOffsets);
         }
 
@@ -24,12 +24,12 @@ namespace BFramework.World
             get; set;
         }
 
-        public string[][] NodeTypes
+        public List<string[]> NodeTypes
         {
             get; private set;
         }
 
-        public Segments[] Weights
+        public List<Segments> Weights
         {
             get; private set;
         }
@@ -52,7 +52,7 @@ namespace BFramework.World
 
         public float Amplitude { get; set; } = 2;
 
-        public int Seed { get; set; } = 20180516;
+        public int Seed { get; set; } = 20180531;
 
         public string GetNodeTypeByHeight(int offset)
         {
@@ -64,9 +64,13 @@ namespace BFramework.World
             return NodeTypes[i][Weights[i].GetRandomIndex()];
         }
 
+        public void Add(string[] nodeTypes, int[] weights)
+        {
+
+        }
+
         public static Configuration ReadCSV(string path)
         {
-            path = Directory.GetCurrentDirectory() + "\\" + path;
             FileStream fileStream = File.Open(path, FileMode.Open);
             StreamReader reader = new StreamReader(fileStream);
             List<string[]> nodeTypes = new List<string[]>();
@@ -103,7 +107,7 @@ namespace BFramework.World
             reader.Dispose();
             fileStream.Close();
             string name = Path.GetFileNameWithoutExtension(path);
-            Configuration result = new Configuration(name, nodeTypes.ToArray(), weights.ToArray(), heightOffsets.ToArray());
+            Configuration result = new Configuration(name, nodeTypes, weights, heightOffsets.ToArray());
             string serializeFilePath = name + Extension;
             Exporter<Configuration>.Save(serializeFilePath, result);
             return result;
