@@ -41,7 +41,7 @@ namespace BFramework.ObjectPools
                 _maxCount = value;
                 if (_cache != null && _maxCount > 0 && _maxCount < _cache.Count)
                 {
-                    for (int i = _cache.Count - Count; i > 0; i--)
+                    for (int i = _cache.Count - _maxCount; i > 0; i--)
                     {
                         _cache.Pop();
                     }

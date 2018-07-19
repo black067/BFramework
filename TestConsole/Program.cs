@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using BFramework;
 using BFramework.StateMachines;
 using BFramework.ShootingGame;
@@ -26,7 +28,7 @@ namespace TestConsole
                 _name = name;
                 _age = age;
             }
-            public TestClass() : this("default", BFramework.ExpandedMath.Random.Range(0, 100)) { }
+            public TestClass() : this("default", BFramework.ExpandedMath.BRandom.Range(0, 100)) { }
             String _name = "default";
             int _age = 18;
 
@@ -70,24 +72,24 @@ namespace TestConsole
             {
                 //随机数测试
                 Console.WriteLine("#############\nBRandom.Distribution Test");
-                BFramework.ExpandedMath.Random.Init();
+                BFramework.ExpandedMath.BRandom.Init();
                 double[] testWeights = new double[] { 40, 100, 500, 20, 300 };
                 for (int i = 0; i < 10; i++)
                 {
-                    Console.Write(BFramework.ExpandedMath.Random.GetIndex(testWeights) + "|");
+                    Console.Write(BFramework.ExpandedMath.BRandom.GetIndex(testWeights) + "|");
                 }
                 Console.WriteLine("\n#############\nBRandom.Distribution Test End");
                 Console.WriteLine("#############\nBRandom.Range Test");
                 for (int i = 0; i <= 35; i++)
                 {
-                    int n = BFramework.ExpandedMath.Random.Range(99999, 999999);
+                    int n = BFramework.ExpandedMath.BRandom.Range(99999, 999999);
                     Console.WriteLine("RandomNumber[{0}] = {1}", i, n);
                 }
                 Console.WriteLine("\n#############\nBRandom.Range Test End");
                 Console.WriteLine("#############\nBRandom.Value Test");
                 for (int i = 0; i <= 35; i++)
                 {
-                    float n = BFramework.ExpandedMath.Random.Value;
+                    float n = BFramework.ExpandedMath.BRandom.Value;
                     Console.WriteLine("RandomNumber = {0}", n);
                 }
                 Console.WriteLine("BRandom Test Over\n");
@@ -279,7 +281,7 @@ namespace TestConsole
                 weightDic["GVALUE"] = 1;
                 weightDic["HVALUE"] = 1;
                 Agent agent = new Agent("AGENT0", Agent.CLIMBLINGABILITY.EXCELLENT, 1000, 20, weightDic, Heuristic.TYPE.EUCLIDEAN, 100);
-                Path path = new Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], agent);
+                BFramework.PathFind.Path path = new BFramework.PathFind.Path(map[0, 1, 0], map[LengthX - 1, 1, LengthZ - 1], agent);
                 path.Find();
                 Console.WriteLine("=========Result=========");
                 foreach (Node node in path.Result)
@@ -326,7 +328,7 @@ namespace TestConsole
                     {
                         for (int k = 0; k < map.LengthZ; k++)
                         {
-                            map[i, j, k].Cost = BFramework.ExpandedMath.Random.Range(0, 10000);
+                            map[i, j, k].Cost = BFramework.ExpandedMath.BRandom.Range(0, 10000);
                         }
                     }
                 }
@@ -385,7 +387,7 @@ namespace TestConsole
             public static void Generate()
             {
                 Generator generator = new Generator();
-                generator.Init("TestGenerator");
+                generator.Init("Generator");
                 Configuration configuration = generator.Config;
                 foreach (Properties p in generator.Prefab.Values)
                 {
@@ -521,6 +523,7 @@ namespace TestConsole
                 }
             }
         }
+        
 
         /// <summary>
         /// 命令行程序主体
@@ -531,7 +534,19 @@ namespace TestConsole
             //Test.ToolsExporter();
             //Test.Generate();
             //Test.HeuristicSort();
-            Test.BinaryTreeT2();
+            //Test.BinaryTreeT2();
+
+            string path = "A.map";
+
+            Map A = new Map("Test",10, 1, 10, true);
+            Exporter<Map>.Save(path, A);
+            
+            
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            FileStream fileStream = new FileStream(path, FileMode.Open);
+            Map a = (Map)binaryFormatter.Deserialize(fileStream);
+            
+            
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

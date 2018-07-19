@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace BFramework.World
 {
@@ -6,9 +7,10 @@ namespace BFramework.World
     /// 地图类, 保存地形
     /// </summary>
     [System.Serializable]
-    public class Map
+    public class Map : ISerializable
     {
         public static readonly string Extension = ".map";
+
         /// <summary>
         /// 根据给定长宽高新建一个地图, 可选择是否随机给节点的通行难度赋值
         /// </summary>
@@ -63,14 +65,11 @@ namespace BFramework.World
         /// </summary>
         public int NodesCount { get; set; }
 
-        [System.NonSerialized]
-        private Node[,,] _nodes;
-
         /// <summary>
         /// 地图中的所有节点
         /// </summary>
-        public Node[,,] Nodes { get { return _nodes; } set { _nodes = value; } }
-        
+        public Node[,,] Nodes { get; set; }
+
         public List<string> PrefabNodeTypes { get; set; }
 
         public int[,,] NodeTypes { get; set; }
@@ -151,6 +150,66 @@ namespace BFramework.World
         public override string ToString()
         {
             return string.Format("Map(Name: {0}, LengthX: {1}, LengthY: {2}, LengthZ: {3})", Name, LengthX, LengthY, LengthZ);
+        }
+
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", Name);
+            info.AddValue("LengthX", LengthX);
+            info.AddValue("LengthY", LengthY);
+            info.AddValue("LengthZ", LengthZ);
+            PrefabNodeTypes = new List<string>() { Default.Properties.Empty.NodeType};
+            NodeTypes = new int[LengthX, LengthY, LengthZ];
+            for (int i = 0; i < LengthX; i++)
+            {
+                for (int j = 0; j < LengthY; j++)
+                {
+                    for (int k = 0; k < LengthZ; k++)
+                    {
+                        string typeName = Nodes[i, j, k].Type;
+                        if (!PrefabNodeTypes.Contains(typeName))
+                        {
+                            PrefabNodeTypes.Add(typeName);
+                        }
+                        NodeTypes[i, j, k] = PrefabNodeTypes.IndexOf(typeName);
+                    }
+                }
+            }
+            info.AddValue("PrefabNodeTypes", PrefabNodeTypes);
+            info.AddValue("NodeTypes", NodeTypes);
+        }
+
+        /// <summary>
+        /// 反序列化
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected Map(SerializationInfo info, StreamingContext context)
+        {
+            Name = info.GetString("Name");
+            LengthX = info.GetInt32("LengthX");
+            LengthY = info.GetInt32("LengthY");
+            LengthZ = info.GetInt32("LengthZ");
+            PrefabNodeTypes = (List<string>)info.GetValue("PrefabNodeTypes", typeof(List<string>));
+            System.Console.WriteLine(PrefabNodeTypes.Count);
+            NodeTypes = (int[,,])info.GetValue("NodeTypes", typeof(int[,,]));
+            Nodes = new Node[LengthX, LengthY, LengthZ];
+            for (int i = 0; i < LengthX; i++)
+            {
+                for (int j = 0; j < LengthY; j++)
+                {
+                    for (int k = 0; k < LengthZ; k++)
+                    {
+                        Nodes[i, j, k] = new Node(i, j, k, new Properties(PrefabNodeTypes[NodeTypes[i, j, k]]));
+                    }
+                }
+            }
+            SetNeighbors();
         }
     }
 }

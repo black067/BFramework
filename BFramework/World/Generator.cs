@@ -114,11 +114,11 @@ namespace BFramework.World
 
         private void DefaultOffsetInit(int seed)
         {
-            Random.Init(seed);
+            BRandom.Init(seed);
             Offsets = new Vector[3];
-            Offsets[0] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
-            Offsets[1] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
-            Offsets[2] = new Vector(Random.Value * 1000, Random.Value * 1000, Random.Value * 1000);
+            Offsets[0] = new Vector(BRandom.Value * 1000, BRandom.Value * 1000, BRandom.Value * 1000);
+            Offsets[1] = new Vector(BRandom.Value * 1000, BRandom.Value * 1000, BRandom.Value * 1000);
+            Offsets[2] = new Vector(BRandom.Value * 1000, BRandom.Value * 1000, BRandom.Value * 1000);
         }
         
         private int GenerateWaveHeight(float x, float y, float z)

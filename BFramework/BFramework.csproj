@@ -56,11 +56,12 @@
     <Compile Include="DataStructure\RBTree.cs" />
     <Compile Include="DataStructure\SortedList.cs" />
     <Compile Include="ExpandedMath\BPNet.cs" />
+    <Compile Include="ExpandedMath\Concussion.cs" />
     <Compile Include="ExpandedMath\Conditional.cs" />
     <Compile Include="ExpandedMath\Distributions\HighOrderEquation.cs" />
     <Compile Include="ExpandedMath\Distributions\Parabola.cs" />
     <Compile Include="ExpandedMath\Gaussian.cs" />
-    <Compile Include="ExpandedMath\Random.cs" />
+    <Compile Include="ExpandedMath\BRandom.cs" />
     <Compile Include="ExpandedMath\Limited.cs" />
     <Compile Include="ExpandedMath\Segments.cs" />
     <Compile Include="ExpandedMath\Vector.cs" />
@@ -102,6 +103,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetPath) C:\Users\black\Projects\PathFind\Assets\Plugins\ /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetPath) C:\Users\black\Projects\PACU\Assets\Plugins\ /Y
+xcopy $(TargetPath) C:\Users\black\Projects\PathFind\Assets\Plugins\ /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

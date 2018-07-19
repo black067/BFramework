@@ -21,7 +21,7 @@ namespace BFramework
         private static object _lock = new object();
 
         /// <summary>
-        /// 取得单例
+        /// 取得实例
         /// </summary>
         public static T Instance
         {
@@ -70,6 +70,16 @@ namespace BFramework
             return item;
         }
     }
+    
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
+    public class NeedResetAttribute : Attribute
+    {
+        public bool ResetValueToNull;
+        public NeedResetAttribute(bool ResetValueToNull)
+        {
+            this.ResetValueToNull = ResetValueToNull;
+        }
+    }
 
     public abstract class Singleton<T> where T : Singleton<T>
     {
@@ -91,6 +101,32 @@ namespace BFramework
                     _initialized = true;
                 }
                 return _instance;
+            }
+        }
+
+        /// <summary>
+        /// 重置单例中所有标记了 NeedReset 属性的 Field
+        /// </summary>
+        public static void Reset()
+        {
+            FieldInfo[] fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            foreach (FieldInfo f in fields)
+            {
+                object[] objs = f.GetCustomAttributes(typeof(NeedResetAttribute), false);
+                if (objs.Length > 0)
+                {
+                    var o = objs[0] as NeedResetAttribute;
+                    if (o.ResetValueToNull)
+                    {
+                        f.SetValue(Instance, null);
+                    }
+                    else
+                    {
+                        ConstructorInfo[] ctrs = f.FieldType.GetConstructors();
+                        ConstructorInfo ctr = Array.Find(f.FieldType.GetConstructors(), c => c.GetParameters().Length == 0);
+                        f.SetValue(Instance, ctr.Invoke(null));
+                    }
+                }
             }
         }
     }

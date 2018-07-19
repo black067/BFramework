@@ -7,8 +7,9 @@ namespace BFramework.TetrisGame
 {
     public class Square
     {
-        public int x;
-        public int y;
+        public float x;
+        public float y;
+        
         public STATE State;
         public enum STATE
         {

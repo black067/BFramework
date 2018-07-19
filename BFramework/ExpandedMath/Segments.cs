@@ -49,7 +49,7 @@ namespace BFramework.ExpandedMath
 
         public int GetRandomIndex()
         {
-            return this[Random.Range(0, Sum)];
+            return this[BRandom.Range(0, Sum)];
         }
 
         public override string ToString()

@@ -181,7 +181,7 @@ namespace BFramework.World
                     return
                         new World.Properties("RANDOM", new Dictionary<string, double>
                         {
-                            { "DIFFICULTY", ExpandedMath.Random.Range(0, 999) },
+                            { "DIFFICULTY", ExpandedMath.BRandom.Range(0, 999) },
                             { "GVALUE", 0 },
                             { "HVALUE", 0 },
                             { "HARDNESS", 35 },
