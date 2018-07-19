@@ -76,18 +76,12 @@ namespace BFramework.PathFind
         /// <summary>
         /// 代理的名字
         /// </summary>
-        public string Name
-        {
-            get; set;
-        }
+        public string Name;
 
         /// <summary>
         /// 代理的攀附能力
         /// </summary>
-        public CLIMBLINGABILITY ClimblingAbility
-        {
-            get; set;
-        }
+        public CLIMBLINGABILITY ClimblingAbility;
 
         /// <summary>
         /// 判断节点能否立足时, 需要判断的方向数组
@@ -103,42 +97,27 @@ namespace BFramework.PathFind
         /// <summary>
         /// 通行阈值
         /// </summary>
-        public int WalkCapacity
-        {
-            get; set;
-        }
+        public int WalkCapacity;
 
         /// <summary>
         /// 对支点的硬度要求
         /// </summary>
-        public int FulcrumHardnessCapacity
-        {
-            get; set;
-        }
+        public int FulcrumHardnessCapacity;
 
         /// <summary>
         /// 节点属性权重表
         /// </summary>
-        public Properties WeightTable
-        {
-            get; set;
-        }
+        public Properties WeightTable;
 
         /// <summary>
         /// 使用的启发算法类型
         /// </summary>
-        public Heuristic.TYPE HeuristicType
-        {
-            get; set;
-        }
+        public Heuristic.TYPE HeuristicType;
 
         /// <summary>
         /// 每次搜索计算次数上限
         /// </summary>
-        public int StepsLimit
-        {
-            get; set;
-        }
+        public int StepsLimit;
         
         /// <summary>
         /// 根据自身使用的启发算法计算距离
@@ -150,8 +129,7 @@ namespace BFramework.PathFind
         {
             return Heuristic.Calculate(node, target, HeuristicType);
         }
-
-
+        
         /// <summary>
         /// 判断节点可否通过
         /// </summary>

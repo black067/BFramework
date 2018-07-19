@@ -43,61 +43,32 @@ namespace BFramework.PathFind
         /// <summary>
         /// 记录节点与其父节点关系的字典
         /// </summary>
-        public Dictionary<Node, Node> Parents
-        {
-            get; set;
-        }
+        public Dictionary<Node, Node> Parents;
 
         /// <summary>
         /// 记录节点状态的字典
         /// </summary>
-        public Dictionary<Node, NODESTATE> NodeStates
-        {
-            get; set;
-        }
+        public Dictionary<Node, NODESTATE> NodeStates;
 
         /// <summary>
         /// 当前节点的有效邻节点指针
         /// </summary>
-        private List<Node> _availableNeighborsCurrent
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// 估值器
-        /// </summary>
-        private Estimator<Properties> _estimator;
-
+        private List<Node> _availableNeighborsCurrent;
+        
         /// <summary>
         /// 估值器, 用于估计每个 Node 的消耗
         /// </summary>
-        public Estimator<Properties> Estimator
-        {
-            get
-            {
-                return _estimator;
-            }
-            private set
-            {
-                _estimator = value;
-            }
-        }
+        public Estimator<Properties> Estimator;
 
         /// <summary>
         /// 地图是否为静态
         /// </summary>
-        public bool MapStatic
-        {
-            get; set;
-        }
+        public bool MapStatic;
+
         /// <summary>
         /// 可用的邻节点字典，仅当地图为静态时使用
         /// </summary>
-        private Dictionary<Node, List<Node>> _availableNeighborsDictionary
-        {
-            get; set;
-        }
+        private Dictionary<Node, List<Node>> _availableNeighborsDictionary;
 
         /// <summary>
         /// 初始化 Path, 需要给定起点, 终点, 通行力阈值, 价值估计权重表, 启发算法类型, 最大计算步数
@@ -125,58 +96,37 @@ namespace BFramework.PathFind
         /// <summary>
         /// 记录当前步数
         /// </summary>
-        public int Steps
-        {
-            get; set;
-        }
+        public int Steps;
 
         /// <summary>
         /// 代理
         /// </summary>
-        public Agent Agent
-        {
-            get; set;
-        }
+        public Agent Agent;
 
         /// <summary>
         /// 路径的花费, 是整个路径中所有 Node 的 Cost 之和
         /// </summary>
-        public float Cost
-        {
-            get; set;
-        }
+        public float Cost;
 
         /// <summary>
         /// 起点
         /// </summary>
-        public Node Start
-        {
-            get; set;
-        }
+        public Node Start;
 
         /// <summary>
         /// 终点
         /// </summary>
-        public Node End
-        {
-            get; set;
-        }
+        public Node End;
 
         /// <summary>
         /// 当前检测到的 Node
         /// </summary>
-        public Node Current
-        {
-            get; set;
-        }
+        public Node Current;
 
         /// <summary>
         /// 当前节点的支撑节点
         /// </summary>
-        public Node CurrentFulcrum
-        {
-            get; set;
-        }
+        public Node CurrentFulcrum;
 
         /// <summary>
         /// 待检测的 Node 列表
@@ -186,10 +136,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 检测完毕的 Node 列表
         /// </summary>
-        public List<Node> Closed
-        {
-            get; set;
-        }
+        public List<Node> Closed;
 
         /// <summary>
         /// 路径检索的最终结果
@@ -202,10 +149,7 @@ namespace BFramework.PathFind
         /// <summary>
         /// 工作状态
         /// </summary>
-        public STATE State
-        {
-            get; set;
-        }
+        public STATE State;
 
         /// <summary>
         /// 访问估值器的权重值
@@ -353,7 +297,7 @@ namespace BFramework.PathFind
             node.GValue = Agent.Compute(node, parent) + (parent == null ? 0 : parent.GValue);
             node.HValue = Agent.Compute(node, End);
             node[Default.Properties.Keys.DynamicWeight] = node.HValue * Steps / Agent.StepsLimit;
-            node.SetCost(ref _estimator);
+            node.SetCost(ref Estimator);
 
             if (Opened.Count < 1)
             {
@@ -413,8 +357,8 @@ namespace BFramework.PathFind
 
             if (GetState(node) == NODESTATE.OPEN)
             {
-                double gValueLocal = Agent.Compute(node, Parents[node]);//Heuristic.ComputeNeighborDistance(node, _parents[node]);
-                double gValueNew = Agent.Compute(node, Current);//Heuristic.ComputeNeighborDistance(node, Current);
+                double gValueLocal = Agent.Compute(node, Parents[node]);
+                double gValueNew = Agent.Compute(node, Current);
                 if (gValueNew < gValueLocal)
                 {
                     SetParent(node, Current);

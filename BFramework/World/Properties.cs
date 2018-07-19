@@ -19,37 +19,16 @@ namespace BFramework.World
         /// 默认的键值
         /// </summary>
         public static List<string> KeysStatic { get; set; } = Default.Properties.Keys.ToList();
-
+        
         /// <summary>
         /// 节点的类型
         /// </summary>
-        private string _nodeType { get; set; } = EmptyValue;
-
-        /// <summary>
-        /// 节点是否可见
-        /// </summary>
-        public bool Visible { get; private set; }
-
-        /// <summary>
-        /// 节点的类型
-        /// </summary>
-        public string NodeType
-        {
-            get
-            {
-                return _nodeType;
-            }
-            set
-            {
-                _nodeType = value;
-                Visible = _nodeType != EmptyValue;
-            }
-        }
+        public string NodeType;
 
         /// <summary>
         /// 记录节点的开销
         /// </summary>
-        public double Cost { get; set; } = double.MaxValue;
+        public double Cost = double.MaxValue;
 
         /// <summary>
         /// 实例化空节点属性

@@ -19,40 +19,25 @@ namespace BFramework.World
             HeightOffsets = new Segments(heightOffsets);
         }
 
-        public string Name
-        {
-            get; set;
-        }
+        public string Name;
 
-        public List<string[]> NodeTypes
-        {
-            get; private set;
-        }
+        public List<string[]> NodeTypes;
 
-        public List<Segments> Weights
-        {
-            get; private set;
-        }
+        public List<Segments> Weights;
 
-        public int Height
-        {
-            get; private set;
-        }
+        public int Height;
 
-        public Segments HeightOffsets
-        {
-            get; private set;
-        }
+        public Segments HeightOffsets;
 
         public const int MaxHeight = 2048;
 
-        public int MinHeight { get; set; } = 10;
+        public int MinHeight = 10;
 
-        public float Frequency { get; set; } = 0.03f;
+        public float Frequency = 0.03f;
 
-        public float Amplitude { get; set; } = 2;
+        public float Amplitude = 2;
 
-        public int Seed { get; set; } = 20180531;
+        public int Seed = 20180719;
 
         public string GetNodeTypeByHeight(int offset)
         {
@@ -66,7 +51,8 @@ namespace BFramework.World
 
         public void Add(string[] nodeTypes, int[] weights)
         {
-
+            NodeTypes.Add(nodeTypes);
+            Weights.Add(new Segments(weights));
         }
 
         public static Configuration ReadCSV(string path)

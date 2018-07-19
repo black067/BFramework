@@ -151,18 +151,7 @@ namespace BFramework.World
                 _properties[key] = value;
             }
         }
-
-        /// <summary>
-        /// 节点的可见性
-        /// </summary>
-        public bool Visible
-        {
-            get
-            {
-                return _properties.Visible;
-            }
-        }
-
+        
         /// <summary>
         /// 节点的类型值
         /// </summary>

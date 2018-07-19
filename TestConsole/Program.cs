@@ -440,12 +440,13 @@ namespace TestConsole
 
             public static void HighOrderEq()
             {
+                /*
                 double x_start = 0, x_end = 70, x_highest = 35;
                 double t_highest = 0.25, t_end = 0.5, t_start = 0;
                 double z_end = 0, z_highest = 20, z_start = 0;
                 double[] a_x = new double[6];
                 double[] a_z = new double[5];
-                HighOrderEquation X = new HighOrderEquation();
+                HighOrderEquation X = new HighOrderEquation();*/
             }
 
             public static void ListInsert()

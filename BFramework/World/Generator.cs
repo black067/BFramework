@@ -8,28 +8,26 @@ namespace BFramework.World
 {
     public class Generator
     {
-        public int Seed { get; set; }
+        public int Seed { get { return Config.Seed; } set { Config.Seed = value; } }
 
-        public float MinHeight { get; set; } = 10;
+        public int MinHeight { get { return Config.MinHeight; } set { Config.MinHeight = value; } }
 
-        public float Frequency { get; set; } = 1f;
+        public float Frequency { get { return Config.Frequency; } set { Config.Frequency = value; } }
 
-        public float Amplitude { get; set; } = 2;
+        public float Amplitude { get { return Config.Amplitude; } set { Config.Amplitude = value; } }
 
-        public Vector[] Offsets { get; set; }
+        private Vector[] Offsets { get; set; }
 
         public BDelegate<int> InitOffset { get; set; }
 
         public BDelegate<int, string> GetTypeByNoise { get; set; }
 
-        public bool UseNoise { get; set; }
+        public bool UseNoise;
 
         public Map Result { get; private set; }
 
-        public Configuration Config { get; set; }
-
-        public string Path { get; set; }
-
+        public Configuration Config;
+        
         public Dictionary<string, Properties> Prefab { get; set; }
 
         private bool _initialized { get; set; }
@@ -50,9 +48,8 @@ namespace BFramework.World
             {
                 return;
             }
-            Path = path;
             Prefab = new Dictionary<string, Properties>();
-            FileInfo[] files = new DirectoryInfo(Path).GetFiles();
+            FileInfo[] files = new DirectoryInfo(path).GetFiles();
             for(int i = files.Length - 1; i > -1; i--)
             {
                 switch (files[i].Extension)
@@ -64,10 +61,6 @@ namespace BFramework.World
                     case Configuration.Extension:
                         Exporter<Configuration>.Load(files[i].FullName, out Configuration config);
                         Config = config;
-                        Seed = Config.Seed;
-                        MinHeight = Config.MinHeight;
-                        Amplitude = Config.Amplitude;
-                        Frequency = Config.Frequency;
                         break;
                 }
             }
@@ -76,6 +69,37 @@ namespace BFramework.World
 
             GetTypeByNoise = GetTypeByNoise ?? new BDelegate<int, string>(DefaultGetType);
 
+            _initialized = true;
+        }
+
+        protected void PrefabInit(Properties[] properties)
+        {
+            Prefab = new Dictionary<string, Properties>();
+            foreach (Properties item in properties)
+            {
+                Prefab.Add(item.NodeType, item);
+            }
+        }
+
+        protected void ConfigInit(Configuration config)
+        {
+            Config = config;
+            Seed = Config.Seed;
+            MinHeight = Config.MinHeight;
+            Amplitude = Config.Amplitude;
+            Frequency = Config.Frequency;
+        }
+
+        public void Init(Properties[] properties, Configuration config)
+        {
+            if (_initialized)
+            {
+                return;
+            }
+            PrefabInit(properties);
+            ConfigInit(config);
+            InitOffset = InitOffset ?? new BDelegate<int>(DefaultOffsetInit);
+            GetTypeByNoise = GetTypeByNoise ?? new BDelegate<int, string>(DefaultGetType);
             _initialized = true;
         }
         

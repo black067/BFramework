@@ -43,36 +43,36 @@ namespace BFramework.World
         /// <summary>
         /// 地图名
         /// </summary>
-        public string Name { get; set; }
+        public string Name;
 
         /// <summary>
         /// 地图在 X 轴方向的长度
         /// </summary>
-        public int LengthX { get; set; }
+        public int LengthX;
 
         /// <summary>
         /// 地图在 Y 轴方向的长度
         /// </summary>
-        public int LengthY { get; set; }
+        public int LengthY;
 
         /// <summary>
         /// 地图在 Z 轴方向的长度
         /// </summary>
-        public int LengthZ { get; set; }
+        public int LengthZ;
 
         /// <summary>
         /// 地图中的节点总量
         /// </summary>
-        public int NodesCount { get; set; }
+        public int NodesCount;
 
         /// <summary>
         /// 地图中的所有节点
         /// </summary>
-        public Node[,,] Nodes { get; set; }
+        public Node[,,] Nodes;
 
-        public List<string> PrefabNodeTypes { get; set; }
+        public List<string> PrefabNodeTypes;
 
-        public int[,,] NodeTypes { get; set; }
+        public int[,,] NodeTypes;
 
         /// <summary>
         /// 节点访问器, 根据坐标返回对应的节点
@@ -114,6 +114,7 @@ namespace BFramework.World
             }
             node.Neighbors = neighbors;
         }
+
         /// <summary>
         /// 设置自身所有节点的相邻节点
         /// </summary>
