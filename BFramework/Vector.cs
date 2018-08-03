@@ -1,7 +1,8 @@
 ﻿using System;
 
-namespace BFramework.ExpandedMath
+namespace BFramework
 {
+    [Serializable]
     public class Vector
     {
         public float x;
@@ -75,6 +76,15 @@ namespace BFramework.ExpandedMath
                 return (float)Math.Sqrt(SqrMagnitude);
             }
         }
+
+        public Vector Normalized
+        {
+            get
+            {
+                return this / Magnitude;
+            }
+        }
+
         public Vector Add(Vector addition)
         {
             Vector result = new Vector(this);
@@ -135,7 +145,7 @@ namespace BFramework.ExpandedMath
             return new VectorInt((int)Math.Round(vector.x), (int)Math.Round(vector.y), (int)Math.Round(vector.z));
         }
     }
-
+    [Serializable]
     public class VectorInt
     {
         public int x;

@@ -84,10 +84,6 @@ namespace BFramework.World
         protected void ConfigInit(Configuration config)
         {
             Config = config;
-            Seed = Config.Seed;
-            MinHeight = Config.MinHeight;
-            Amplitude = Config.Amplitude;
-            Frequency = Config.Frequency;
         }
 
         public void Init(Properties[] properties, Configuration config)
@@ -103,11 +99,11 @@ namespace BFramework.World
             _initialized = true;
         }
         
-        public Map Build(string name, int width, int height, int length)
+        public Map Build(string name, VectorInt origin, int width, int height, int length)
         {
             InitOffset.Execute(Seed);
 
-            Result = new Map(name, width, height, length);
+            Result = new Map(name, width, height, length, origin);
 
             for (I = 0; I < width; I++)
             {
@@ -115,20 +111,12 @@ namespace BFramework.World
                 {
                     for (K = 0; K < length; K++)
                     {
-                        SetNodeType(Result[I, J, K]);
+                        SetNodeType(Result.Nodes[I, J, K]);
                     }
                 }
             }
 
             return Result;
-        }
-
-        public void BuildSynchronizeInit(string name, int width, int height, int length)
-        {
-            InitOffset.Execute(Seed);
-            Result = new Map(name, width, height, length);
-            I = 0; J = 0; K = 0;
-            Done = false;
         }
 
         private string DefaultGetType(int height, int noiseHeight)

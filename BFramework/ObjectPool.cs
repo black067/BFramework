@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BFramework.ObjectPools
+namespace BFramework
 {
     public interface IPool<T>
     {
@@ -12,8 +12,10 @@ namespace BFramework.ObjectPools
 
     public interface IPoolable
     {
-        void OnRecycled();
         bool IsRecycled { get; set; }
+        void OnRecycled();
+        void OnAllocate();
+        void OnCreated();
     }
 
     public interface IPoolType
@@ -51,7 +53,9 @@ namespace BFramework.ObjectPools
 
         public virtual T Allocate()
         {
-            return _cache.Count == 0 ? _factory.Create() : _cache.Pop();
+            T item = _cache.Count == 0 ? _factory.Create() : _cache.Pop();
+            item.OnAllocate();
+            return item;
         }
 
         public abstract bool Recycle(T item);
@@ -68,12 +72,13 @@ namespace BFramework.ObjectPools
     public class SafePool<T> : Pool<T>, ISingleton where T : IPoolable, new()
     {
         #region 实现接口 ISingleton
-        public virtual void OnInitialized() { }
-
-        protected SafePool()
+        public virtual void OnInitialized()
         {
             _factory = new Factory<T>();
+            Init(64, 64);
         }
+
+        protected SafePool() { }
 
         public static SafePool<T> Instance
         {

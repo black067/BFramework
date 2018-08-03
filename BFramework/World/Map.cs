@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using BFramework.ExpandedMath;
 
 namespace BFramework.World
 {
@@ -19,9 +20,10 @@ namespace BFramework.World
         /// <param name="lengthY"></param>
         /// <param name="lengthZ"></param>
         /// <param name="randomDifficulty"></param>
-        public Map(string name, int lengthX, int lengthY, int lengthZ, bool randomDifficulty = false)
+        public Map(string name, int lengthX, int lengthY, int lengthZ, VectorInt origin, bool randomDifficulty = false)
         {
             Name = name;
+            Origin = origin;
             LengthX = lengthX;
             LengthY = lengthY;
             LengthZ = lengthZ;
@@ -33,7 +35,7 @@ namespace BFramework.World
                 {
                     for (int k = 0; k < LengthZ; k++)
                     {
-                        Nodes[i, j, k] = new Node(i, j, k, randomDifficulty ? Default.Properties.Random : Default.Properties.Empty);
+                        Nodes[i, j, k] = new Node(i + Origin.x, j + Origin.y, k + Origin.z, randomDifficulty ? Default.Properties.Random : Default.Properties.Empty);
                     }
                 }
             }
@@ -44,6 +46,11 @@ namespace BFramework.World
         /// 地图名
         /// </summary>
         public string Name;
+
+        /// <summary>
+        /// 地图原点
+        /// </summary>
+        public VectorInt Origin;
 
         /// <summary>
         /// 地图在 X 轴方向的长度
@@ -75,7 +82,7 @@ namespace BFramework.World
         public int[,,] NodeTypes;
 
         /// <summary>
-        /// 节点访问器, 根据坐标返回对应的节点
+        /// 节点访问器, 根据坐标返回对应的节点(考虑地图原点)
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -85,7 +92,7 @@ namespace BFramework.World
         {
             get
             {
-                return Check(x, y, z) ? Nodes[x, y, z] : null;
+                return Check(x, y, z) ? Nodes[x - Origin.x, y - Origin.y, z - Origin.z] : null;
             }
         }
 
@@ -104,7 +111,7 @@ namespace BFramework.World
                 {
                     for (int k = -1; k < 2; k++)
                     {
-                        if (Check(x + i, y + j, z + k))
+                        if (IgnoreOriginCheck(x + i, y + j, z + k))
                         {
                             current = Nodes[x + i, y + j, z + k];
                             neighbors[i + 1, j + 1, k + 1] = current;
@@ -127,13 +134,30 @@ namespace BFramework.World
         }
 
         /// <summary>
-        /// 根据坐标检查该坐标是否在地图内
+        /// 根据坐标检查该坐标是否在地图内(不考虑地图原点)
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <returns></returns>
-        public bool Check(int x, int y, int z) { return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ; }
+        public bool IgnoreOriginCheck(int x, int y, int z)
+        {
+            return x >= 0 && x < LengthX && y >= 0 && y < LengthY && z >= 0 && z < LengthZ;
+        }
+
+        /// <summary>
+        /// 根据坐标检查该坐标是否在地图内(考虑地图原点)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        public bool Check(int x, int y, int z)
+        {
+            return x >= Origin.x && x < (LengthX + Origin.x) &&
+                y >= Origin.y && y < (LengthY + Origin.y) &&
+                z >= Origin.z && z < (LengthZ + Origin.z);
+        }
 
         public static void SetNode(Node node, Properties newProperties)
         {
@@ -161,6 +185,7 @@ namespace BFramework.World
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", Name);
+            info.AddValue("Origin", Origin);
             info.AddValue("LengthX", LengthX);
             info.AddValue("LengthY", LengthY);
             info.AddValue("LengthZ", LengthZ);
@@ -193,6 +218,7 @@ namespace BFramework.World
         protected Map(SerializationInfo info, StreamingContext context)
         {
             Name = info.GetString("Name");
+            Origin = (VectorInt)info.GetValue("Origin", typeof(VectorInt));
             LengthX = info.GetInt32("LengthX");
             LengthY = info.GetInt32("LengthY");
             LengthZ = info.GetInt32("LengthZ");
@@ -206,7 +232,7 @@ namespace BFramework.World
                 {
                     for (int k = 0; k < LengthZ; k++)
                     {
-                        Nodes[i, j, k] = new Node(i, j, k, new Properties(PrefabNodeTypes[NodeTypes[i, j, k]]));
+                        Nodes[i, j, k] = new Node(i + Origin.x, j + Origin.y, k + Origin.z, new Properties(PrefabNodeTypes[NodeTypes[i, j, k]]));
                     }
                 }
             }

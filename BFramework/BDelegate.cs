@@ -172,13 +172,17 @@ namespace BFramework
 
     public class BDelegate
     {
+        public BDelegate()
+        {
+            _method = delegate () { };
+        }
         public BDelegate(Method method)
         {
-            _method = method;
+            _method = method ?? delegate () { };
         }
         public BDelegate(MethodParams method)
         {
-            _methodParams = method;
+            _methodParams = method ?? delegate (object[] args) { };
         }
 
         public void Execute()
@@ -195,6 +199,30 @@ namespace BFramework
         {
             if (d._method == null) { return d._methodParams; }
             else { return d._method; }
+        }
+
+        public void Add(Method method)
+        {
+            if (method == null) return;
+            _method += method;
+        }
+
+        public void Add(MethodParams methodParams)
+        {
+            if (methodParams == null) return;
+            _methodParams += methodParams;
+        }
+
+        public void Remove(Method method)
+        {
+            if (method == null) return;
+            _method -= method;
+        }
+
+        public void Remove(MethodParams methodParams)
+        {
+            if (methodParams == null) return;
+            _methodParams -= methodParams;
         }
 
         public delegate void Method();
@@ -236,35 +264,154 @@ namespace BFramework
 
         public void Execute(T input)
         {
-            if (_case == BDelegateTYPE.NORMAL)
-                _method(input);
+            switch (_case)
+            {
+                case BDelegateTYPE.NONE:
+                    _methodNone();
+                    return;
+                case BDelegateTYPE.NORMAL:
+                    _method(input);
+                    return;
+                case BDelegateTYPE.REF:
+                    _methodRef(ref input);
+                    return;
+                case BDelegateTYPE.PARAMS:
+                    _methodParams(input);
+                    return;
+                case BDelegateTYPE.PARAMSTWO:
+                    _methodTwoParams(input, default(T));
+                    return;
+                case BDelegateTYPE.RETURN:
+                    _methodReturnT();
+                    return;
+            }
         }
 
         public void Execute(ref T input)
         {
-            if (_case == BDelegateTYPE.REF)
-                _methodRef(ref input);
+            switch (_case)
+            {
+                case BDelegateTYPE.NONE:
+                    _methodNone();
+                    return;
+                case BDelegateTYPE.NORMAL:
+                    _method(input);
+                    return;
+                case BDelegateTYPE.REF:
+                    _methodRef(ref input);
+                    return;
+                case BDelegateTYPE.PARAMS:
+                    _methodParams(input);
+                    return;
+                case BDelegateTYPE.PARAMSTWO:
+                    _methodTwoParams(input, default(T));
+                    return;
+                case BDelegateTYPE.RETURN:
+                    _methodReturnT();
+                    return;
+            }
         }
 
         public void Execute(params T[] inputs)
         {
-            if (_case == BDelegateTYPE.PARAMSTWO && inputs.Length == 2)
+            switch (_case)
             {
-                _methodTwoParams(inputs[0], inputs[1]);
+                case BDelegateTYPE.NONE:
+                    _methodNone();
+                    return;
+                case BDelegateTYPE.NORMAL:
+                    if (inputs.Length > 0)
+                    {
+                        _method(inputs[0]);
+                    }
+                    else
+                    {
+                        _method(default(T));
+                    }
+                    return;
+                case BDelegateTYPE.REF:
+                    if (inputs.Length > 0)
+                    {
+                        _methodRef(ref inputs[0]);
+                    }
+                    else
+                    {
+                        T i = default(T);
+                        _methodRef(ref i);
+                    }
+                    return;
+                case BDelegateTYPE.PARAMS:
+                    _methodParams(inputs);
+                    return;
+                case BDelegateTYPE.PARAMSTWO:
+                    if (inputs.Length > 1)
+                    {
+                        _methodTwoParams(inputs[0], inputs[1]);
+                    }
+                    else if(inputs.Length > 0)
+                    {
+                        _methodTwoParams(inputs[0], default(T));
+                    }
+                    else
+                    {
+                        _methodTwoParams(default(T), default(T));
+                    }
+                    return;
+                case BDelegateTYPE.RETURN:
+                    _methodReturnT();
+                    return;
             }
-            else if (_case == BDelegateTYPE.PARAMS) { _methodParams(inputs); }
         }
 
         public T Execute()
         {
-            if (_case != BDelegateTYPE.RETURN) return default(T);
-            return _methodReturnT();
+            switch (_case)
+            {
+                case BDelegateTYPE.NONE:
+                    _methodNone();
+                    return default(T);
+                case BDelegateTYPE.NORMAL:
+                    _method(default(T));
+                    break;
+                case BDelegateTYPE.REF:
+                    T i = default(T);
+                    _methodRef(ref i);
+                    break;
+                case BDelegateTYPE.PARAMS:
+                    _methodParams(default(T));
+                    break;
+                case BDelegateTYPE.PARAMSTWO:
+                    _methodTwoParams(default(T), default(T));
+                    break;
+                case BDelegateTYPE.RETURN:
+                    return _methodReturnT();
+            }
+            return default(T);
         }
 
         public void Execute(T input0, T input1)
         {
-            if (_case != BDelegateTYPE.PARAMSTWO) return;
-            _methodTwoParams(input0, input1);
+            switch (_case)
+            {
+                case BDelegateTYPE.NONE:
+                    _methodNone();
+                    return;
+                case BDelegateTYPE.NORMAL:
+                    _method(input0);
+                    return;
+                case BDelegateTYPE.REF:
+                    _methodRef(ref input0);
+                    return;
+                case BDelegateTYPE.PARAMS:
+                    _methodParams(input0, input1);
+                    return;
+                case BDelegateTYPE.PARAMSTWO:
+                    _methodTwoParams(input0, input1);
+                    return;
+                case BDelegateTYPE.RETURN:
+                    _methodReturnT();
+                    return;
+            }
         }
 
         public static explicit operator System.Delegate(BDelegate<T> d)
@@ -281,6 +428,8 @@ namespace BFramework
                     return d._methodTwoParams;
                 case BDelegateTYPE.RETURN:
                     return d._methodReturnT;
+                case BDelegateTYPE.NONE:
+                    return d._methodNone;
             }
             return d._method;
         }
@@ -290,6 +439,7 @@ namespace BFramework
         public delegate void MethodRef(ref T input);
         public delegate void MethodTwoParams(T input0, T input1);
         public delegate void MethodParams(params T[] input);
+        public delegate void MethodNone();
         public delegate T ReturnT();
         
 
@@ -299,5 +449,6 @@ namespace BFramework
         private readonly MethodTwoParams _methodTwoParams;
         private readonly MethodParams _methodParams;
         private readonly ReturnT _methodReturnT;
+        private readonly MethodNone _methodNone;
     }
 }

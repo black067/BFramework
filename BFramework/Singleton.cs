@@ -51,7 +51,7 @@ namespace BFramework
         /// 用于创建单例
         /// </summary>
         /// <returns></returns>
-        private static T CreateSingleton()
+        protected static T CreateSingleton()
         {
             T item = default(T);
 

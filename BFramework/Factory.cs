@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BFramework.ObjectPools
+namespace BFramework
 {
     /// <summary>
     /// 对象工厂接口
@@ -13,12 +13,14 @@ namespace BFramework.ObjectPools
     {
         T Create();
     }
-
-    public class Factory<T> : IFactory<T> where T : new()
+    
+    public class Factory<T> : IFactory<T> where T : IPoolable, new()
     {
         public T Create()
         {
-            return new T();
+            T item = new T();
+            item.OnCreated();
+            return item;
         }
     }
 }

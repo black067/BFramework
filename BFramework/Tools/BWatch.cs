@@ -1,55 +1,108 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BFramework.Tools
 {
+    [Serializable]
     public class BWatch
     {
-        private DateTime _time0;
-
-        public BWatch()
+        protected int _cycle = 60;
+        public int Cycle
         {
-            _time0 = DateTime.Now;
+            get { return _cycle; }
+            set { _cycle = value != 0 ? (value > 0 ? value : -value) : 1; }
         }
-
-        /// <summary>
-        /// 返回从计时器新建/上一次刷新到现在的时间
-        /// </summary>
-        /// <returns></returns>
-        public double Click()
+        protected int _interval = 10;
+        public int Interval
         {
-            TimeSpan span = new TimeSpan((DateTime.Now - _time0).Ticks);
-            return span.TotalMilliseconds;
+            get { return _interval; }
+            set { _interval = value != 0 ? (value > 0 ? value : -value) : 1; }
         }
-
-        public void Refresh()
+        protected int _step = 1;
+        public int Step
         {
-            _time0 = DateTime.Now;
-        }
-
-        public static string Now
-        {
-            get
+            get { return _step; }
+            set
             {
-                DateTime now = DateTime.Now;
-                return string.Format("[{0}-{1}-{2}-{3}-{4}-{5}]", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                _step = value != 0 ? (value > 0 ? value : -value) : 1;
+            }
+        }
+        public int Current { get; protected set; } = 0;
+        public bool AutoReset = true;
+        public bool IsRun { get; protected set; } = false;
+        public BDelegate CycleAction = null;
+        public BDelegate IntervalAction = null;
+        public BDelegate StepAction = null;
+
+        public BWatch(int cycle = 60, int interval = 10, int step = 1, BDelegate.Method cycleMethod = null, BDelegate.Method intervalMethod = null, BDelegate.Method stepMethod = null)
+        {
+            Cycle = cycle;
+            CycleAction = new BDelegate(CycleActionOriginal);
+            CycleAction.Add(cycleMethod);
+            Interval = interval;
+            IntervalAction = new BDelegate(IntervalActionOriginal);
+            IntervalAction.Add(intervalMethod);
+            Step = step;
+            StepAction = new BDelegate(StepActionOriginal);
+            StepAction.Add(stepMethod);
+        }
+
+        public BWatch Start()
+        {
+            Reset();
+            IsRun = true;
+            return this;
+        }
+
+        public BWatch Tick()
+        {
+            if (!IsRun)
+            {
+                return this;
+            }
+            StepAction.Execute();
+            if (Current % Interval == 0)
+            {
+                IntervalAction.Execute();
+            }
+            if(Current >= Cycle)
+            {
+                CycleAction.Execute();
+            }
+            return this;
+        }
+
+        public BWatch Stop()
+        {
+            IsRun = false;
+            return this;
+        }
+
+        public BWatch Reset()
+        {
+            Current = 0;
+            return this;
+        }
+
+        public void CycleActionOriginal()
+        {
+            if (AutoReset)
+            {
+                Reset();
+            }
+            else
+            {
+                Stop();
             }
         }
 
-        public override string ToString()
+        public void IntervalActionOriginal()
         {
-            double d = Click();
-            Refresh();
-            return string.Format("Delta time: {0} ms", d);
+
         }
 
-        public string ToString(string format)
+        public void StepActionOriginal()
         {
-            TimeSpan span = new TimeSpan((DateTime.Now - _time0).Ticks);
-            Refresh();
-            return string.Format("Delta time: {0}", string.Format(format, span));
+            Current += Step;
         }
     }
 }

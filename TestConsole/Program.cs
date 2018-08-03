@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using BFramework;
 using BFramework.StateMachines;
-using BFramework.ShootingGame;
 using BFramework.ExpandedMath;
-using BFramework.ExpandedMath.Distributions;
 using BFramework.PathFind;
 using BFramework.World;
 using BFramework.Tools;
 using BFramework.DataStructure;
 using System.Collections;
-
 namespace TestConsole
 {
     class Program
@@ -203,61 +197,13 @@ namespace TestConsole
 
                 Console.WriteLine("StateMachine Test Over\n");
             }
-
-            public static void ShootingGame()
-            {
-                Console.WriteLine("#############\nShooting Game Test");
-                Creature creature = new Creature();
-                creature.attributes.body.Components["Head"].health += 2;
-
-                while (true)
-                {
-
-                    Console.WriteLine(creature.command.ChangePostureTo);
-                    ConsoleKeyInfo input = Console.ReadKey();
-                    if (input.Key == ConsoleKey.Escape)
-                    {
-                        break;
-                    }
-                    else if (input.Key == ConsoleKey.C)
-                    {
-                        creature.command.ChangePostureTo = 2;
-                    }
-                    else if (input.Key == ConsoleKey.Z)
-                    {
-                        creature.command.ChangePostureTo = 3;
-                    }
-                    creature.Update(); creature.Update();
-                    Console.WriteLine(creature.actuator.PostureMgr.StateMachine.Current);
-
-                }
-
-                creature.Update();
-                Console.WriteLine("00 " + creature.actuator.PostureMgr.StateMachine.Current);
-                creature.command.ChangePostureTo = 2;
-                creature.Update();
-                creature.Update();
-                Console.WriteLine("02 " + creature.actuator.PostureMgr.StateMachine.Current);
-                creature.command.ChangePostureTo = 3;
-                creature.Update();
-                creature.Update();
-                Console.WriteLine("04 " + creature.actuator.PostureMgr.StateMachine.Current);
-                creature.command.ChangePostureTo = 1;
-                creature.Update();
-                creature.Update();
-                Console.WriteLine("06 " + creature.actuator.PostureMgr.StateMachine.Current);
-                creature.command.ChangePostureTo = 2;
-                creature.Update();
-                creature.Update();
-                Console.WriteLine("08 " + creature.actuator.PostureMgr.StateMachine.Current);
-            }
-
+            
             public static void DoPathfinding()
             {
                 int LengthX = 6;
                 int LengthY = 2;
                 int LengthZ = 6;
-                Map map = new Map("TestMap", LengthX, LengthY, LengthZ, true);
+                Map map = new Map("TestMap", LengthX, LengthY, LengthZ, VectorInt.Zero, true);
 
                 Console.WriteLine(map);
                 Console.Write("#####");
@@ -321,7 +267,7 @@ namespace TestConsole
 
             public static void BinaryTreeT1()
             {
-                Map map = new Map("Test", 10, 2, 11, true);
+                Map map = new Map("Test", 10, 2, 11, VectorInt.Zero, true);
                 for (int i = 0; i < map.LengthX; i++)
                 {
                     for (int j = 0; j < map.LengthY; j++)
@@ -333,7 +279,7 @@ namespace TestConsole
                     }
                 }
 
-                BWatch watch = new BWatch();
+                BStopWatch watch = new BStopWatch();
                 List<Node> nodeList = new List<Node>() { map[0, 0, 0] };
                 foreach (Node node in map.Nodes)
                 {
@@ -396,7 +342,7 @@ namespace TestConsole
                 DateTime now = DateTime.Now;
                 string format = string.Format("{0}{1}{2}{3}",now.Year, now.Month, now.Day, now.Hour);
                 generator.Seed = int.Parse(format);
-                Map map = generator.Build("Test", 32, 32, 32);
+                Map map = generator.Build("Test", VectorInt.Zero, 32, 32, 32);
                 Exporter<Map>.Save(map.Name + Map.Extension, map);
 
                 Properties as_table = new Properties();
@@ -536,18 +482,14 @@ namespace TestConsole
             //Test.Generate();
             //Test.HeuristicSort();
             //Test.BinaryTreeT2();
-
-            string path = "A.map";
-
-            Map A = new Map("Test",10, 1, 10, true);
-            Exporter<Map>.Save(path, A);
-            
-            
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            FileStream fileStream = new FileStream(path, FileMode.Open);
-            Map a = (Map)binaryFormatter.Deserialize(fileStream);
-            
-            
+            string typeName = typeof(Map).Name;
+            Console.WriteLine(typeName);
+            Console.WriteLine(typeof(Map));
+            Type tempType = Type.GetType(typeName, false, true);
+            Console.WriteLine(tempType);
+            Console.WriteLine("++++++");
+            Type tempTypeB = Type.GetType(typeName);
+            Console.WriteLine(tempTypeB);
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

@@ -37,6 +37,14 @@ namespace BFramework.StateMachines
             CallbackAction = callback;
         }
 
+        public Translation(string fromState, string targetState, BDelegate<object, bool>.Method conditionMethod, BDelegate<object, string>.Method callbackMethod) : this(fromState, targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod)) { }
+
+        public Translation(string fromState, string targetState, BDelegate<object, bool>.Method conditionMethod, BDelegate<object, string>.MethodNone callbackMethod) : this(fromState, targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod)) { }
+
+        public Translation(string fromState, string targetState, BDelegate<object, bool>.MethodNone conditionMethod, BDelegate<object, string>.Method callbackMethod) : this(fromState, targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod)) { }
+
+        public Translation(string fromState, string targetState, BDelegate<object, bool>.MethodNone conditionMethod, BDelegate<object, string>.MethodNone callbackMethod) : this(fromState, targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod)) { }
+
         public bool Determine(object input)
         {
             if (Condition == null)

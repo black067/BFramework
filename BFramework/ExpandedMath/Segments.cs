@@ -1,16 +1,17 @@
-﻿
+﻿using System.Runtime.Serialization;
+
 namespace BFramework.ExpandedMath
 {
     /// <summary>
     /// 分段数组
     /// </summary>
     [System.Serializable]
-    public class Segments
+    public class Segments : ISerializable
     {
         public Segments(params int[] args)
         {
-            Count = args.Length;
             Weights = args;
+            Count = args.Length;
             Sum = 0;
             Accumulations = new int[Count];
             Max = int.MinValue;
@@ -62,6 +63,29 @@ namespace BFramework.ExpandedMath
             }
             result += Weights[length - 1] + ")";
             return result;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Weights", Weights);
+        }
+
+        protected Segments(SerializationInfo info, StreamingContext context)
+        {
+            int[] args = (int[])info.GetValue("Weights", typeof(int[]));
+            Weights = args;
+            Count = args.Length;
+            Sum = 0;
+            Accumulations = new int[Count];
+            Max = int.MinValue;
+            Min = int.MaxValue;
+            for (int i = 0; i < Count; i++)
+            {
+                Accumulations[i] = Sum;
+                Sum += args[i];
+                if (Max <= args[i]) { Max = args[i]; }
+                if (Min >= args[i]) { Min = args[i]; }
+            }
         }
     }
 }

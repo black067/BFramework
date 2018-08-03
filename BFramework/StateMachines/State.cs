@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BFramework.StateMachines
 {
@@ -14,7 +11,7 @@ namespace BFramework.StateMachines
         /// 使用字符串为名称新建一个状态
         /// </summary>
         /// <param name="name"></param>
-        public State(string name):this(name, new BDelegate<object, string>(delegate (object o){return name;})){}
+        public State(string name) : this(name, new BDelegate<object, string>(delegate (object o) { return name; })) { }
 
 
         /// <summary>
@@ -35,17 +32,25 @@ namespace BFramework.StateMachines
             Action = action;
             _translations = new Dictionary<string, Translation>();
         }
-        
+
+        public BDelegate<object, string> _action;
         /// <summary>
-        /// 状态节点的动作
+        /// 状态节点的行为
         /// </summary>
         public BDelegate<object, string> Action
         {
-            get;set;
+            get
+            {
+                return _action;
+            }
+            set
+            {
+                _action = value ?? new BDelegate<object, string>(() => Name);
+            }
         }
 
         private Dictionary<string, Translation> _translations { get; set; }
-        
+
         /// <summary>
         /// 状态名
         /// </summary>
@@ -63,6 +68,11 @@ namespace BFramework.StateMachines
             StateMachine = machine;
         }
 
+        /// <summary>
+        /// 执行该状态的行为
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public string Act(object input)
         {
             foreach (Translation t in _translations.Values)
@@ -72,24 +82,67 @@ namespace BFramework.StateMachines
                     return t.Callback(input);
                 }
             }
-            if (Action == null)
-            {
-                return Name;
-            }
             return Action.Execute(input);
         }
 
+        /// <summary>
+        /// 条件有参数, 回调有参数
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="conditionMethod"></param>
+        /// <param name="callbackMethod"></param>
+        /// <returns></returns>
         public Translation AddTranslation(string targetState, BDelegate<object, bool>.Method conditionMethod, BDelegate<object, string>.Method callbackMethod)
         {
+            callbackMethod = callbackMethod ?? (i => targetState);
+            return AddTranslation(targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod));
+        }
+
+        /// <summary>
+        /// 条件无参数, 回调无参数
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="conditionMethod"></param>
+        /// <param name="callbackMethod"></param>
+        /// <returns></returns>
+        public Translation AddTranslation(string targetState, BDelegate<object, bool>.MethodNone conditionMethod, BDelegate<object, string>.MethodNone callbackMethod)
+        {
+            callbackMethod = callbackMethod ?? (() => targetState);
+            return AddTranslation(targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod));
+        }
+
+        /// <summary>
+        /// 条件无参数, 回调有参数
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="conditionMethod"></param>
+        /// <param name="callbackMethod"></param>
+        /// <returns></returns>
+        public Translation AddTranslation(string targetState, BDelegate<object, bool>.MethodNone conditionMethod, BDelegate<object, string>.Method callbackMethod)
+        {
+            callbackMethod = callbackMethod ?? (i => targetState);
             return AddTranslation(targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod));
         }
 
         public Translation AddTranslation(string targetState, BDelegate<object, bool> condition, BDelegate<object, string> callback)
         {
+            callback = callback ?? new BDelegate<object, string>(() => targetState);
             Translation trans = new Translation(Name, targetState, condition, callback);
             _translations.Add(trans.Name, trans);
             return trans;
         }
+
+        /// <summary>
+        /// 移除通向目标状态的转移
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <returns></returns>
+        public Translation RemoveTranslationTo(string targetState)
+        {
+            string tName = Name + "TO" + targetState;
+            return RemoveTranslation(tName);
+        }
+
         public Translation RemoveTranslation(string name)
         {
             if (_translations.ContainsKey(name))

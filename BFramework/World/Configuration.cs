@@ -71,6 +71,7 @@ namespace BFramework.World
                 string[] typeSplitted = str.Split(',');
                 string item = typeSplitted[0];
                 heightOffsets.Add(int.Parse(item));
+
                 for (int j = 1, length = typeSplitted.Length; j < length; j++)
                 {
                     item = typeSplitted[j];

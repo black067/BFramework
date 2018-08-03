@@ -208,30 +208,29 @@ namespace BFramework.World
         {
             List<string[]> nodeTypes = new List<string[]>
             {
-            new string[]{"GRASS"},
-            new string[]{"GRASS"},
-            new string[]{"GRASS", "MUD"},
-            new string[]{"MUD"},
-            new string[]{"MUD", "ROCK"},
-            new string[]{"MUD", "ROCK"},
-            new string[]{"MUD", "ROCK"},
-            new string[]{"ROCK"},
-
+                new string[]{"GRASS"},
+                new string[]{"GRASS"},
+                new string[]{"GRASS", "MUD"},
+                new string[]{"MUD"},
+                new string[]{"MUD", "ROCK"},
+                new string[]{"MUD", "ROCK"},
+                new string[]{"MUD", "ROCK"},
+                new string[]{"ROCK"},
             };
             int[] heightOffsets = new int[]
             {
-            0, 1, 1, 1, 1, 1, 1, 1
+                0, 1, 1, 1, 1, 1, 1, 1
             };
             List<ExpandedMath.Segments> weights = new List<ExpandedMath.Segments>
             {
-            new ExpandedMath.Segments(1),
-            new ExpandedMath.Segments(1),
-            new ExpandedMath.Segments(1, 1),
-            new ExpandedMath.Segments(1),
-            new ExpandedMath.Segments(10, 1),
-            new ExpandedMath.Segments(1, 1),
-            new ExpandedMath.Segments(1, 10),
-            new ExpandedMath.Segments(1)
+                new ExpandedMath.Segments(1),
+                new ExpandedMath.Segments(1),
+                new ExpandedMath.Segments(1, 1),
+                new ExpandedMath.Segments(1),
+                new ExpandedMath.Segments(10, 1),
+                new ExpandedMath.Segments(1, 1),
+                new ExpandedMath.Segments(1, 10),
+                new ExpandedMath.Segments(1)
             };
             return new Configuration("Default", nodeTypes, weights, heightOffsets);
         }

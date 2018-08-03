@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Timers;
 using System.Collections.Generic;
 
 namespace BFramework.StateMachines
@@ -41,33 +41,15 @@ namespace BFramework.StateMachines
         private string _nextState;
 
         /// <summary>
-        /// 公用变量，用于状态之间传递参数
-        /// </summary>
-        private object _params;
-
-        /// <summary>
         /// 当前状态节点
         /// </summary>
-        public string Current
-        {
-            get;
-            set;
-        }
+        public string Current { get; set; }
 
         /// <summary>
         /// 公用变量，用于状态之间传递参数
         /// </summary>
-        public object Params
-        {
-            get
-            {
-                return _params;
-            }
-            set
-            {
-                _params = value;
-            }
-        }
+        public object Params { get; set; }
+
         /// <summary>
         /// 保存状态机中所有状态节点
         /// </summary>
@@ -76,6 +58,7 @@ namespace BFramework.StateMachines
             get;
             private set;
         }
+
         /// <summary>
         /// 用于记录状态节点的名称
         /// </summary>
@@ -84,6 +67,9 @@ namespace BFramework.StateMachines
             get;
             private set;
         }
+
+        public List<Translation> AnyStateTranslations { get; set; } = new List<Translation>();
+
         /// <summary>
         /// 执行当前状态节点
         /// </summary>
@@ -94,24 +80,65 @@ namespace BFramework.StateMachines
 
         public void Run(object input)
         {
+            foreach(var t in AnyStateTranslations)
+            {
+                if (t.Determine(input))
+                {
+                    _nextState = t.Callback(input);
+                    StateChangeCheck();
+                    return;
+                }
+            }
             _nextState = States[Current].Act(input);
+            StateChangeCheck();
+        }
+
+        bool StateChangeCheck()
+        {
             if (_nextState != Current && States.ContainsKey(_nextState))
             {
                 Current = _nextState;
+                return true;
             }
+            return false;
         }
-
+        
         /// <summary>
-        /// 添加状态转换
+        /// 添加任意状态到某状态的转移
         /// </summary>
-        /// <param name="fromState"></param>
         /// <param name="targetState"></param>
         /// <param name="conditionMethod"></param>
         /// <param name="callbackMethod"></param>
         /// <returns></returns>
-        public Translation AddTranslation(string fromState, string targetState, BDelegate<object, bool>.Method conditionMethod, BDelegate<object, string>.Method callbackMethod)
+        public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool> condition, BDelegate<object, string> callback)
         {
-            return States[fromState].AddTranslation(targetState, conditionMethod, callbackMethod);
+            Translation t = new Translation("ANY", targetState, condition, callback);
+            AnyStateTranslations.Add(t);
+            return t;
+        }
+        public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.Method condition, BDelegate<object, string>.Method callback)
+        {
+            Translation t = new Translation("ANY", targetState, condition, callback);
+            AnyStateTranslations.Add(t);
+            return t;
+        }
+        public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.Method condition, BDelegate<object, string>.MethodNone callback)
+        {
+            Translation t = new Translation("ANY", targetState, condition, callback);
+            AnyStateTranslations.Add(t);
+            return t;
+        }
+        public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.MethodNone condition, BDelegate<object, string>.Method callback)
+        {
+            Translation t = new Translation("ANY", targetState, condition, callback);
+            AnyStateTranslations.Add(t);
+            return t;
+        }
+        public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.MethodNone condition, BDelegate<object, string>.MethodNone callback)
+        {
+            Translation t = new Translation("ANY", targetState, condition, callback);
+            AnyStateTranslations.Add(t);
+            return t;
         }
 
         /// <summary>

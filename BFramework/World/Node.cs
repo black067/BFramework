@@ -33,34 +33,22 @@ namespace BFramework.World
         /// <summary>
         /// 节点的所有相邻节点
         /// </summary>
-        public Node[,,] Neighbors
-        {
-            get; set;
-        }
+        public Node[,,] Neighbors;
 
         /// <summary>
         /// 节点在 X 轴上的坐标
         /// </summary>
-        public int X
-        {
-            get; set;
-        }
+        public int X;
 
         /// <summary>
         /// 节点在 Y 轴上的坐标
         /// </summary>
-        public int Y
-        {
-            get; set;
-        }
+        public int Y;
 
         /// <summary>
         /// 节点在 Z 轴上的坐标
         /// </summary>
-        public int Z
-        {
-            get; set;
-        }
+        public int Z;
 
         /// <summary>
         /// 通过给定的方向, 调整坐标的指针
