@@ -32,8 +32,8 @@ namespace BFramework.StateMachines
             Action = action;
             _translations = new Dictionary<string, Translation>();
         }
-
-        public BDelegate<object, string> _action;
+        
+        private BDelegate<object, string> _action;
         /// <summary>
         /// 状态节点的行为
         /// </summary>
@@ -124,6 +124,13 @@ namespace BFramework.StateMachines
             return AddTranslation(targetState, new BDelegate<object, bool>(conditionMethod), new BDelegate<object, string>(callbackMethod));
         }
 
+        /// <summary>
+        /// 指定目标状态, 条件, 回调函数后添加转移
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="condition"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public Translation AddTranslation(string targetState, BDelegate<object, bool> condition, BDelegate<object, string> callback)
         {
             callback = callback ?? new BDelegate<object, string>(() => targetState);
@@ -143,6 +150,11 @@ namespace BFramework.StateMachines
             return RemoveTranslation(tName);
         }
 
+        /// <summary>
+        /// 移除转移
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Translation RemoveTranslation(string name)
         {
             if (_translations.ContainsKey(name))

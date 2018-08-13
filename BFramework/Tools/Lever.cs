@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
 
 namespace BFramework.Tools
 {
     /// <summary>
-    /// 由字符串快速设置/获取某个实例的字段, 若要获取索引器, 需要标记为
-    /// [System.Runtime.CompilerServices.IndexerName(Tools.Lever.INDEXEDPROPERTYTAG)]
+    /// 由字符串快速设置/获取某个实例的相应成员的值
     /// </summary>
     public class Lever
     {
-        /// <summary>
-        /// 索引器标签常量, 用于标记索引器
-        /// </summary>
-        public const string INDEXEDPROPERTYTAG = "IndexedProperty";
-
         private object _instance;
 
         /// <summary>
-        /// 取得目标实例
+        /// 取得作用目标的实例
         /// </summary>
         public object Instance
         {
@@ -37,10 +30,18 @@ namespace BFramework.Tools
             get; set;
         }
 
-        public Dictionary<string, PropertyInfo> Table
+        /// <summary>
+        /// 属性信息表
+        /// </summary>
+        public Dictionary<string, PropertyInfo> PropertyTable
         {
             get; private set;
         }
+
+        /// <summary>
+        /// 字段信息表
+        /// </summary>
+        public Dictionary<string, FieldInfo> FieldTable { get; private set; }
 
         /// <summary>
         /// 目标的所有 public 属性名列表
@@ -48,21 +49,6 @@ namespace BFramework.Tools
         public string[] Keys
         {
             get; private set;
-        }
-
-        private PropertyInfo _indexedProperty
-        {
-            get; set;
-        }
-
-        private bool _indexedPropertyIsNull
-        {
-            get; set;
-        }
-
-        private string[] _index
-        {
-            get;set;
         }
         
         /// <summary>
@@ -73,19 +59,24 @@ namespace BFramework.Tools
         {
             _instance = target;
             Type = _instance.GetType();
-
-            _indexedProperty = Type.GetProperty(INDEXEDPROPERTYTAG);
-            _indexedPropertyIsNull = _indexedProperty == null;
-            _index = new string[1];
-
-            Table = new Dictionary<string, PropertyInfo>();
+            
+            PropertyTable = new Dictionary<string, PropertyInfo>();
+            FieldTable = new Dictionary<string, FieldInfo>();
             List<string> KeysList = new List<string>();
-            foreach (PropertyInfo p in Type.GetProperties())
+            foreach (PropertyInfo info in Type.GetProperties(BindingFlags.Instance|BindingFlags.Public))
             {
-                if (!Table.ContainsKey(p.Name))
+                if (!PropertyTable.ContainsKey(info.Name))
                 {
-                    Table.Add(p.Name, p);
-                    KeysList.Add(p.Name);
+                    PropertyTable.Add(info.Name, info);
+                    KeysList.Add(info.Name);
+                }
+            }
+            foreach (FieldInfo info in Type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+            {
+                if (!FieldTable.ContainsKey(info.Name))
+                {
+                    FieldTable.Add(info.Name, info);
+                    KeysList.Add(info.Name);
                 }
             }
             Keys = KeysList.ToArray();
@@ -94,52 +85,62 @@ namespace BFramework.Tools
         /// <summary>
         /// 根据属性名字设定目标实例对应的值
         /// </summary>
-        /// <param name="accessor"></param>
+        /// <param name="memberName"></param>
         /// <param name="value"></param>
         /// <param name="index"></param>
-        public void SetValue(string accessor, object value, params object[] index)
+        public void TrySetValue(string memberName, object value, params object[] index)
         {
-            if (Keys.Contains(accessor))
+            if (FieldTable.TryGetValue(memberName, out FieldInfo fieldInfo))
             {
-                Table[accessor].SetValue(_instance, value, index);
-                return;
+                fieldInfo.SetValue(_instance, value);
             }
-            if (!_indexedPropertyIsNull)
+            else if(PropertyTable.TryGetValue(memberName, out PropertyInfo propertyInfo))
             {
-                _index[0] = accessor;
-                _indexedProperty.SetValue(_instance, value, _index);
+                propertyInfo.SetValue(_instance, value, index);
             }
         }
 
         /// <summary>
         /// 根据属性名字获取目标实例对应的值
         /// </summary>
-        /// <param name="accessor"></param>
+        /// <param name="memberName"></param>
+        /// <param name="value"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public object GetValue(string accessor, params object[] index)
+        public bool TryGetValue(string memberName, out object value, params object[] index)
         {
-            if (Keys.Contains(accessor))
+            if (FieldTable.TryGetValue(memberName, out FieldInfo fieldInfo))
             {
-                return Table[accessor].GetValue(_instance, index);
+                value= fieldInfo.GetValue(_instance);
+                return true;
             }
-            if (!_indexedPropertyIsNull)
+            else if (PropertyTable.TryGetValue(memberName, out PropertyInfo propertyInfo))
             {
-                _index[0] = accessor;
-                return _indexedProperty.GetValue(_instance, _index);
+                value= propertyInfo.GetValue(_instance, index);
+                return true;
             }
-            return null;
+            value = null;
+            return false;
         }
 
-        public object this[string accessor]
+        /// <summary>
+        /// 通过 Lever 的索引器设置/取得目标实例的成员值
+        /// </summary>
+        /// <param name="memberName"></param>
+        /// <returns></returns>
+        public object this[string memberName]
         {
             get
             {
-                return GetValue(accessor);
+                if (TryGetValue(memberName, out object value))
+                {
+                    return value;
+                }
+                return null;
             }
             set
             {
-                SetValue(accessor, value);
+                TrySetValue(memberName, value);
             }
         }
     }

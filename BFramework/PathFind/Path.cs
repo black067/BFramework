@@ -16,8 +16,20 @@ namespace BFramework.PathFind
         /// </summary>
         public enum STATE
         {
+
+            /// <summary>
+            /// 路径检索失败
+            /// </summary>
             FAIL = -1,
+
+            /// <summary>
+            /// 路径检索中
+            /// </summary>
             PROCESSING = 0,
+
+            /// <summary>
+            /// 路径检索成功
+            /// </summary>
             SUCCESS = 1,
         }
         
@@ -26,8 +38,20 @@ namespace BFramework.PathFind
         /// </summary>
         public enum NODESTATE
         {
+
+            /// <summary>
+            /// 节点关闭(已查找过)
+            /// </summary>
             CLOSED = -1,
+
+            /// <summary>
+            /// 未知节点
+            /// </summary>
             NONE = 0,
+
+            /// <summary>
+            /// 待查找节点
+            /// </summary>
             OPEN = 1,
         }
 
@@ -70,15 +94,14 @@ namespace BFramework.PathFind
         /// </summary>
         private Dictionary<Node, List<Node>> _availableNeighborsDictionary;
 
+
         /// <summary>
-        /// 初始化 Path, 需要给定起点, 终点, 通行力阈值, 价值估计权重表, 启发算法类型, 最大计算步数
+        /// 初始化 Path, 需要给定起始节点, 终止节点, 代理, 以及地图是否为静态(默认为否)
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <param name="walkabilityThreshold"></param>
-        /// <param name="weightDictionary"></param>
-        /// <param name="heuristicType"></param>
-        /// <param name="maxStep"></param>
+        /// <param name="agent"></param>
+        /// <param name="mapStatic"></param>
         public Path(
             Node start,
             Node end,
@@ -172,7 +195,7 @@ namespace BFramework.PathFind
         /// 根据键值设置估值器相应的权重值
         /// </summary>
         /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="weight"></param>
         public void SetWeight(string key, int weight)
         {
             if (Estimator.WeightItem.ContainsKey(key))
@@ -182,8 +205,9 @@ namespace BFramework.PathFind
         }
 
         /// <summary>
-        ///  检查节点是否可以作为支点(需要给出检查的方位)
+        /// 检查节点是否可以作为支点(需要给出代理信息与待检查的方位)
         /// </summary>
+        /// <param name="agent"></param>
         /// <param name="node"></param>
         /// <param name="directions"></param>
         /// <returns></returns>
@@ -223,11 +247,21 @@ namespace BFramework.PathFind
             return r == 0 ? CompareByAngle(node, other) : r;
         }
 
+        /// <summary>
+        /// 取得节点的父节点
+        /// </summary>
+        /// <param name="child"></param>
+        /// <returns></returns>
         public Node GetParent(Node child)
         {
             return (child != null && Parents.ContainsKey(child)) ? Parents[child] : null;
         }
 
+        /// <summary>
+        /// 设置节点的父节点
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="parent"></param>
         public void SetParent(Node node, Node parent)
         {
             if (Parents.ContainsKey(node))
@@ -518,6 +552,10 @@ namespace BFramework.PathFind
             return State;
         }
 
+        /// <summary>
+        /// 取得路径检索结果的路程
+        /// </summary>
+        /// <returns></returns>
         public double GetResultLength()
         {
             if (State != STATE.SUCCESS)

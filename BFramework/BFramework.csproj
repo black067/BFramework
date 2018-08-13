@@ -37,6 +37,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ForUnity|AnyCPU'">
     <OutputPath>bin\ForUnity\</OutputPath>
+    <DocumentationFile>bin\ForUnity\BFramework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
@@ -64,6 +65,9 @@
     <Compile Include="ExpandedMath\BRandom.cs" />
     <Compile Include="ExpandedMath\Limited.cs" />
     <Compile Include="ExpandedMath\Segments.cs" />
+    <Compile Include="ShootingGame\EffectBase.cs" />
+    <Compile Include="ShootingGame\IItemComponent.cs" />
+    <Compile Include="ShootingGame\ItemInfo.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="Library\Noise.cs" />
     <Compile Include="Factory.cs" />
@@ -72,14 +76,14 @@
     <Compile Include="StateMachines\State.cs" />
     <Compile Include="StateMachines\Translation.cs" />
     <Compile Include="Tools\BStopWatch.cs" />
-    <Compile Include="Tools\BDebug.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="ExpandedMath\Estimator.cs" />
-    <Compile Include="Tools\BWatch.cs" />
+    <Compile Include="WatchBase.cs" />
     <Compile Include="Tools\Lever.cs" />
-    <Compile Include="Tools\ReferenceCounter.cs" />
     <Compile Include="World\Configuration.cs" />
+    <Compile Include="World\FixedBounds2D.cs" />
     <Compile Include="World\Generator.cs" />
+    <Compile Include="World\Dungeon.cs" />
     <Compile Include="World\Properties.cs" />
     <Compile Include="World\ConstValueAndEnum.cs" />
     <Compile Include="World\Node.cs" />
@@ -88,10 +92,6 @@
     <Compile Include="PathFind\Path.cs" />
     <Compile Include="StateMachines\StateMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TetrisGame\Square.cs" />
-    <Compile Include="TetrisGame\Tetromino.cs" />
-    <Compile Include="TetrisGame\Grid.cs" />
-    <Compile Include="TetrisGame\Tetris.cs" />
     <Compile Include="Tools\Exporter.cs" />
     <Compile Include="Singleton.cs" />
   </ItemGroup>

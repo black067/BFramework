@@ -1,0 +1,2201 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BFramework</name>
+    </assembly>
+    <members>
+        <member name="T:BFramework.BDelegate`2">
+            <summary>
+            指定输入类型及输出类型的委托
+            </summary>
+            <typeparam name="TIn"></typeparam>
+            <typeparam name="TOut"></typeparam>
+        </member>
+        <member name="M:BFramework.BDelegate`2.#ctor(BFramework.BDelegate{`0,`1}.Method)">
+            <summary>
+            添加 TInput 输入 方法
+            </summary>
+            <param name="method"></param>
+        </member>
+        <member name="M:BFramework.BDelegate`2.#ctor(BFramework.BDelegate{`0,`1}.MethodRef)">
+            <summary>
+            添加 ref TInput 输入 方法
+            </summary>
+            <param name="methodRef"></param>
+        </member>
+        <member name="M:BFramework.BDelegate`2.#ctor(BFramework.BDelegate{`0,`1}.MethodParams)">
+            <summary>
+            添加 parms TInput[] 输入 的方法
+            </summary>
+            <param name="methodParams"></param>
+        </member>
+        <member name="M:BFramework.BDelegate`2.#ctor(BFramework.BDelegate{`0,`1}.MethodNone)">
+            <summary>
+            添加无输入的方法
+            </summary>
+            <param name="methodVoid"></param>
+        </member>
+        <member name="T:BFramework.BehaviourTree.BehaviourTree">
+            <summary>
+            行为树类
+            </summary>
+        </member>
+        <member name="T:BFramework.BehaviourTree.Cognition">
+            <summary>
+            用于行为树节点间交互的印象类
+            </summary>
+        </member>
+        <member name="T:BFramework.BehaviourTree.STATUS">
+            <summary>
+            节点状态枚举类
+            </summary>
+        </member>
+        <member name="T:BFramework.BehaviourTree.IBehaviour">
+            <summary>
+            行为类
+            </summary>
+        </member>
+        <member name="M:BFramework.DataStructure.BinaryTree`1.PreOrder(BFramework.DataStructure.BinaryTree{`0}.Node,System.Collections.Generic.Stack{`0}@)">
+            <summary>
+            先序遍历, 将结果保存到堆栈中
+            </summary>
+            <param name="node"></param>
+            <param name="result"></param>
+        </member>
+        <member name="M:BFramework.DataStructure.BinaryTree`1.InOrder(BFramework.DataStructure.BinaryTree{`0}.Node,System.Collections.Generic.Stack{`0}@)">
+            <summary>
+            中序遍历, 将结果保存到堆栈中
+            </summary>
+            <param name="node"></param>
+            <param name="result"></param>
+        </member>
+        <member name="M:BFramework.DataStructure.BinaryTree`1.PostOrder(BFramework.DataStructure.BinaryTree{`0}.Node,System.Collections.Generic.Stack{`0}@)">
+            <summary>
+            后序遍历, 将结果保存到堆栈中
+            </summary>
+            <param name="node"></param>
+            <param name="result"></param>
+        </member>
+        <member name="M:BFramework.DataStructure.BinaryTree`1.GetMin">
+            <summary>
+            查找最小值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.DataStructure.BinaryTree`1.GetMax">
+            <summary>
+            查找最大值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.DataStructure.BinaryTree`1.Find(`0)">
+            <summary>
+            根据键查找节点
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.DataStructure.RedBlackTree`1">
+            红黑树定义：  
+            性质1.节点是红色或黑色  
+            性质2.根是黑色  
+            性质3.所有叶子都是黑色（叶子是NIL节点）  
+            性质4.如果一个节点是红的，则它的两个子节点都是黑的(从每个叶子到根的所有路径上不能有两个连续的红色节点)  
+            性质5.从任一节点到其叶子的所有路径都包含相同数目的黑色节点。  
+        </member>
+        <member name="T:BFramework.DataStructure.SortedList`1">
+            <summary>
+            有序数组
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:BFramework.DataStructure.SortedList`1.ORDER">
+            <summary>
+            顺序是正序(从小到大)还是逆序(从大到小)
+            </summary>
+        </member>
+        <member name="P:BFramework.DataStructure.SortedList`1._instance">
+            <summary>
+            数组
+            </summary>
+        </member>
+        <member name="M:BFramework.DataStructure.SortedList`1.Push(`0)">
+            <summary>
+            向数组中添加元素
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:BFramework.DataStructure.SortedList`1.Pop">
+            <summary>
+            从数组中取出第一个元素
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.ExpandedMath.Concussion">
+            <summary>
+            震荡模拟
+            </summary>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Concussion.Count">
+            <summary>
+            返回值 result 接近于 sin(current)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.ExpandedMath.Conditional`1">
+            <summary>
+            有条件限制的容器，在对 Value 赋值之前会检查是否符合条件
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:BFramework.ExpandedMath.BRandom.Seed">
+            <summary>
+            随机数生成器种子（只读）
+            </summary>
+        </member>
+        <member name="P:BFramework.ExpandedMath.BRandom.Value">
+            <summary>
+            取得一个随机浮点数
+            返回值 ∈ [min, max)
+            </summary>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.Range(System.Double,System.Double)">
+            <summary>
+            返回一个范围内的随机双精度浮点数. 
+            返回值 ∈ [min, max)
+            </summary>
+            <param name="min"></param>
+            <param name="max"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.Range(System.Single,System.Single)">
+            <summary>
+            返回一个范围内的随机浮点数. 
+            返回值 ∈ [min, max)
+            </summary>
+            <param name="min"></param>
+            <param name="max"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.Range(System.Int32,System.Int32)">
+            <summary>
+            返回一个范围内的随机整数. 
+            返回值 ∈ [min, max)
+            </summary>
+            <param name="min"></param>
+            <param name="max"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.GetIndex(System.Double[])">
+            <summary>
+            根据给定的权重数组, 随机返回一个索引
+            </summary>
+            <param name="weights"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.Init(System.Int32)">
+            <summary>
+            使用种子初始化随机数生成器
+            </summary>
+            <param name="seed"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.Init">
+            <summary>
+            使用当前时间作为种子初始化随机数生成器
+            </summary>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.GetBoolean(System.Double)">
+            <summary>
+            根据所给出现 true 的概率, 取得一个随机 Boolean 值
+            </summary>
+            <param name="trueProbability"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.Choose``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            根据给定的概率, 在给定的选择列表中选出一个结果
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="options"></param>
+            <param name="probabilities"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.Choose``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            根据给定的概率之和以及概率的逐步和, 在给定的选项列表中选出一个结果
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="options"></param>
+            <param name="sum"></param>
+            <param name="probabilities_sum"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.GetElement``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            随机取得一个选项
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.BRandom.GetVectorInt(System.Int32[])">
+            <summary>
+            取得一个随机三维整数向量, 输入的值将依次作为 x 的最大/最小值, y 的最大/最小值, z 的最大/最小值, 输入的值最多 6 个, 超出部分无效. 
+            若输入三个值, 则随机的范围则是 x ∈ [0, args[0]), y ∈ [0, args[1]), z ∈ [0, args[2])
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.ExpandedMath.Limited">
+            <summary>
+            限制数，包含上限与下限。
+            两两运算时，结果的上限是两数中最大的上限，下限是两数中最小的上限。
+            </summary>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Limited.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            实例化一个限制数, 给定其下限, 上限, 与初始值
+            </summary>
+            <param name="min"></param>
+            <param name="max"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Limited.#ctor(BFramework.ExpandedMath.Limited)">
+            <summary>
+            从现有的数创建一个限制数
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Limited.#ctor">
+            <summary>
+            创建默认限制数, 下限为0, 上限为100, 初始值为0
+            </summary>
+        </member>
+        <member name="T:BFramework.ExpandedMath.Segments">
+            <summary>
+            分段数组
+            </summary>
+        </member>
+        <member name="P:BFramework.ExpandedMath.Estimable.Dictionary">
+            <summary>
+            用于保存键与数值的字典
+            </summary>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.#ctor(System.Collections.Generic.Dictionary{System.String,System.Double})">
+            <summary>
+            使用一个已有的字典初始化 Estimable
+            </summary>
+            <param name="dictionary"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.#ctor">
+            <summary>
+            初始化一个空 Estimable
+            </summary>
+        </member>
+        <member name="P:BFramework.ExpandedMath.Estimable.IndexedProperty(System.String)">
+            <summary>
+            使用键取得数值
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:BFramework.ExpandedMath.Estimable.Keys">
+            <summary>
+            获取字典的键值列表
+            </summary>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.GetCount">
+            <summary>
+            获取字典的总数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.CompareTo(BFramework.ExpandedMath.Estimable)">
+            <summary>
+            逐个键比较大小, 若每个键对应的值都大于等于参数, 返回 true, 否则返回 false
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.Add(BFramework.ExpandedMath.Estimable)">
+            <summary>
+            将加数中每个键对应的值与自身相应的值相加
+            </summary>
+            <param name="addition"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.Add(System.Int32)">
+            <summary>
+            将自身每个键对应的值与加数相加
+            </summary>
+            <param name="addition"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.Multiply(BFramework.ExpandedMath.Estimable)">
+            <summary>
+            将乘数中每个键对应的值与自身相应的值相乘
+            </summary>
+            <param name="multiplier"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.Multiply(System.Int32)">
+            <summary>
+            将自身每个键对应的值与乘数相乘
+            </summary>
+            <param name="multiplier"></param>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.Sum">
+            <summary>
+            获取自身所有值的总和
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ExpandedMath.Estimable.Clone">
+            <summary>
+            取得一个自身的克隆
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.ExpandedMath.Estimator`1">
+            <summary>
+            估值器, 根据一组数值的权重计算总价值
+            </summary>
+        </member>
+        <member name="T:BFramework.ShootingGame.IAffectable">
+            <summary>
+            确定可被 Effect 作用的类带有的属性与方法
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IAffectable.BeAffectedBy(BFramework.ShootingGame.EffectBase)">
+            <summary>
+            被指定效果影响
+            </summary>
+            <param name="effect"></param>
+        </member>
+        <member name="P:BFramework.ShootingGame.IAffectable.AffectedActions">
+            <summary>
+            根据效果作用的不同, 对效果执行相应的初始化工作
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IAffectable.Compute">
+            <summary>
+            计算效果的作用
+            </summary>
+        </member>
+        <member name="T:BFramework.ShootingGame.EffectBase">
+            <summary>
+            效果的基类
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.EffectBase.CompareActions">
+            <summary>
+            从字符串反序列化时, 进行比较的方法字典
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.ReadString``1(System.String)">
+            <summary>
+            从字符串反序列化一个效果
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="P:BFramework.ShootingGame.EffectBase.Formatter">
+            <summary>
+            格式化工具
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.Serialize``1(``0)">
+            <summary>
+            序列化一个效果
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.Deserialize``1(System.String)">
+            <summary>
+            反序列化效果
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="serializedMsg"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.ShootingGame.EffectBase.CALTYPE">
+            <summary>
+            计算类型
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.CALTYPE.Add">
+            <summary>
+            加法
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.CALTYPE.Multiple">
+            <summary>
+            乘法
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.CALTYPE.Lock">
+            <summary>
+            锁定
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.Name">
+            <summary>
+            效果名
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.CalType">
+            <summary>
+            计算方式
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.MemberName">
+            <summary>
+            效果作用的成员名
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.Parameter">
+            <summary>
+            作用参数
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.NeedReset">
+            <summary>
+            在效果作用完毕后是否需要重置相应的成员
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.CallCount">
+            <summary>
+            作用次数
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.ExertsImmediately">
+            <summary>
+            是否立即产生作用
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.IsAvailable">
+            <summary>
+            效果是否还在作用中
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase._value">
+            <summary>
+            用于记录作用目标当前值的变量
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.EffectBase.IsInitialized">
+            <summary>
+            是否已经初始化完毕
+            </summary>
+        </member>
+        <member name="T:BFramework.ShootingGame.EffectBase.ComputeMethod">
+            <summary>
+            计算作用效果方法的委托
+            </summary>
+            <param name="value"></param>
+            <param name="positive"></param>
+        </member>
+        <member name="F:BFramework.ShootingGame.EffectBase.Compute">
+            <summary>
+            计算作用效果
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.DefaultCompute(System.Single@,System.Boolean)">
+            <summary>
+            默认的计算方法, 将根据效果的作用类型, 对效果指定目标的成员(MemberName)产生作用
+            </summary>
+            <param name="value"></param>
+            <param name="positive"></param>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.Init(System.Object,BFramework.BDelegate.Method,BFramework.BDelegate.Method)">
+            <summary>
+            初始化效果
+            </summary>
+            <param name="target"></param>
+            <param name="stepAction"></param>
+            <param name="cycleAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.InitGeneric``1(``0)">
+            <summary>
+            对于可被效果作用的物体进行初始化
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.ToString">
+            <summary>
+            序列化为字符串(可读)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.CompareTo(System.Object)">
+            <summary>
+            比较
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            通过 ISerializable 接口序列化实例
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            通过 ISerializabel 接口反序列化实例
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:BFramework.ShootingGame.EffectBase.#ctor">
+            <summary>
+            新建一个效果实例
+            </summary>
+        </member>
+        <member name="T:BFramework.ShootingGame.IItemHolder">
+            <summary>
+            定义物品持有者需要带有的方法
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemHolder.GetItem(BFramework.ShootingGame.IItemBehaviour)">
+            <summary>
+            取得某个道具
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemHolder.DropItem(BFramework.ShootingGame.IItemBehaviour)">
+            <summary>
+            掉落/失去某个道具
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.ShootingGame.IItemComponent">
+            <summary>
+            道具组件需要带有的属性与方法
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IItemComponent.Order">
+            <summary>
+            组件的顺序, Order 越小的组件越先执行
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IItemComponent.IsInitialized">
+            <summary>
+            组件是否已初始化
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemComponent.Init">
+            <summary>
+            初始化组件
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemComponent.Tick">
+            <summary>
+            调用组件, 使其发挥功能
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IItemComponent.BehaviourAttached">
+            <summary>
+            组件所依附的 ItemBehaviour
+            </summary>
+        </member>
+        <member name="T:BFramework.ShootingGame.IItemBehaviour">
+            <summary>
+            道具类需要带有的属性与方法
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IItemBehaviour.Active">
+            <summary>
+            道具是否可用
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IItemBehaviour.Info">
+            <summary>
+            道具的信息
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IItemBehaviour.Holder">
+            <summary>
+            道具持有者
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.IItemBehaviour.Components">
+            <summary>
+            道具的组件列表
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemBehaviour.AddComponent``1">
+            <summary>
+            为道具添加组件, 相同类型的组件只能存在一个
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemBehaviour.RemoveComponent``1">
+            <summary>
+            为道具移除组件
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemBehaviour.TryGetComponent``1(``0@)">
+            <summary>
+            尝试取得指定类型的组件
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemBehaviour.GetBy(BFramework.ShootingGame.IItemHolder)">
+            <summary>
+            道具被持有者取得
+            </summary>
+            <param name="holder"></param>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemBehaviour.Drop">
+            <summary>
+            道具被掉落/失去
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemBehaviour.Tick">
+            <summary>
+            使用道具
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IItemBehaviour.StartCoroutine(System.Collections.IEnumerator)">
+            <summary>
+            开启一个协程
+            </summary>
+            <param name="enumerator"></param>
+        </member>
+        <member name="T:BFramework.ShootingGame.IInterpreter">
+            <summary>
+            道具信息的展示者需要携带的方法
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.IInterpreter.Show(BFramework.ShootingGame.ItemInfo)">
+            <summary>
+            展示道具信息
+            </summary>
+            <param name="info"></param>
+        </member>
+        <member name="T:BFramework.ShootingGame.ItemInfo">
+            <summary>
+            道具信息
+            </summary>
+        </member>
+        <member name="P:BFramework.ShootingGame.ItemInfo.FieldInfos">
+            <summary>
+            道具信息的字段字典, 可以从中取得字段信息
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.id">
+            <summary>
+            道具的 ID
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.name">
+            <summary>
+            道具名
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.effectInString">
+            <summary>
+            道具附带的效果(可读字符串形式)
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.main">
+            <summary>
+            道具描述
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.usageCount">
+            <summary>
+            道具剩余的可用次数(值为 -1 时即表示不限次数)
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.infinity">
+            <summary>
+            道具是否可以无限使用
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.stackable">
+            <summary>
+            道具是否可以堆叠
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.date_manufacture">
+            <summary>
+            道具被生产的时间
+            </summary>
+        </member>
+        <member name="F:BFramework.ShootingGame.ItemInfo.date_obtain">
+            <summary>
+            道具被获取的时间
+            </summary>
+        </member>
+        <member name="M:BFramework.ShootingGame.ItemInfo.#ctor(System.Int32,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            生成一个道具信息
+            </summary>
+            <param name="id"></param>
+            <param name="name"></param>
+            <param name="main"></param>
+            <param name="usageCount"></param>
+            <param name="stackable"></param>
+        </member>
+        <member name="P:BFramework.ShootingGame.ItemInfo.Item(System.String)">
+            <summary>
+            通过索引器取得道具的字段信息
+            </summary>
+            <param name="fieldName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.ItemInfo.TrySetValue(System.String,System.Object)">
+            <summary>
+            尝试对指定名称的字段赋值
+            </summary>
+            <param name="fieldName"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:BFramework.ShootingGame.ItemInfo.TryGetValue(System.String,System.Object@)">
+            <summary>
+            尝试取得指定名称的字段值
+            </summary>
+            <param name="fieldName"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.ShootingGame.ItemInfo.ToString">
+            <summary>
+            将信息序列化为可读字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BFramework.Vector.Inverse">
+            <summary>
+            逆向量
+            </summary>
+        </member>
+        <member name="P:BFramework.Vector.SqrMagnitude">
+            <summary>
+            向量长度的平方(不开根号)
+            </summary>
+        </member>
+        <member name="P:BFramework.Vector.Magnitude">
+            <summary>
+            向量的长度
+            </summary>
+        </member>
+        <member name="P:BFramework.VectorInt.Inverse">
+            <summary>
+            逆向量
+            </summary>
+        </member>
+        <member name="P:BFramework.VectorInt.SqrMagnitude">
+            <summary>
+            向量长度的平方(不开根号)
+            </summary>
+        </member>
+        <member name="P:BFramework.VectorInt.Magnitude">
+            <summary>
+            向量的长度
+            </summary>
+        </member>
+        <member name="M:BFramework.VectorInt.Dot(BFramework.VectorInt)">
+            <summary>
+            向量的点积
+            </summary>
+            <param name="multiplier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.VectorInt.Cross(BFramework.VectorInt)">
+            <summary>
+            向量叉积, 返回一个与这两个向量垂直的向量,
+            </summary>
+            <param name="multiplier"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.IFactory`1">
+            <summary>
+            对象工厂接口
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:BFramework.PathFind.Agent">
+            <summary>
+            用于路径规划的代理类
+            </summary>
+        </member>
+        <member name="T:BFramework.PathFind.Agent.CLIMBLINGABILITY">
+            <summary>
+            攀附能力水准的枚举
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.Extension">
+            <summary>
+            后缀名
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent._directions">
+            <summary>
+            所有攀附水平需要判断的方向数组
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.Name">
+            <summary>
+            代理的名字
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.ClimblingAbility">
+            <summary>
+            代理的攀附能力
+            </summary>
+        </member>
+        <member name="P:BFramework.PathFind.Agent.ClimblingRequirements">
+            <summary>
+            判断节点能否立足时, 需要判断的方向数组
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.WalkCapacity">
+            <summary>
+            通行阈值
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.FulcrumHardnessCapacity">
+            <summary>
+            对支点的硬度要求
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.WeightTable">
+            <summary>
+            节点属性权重表
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.HeuristicType">
+            <summary>
+            使用的启发算法类型
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Agent.StepsLimit">
+            <summary>
+            每次搜索计算次数上限
+            </summary>
+        </member>
+        <member name="M:BFramework.PathFind.Agent.Compute(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            根据自身使用的启发算法计算距离
+            </summary>
+            <param name="node"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Agent.BeAbleToPass(BFramework.World.Node)">
+            <summary>
+            判断节点可否通过
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.PathFind.Heuristic">
+            <summary>
+            启发函数
+            </summary>
+        </member>
+        <member name="T:BFramework.PathFind.Heuristic.TYPE">
+            <summary>
+            启发函数类型枚举
+            </summary>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.Abs(System.Int32)">
+            <summary>
+            快速求绝对值
+            </summary>
+            <param name="n"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.ComputeNeighborDistance(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            查表法计算节点与邻节点的距离
+            </summary>
+            <param name="node"></param>
+            <param name="neighbor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.Sort3(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            将三个整型数排序
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <param name="c"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.Manhattan(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            求两个节点间的曼哈顿距离
+            </summary>
+            <param name="start"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.EuclideanSquare(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            求两个节点间的欧几里得距离, 但不开根号
+            </summary>
+            <param name="start"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.Octile(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            求两个节点间的 Octile 距离
+            </summary>
+            <param name="start"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.Chebyshev(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            求两个节点间的切比雪夫距离
+            </summary>
+            <param name="start"></param>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Heuristic.Calculate(BFramework.World.Node,BFramework.World.Node,BFramework.PathFind.Heuristic.TYPE)">
+            <summary>
+            根据输入的类型与节点选择相应的启发函数计算节点间的距离
+            </summary>
+            <param name="start"></param>
+            <param name="target"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.PathFind.Path">
+            <summary>
+            用于路径规划的路径类, 进行路径规划时调用其 Find() 方法
+            </summary>
+        </member>
+        <member name="T:BFramework.PathFind.Path.STATE">
+            <summary>
+            用于记录工作状态的枚举
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.STATE.FAIL">
+            <summary>
+            路径检索失败
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.STATE.PROCESSING">
+            <summary>
+            路径检索中
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.STATE.SUCCESS">
+            <summary>
+            路径检索成功
+            </summary>
+        </member>
+        <member name="T:BFramework.PathFind.Path.NODESTATE">
+            <summary>
+            用于记录节点状态的枚举
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.NODESTATE.CLOSED">
+            <summary>
+            节点关闭(已查找过)
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.NODESTATE.NONE">
+            <summary>
+            未知节点
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.NODESTATE.OPEN">
+            <summary>
+            待查找节点
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Parents">
+            <summary>
+            记录节点与其父节点关系的字典
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.NodeStates">
+            <summary>
+            记录节点状态的字典
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path._availableNeighborsCurrent">
+            <summary>
+            当前节点的有效邻节点指针
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Estimator">
+            <summary>
+            估值器, 用于估计每个 Node 的消耗
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.MapStatic">
+            <summary>
+            地图是否为静态
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path._availableNeighborsDictionary">
+            <summary>
+            可用的邻节点字典，仅当地图为静态时使用
+            </summary>
+        </member>
+        <member name="M:BFramework.PathFind.Path.#ctor(BFramework.World.Node,BFramework.World.Node,BFramework.PathFind.Agent,System.Boolean)">
+            <summary>
+            初始化 Path, 需要给定起始节点, 终止节点, 代理, 以及地图是否为静态(默认为否)
+            </summary>
+            <param name="start"></param>
+            <param name="end"></param>
+            <param name="agent"></param>
+            <param name="mapStatic"></param>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Steps">
+            <summary>
+            记录当前步数
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Agent">
+            <summary>
+            代理
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Cost">
+            <summary>
+            路径的花费, 是整个路径中所有 Node 的 Cost 之和
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Start">
+            <summary>
+            起点
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.End">
+            <summary>
+            终点
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Current">
+            <summary>
+            当前检测到的 Node
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.CurrentFulcrum">
+            <summary>
+            当前节点的支撑节点
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Opened">
+            <summary>
+            待检测的 Node 列表
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.Closed">
+            <summary>
+            检测完毕的 Node 列表
+            </summary>
+        </member>
+        <member name="P:BFramework.PathFind.Path.Result">
+            <summary>
+            路径检索的最终结果
+            </summary>
+        </member>
+        <member name="F:BFramework.PathFind.Path.State">
+            <summary>
+            工作状态
+            </summary>
+        </member>
+        <member name="P:BFramework.PathFind.Path.Item(System.String)">
+            <summary>
+            访问估值器的权重值
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.SetWeight(System.String,System.Int32)">
+            <summary>
+            根据键值设置估值器相应的权重值
+            </summary>
+            <param name="key"></param>
+            <param name="weight"></param>
+        </member>
+        <member name="M:BFramework.PathFind.Path.GetFulcrum(BFramework.PathFind.Agent,BFramework.World.Node,BFramework.World.DIRECTION[])">
+            <summary>
+            检查节点是否可以作为支点(需要给出代理信息与待检查的方位)
+            </summary>
+            <param name="agent"></param>
+            <param name="node"></param>
+            <param name="directions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.CompareCost(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            比较两个 Node 的开销
+            </summary>
+            <param name="node"></param>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.GetParent(BFramework.World.Node)">
+            <summary>
+            取得节点的父节点
+            </summary>
+            <param name="child"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.SetParent(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            设置节点的父节点
+            </summary>
+            <param name="node"></param>
+            <param name="parent"></param>
+        </member>
+        <member name="M:BFramework.PathFind.Path.PushToOpenset(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            将指定 Node 添加到开启列表中(需要设置其父节点)
+            </summary>
+            <param name="node"></param>
+            <param name="parent"></param>
+        </member>
+        <member name="M:BFramework.PathFind.Path.PushToClosed(BFramework.World.Node)">
+            <summary>
+            将指定 Node 添加到关闭列表中
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:BFramework.PathFind.Path.CheckNode(BFramework.World.Node)">
+            <summary>
+            检查节点
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.OnFail">
+            <summary>
+            失败时执行动作
+            </summary>
+        </member>
+        <member name="M:BFramework.PathFind.Path.OnSuccess">
+            <summary>
+            成功时执行动作
+            </summary>
+        </member>
+        <member name="M:BFramework.PathFind.Path.CompareDifficulty(BFramework.World.Node)">
+            <summary>
+            检查节点是否可以通行
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.GetAvailableNeighbors(BFramework.World.Node)">
+            <summary>
+            对于指定节点, 获取其可以通行的相邻节点
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.FindSync">
+            <summary>
+            按步检索路径
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.Find">
+            <summary>
+            检索路径, 直到寻路结束
+            </summary>
+        </member>
+        <member name="M:BFramework.PathFind.Path.Find(BFramework.BDelegate)">
+            <summary>
+            检索路径, 且在每一步检索之后执行动作, 直到寻路结束
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:BFramework.PathFind.Path.GetResultLength">
+            <summary>
+            取得路径检索结果的路程
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.Reset">
+            <summary>
+            重置/初始化路径
+            </summary>
+        </member>
+        <member name="M:BFramework.PathFind.Path.SetStart(BFramework.World.Node)">
+            <summary>
+            设置起点
+            </summary>
+            <param name="start"></param>
+        </member>
+        <member name="M:BFramework.PathFind.Path.SetEnd(BFramework.World.Node)">
+            <summary>
+            设置终点
+            </summary>
+            <param name="end"></param>
+        </member>
+        <member name="M:BFramework.PathFind.Path.NodeAsVector(BFramework.World.Node)">
+            <summary>
+            将节点坐标转化为整数三维向量
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.PathFind.Path.CompareByAngle(BFramework.World.Node,BFramework.World.Node)">
+            <summary>
+            比较两个节点之间的角度
+            </summary>
+            <param name="node"></param>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.StateMachines.State">
+            <summary>
+            用于状态机的状态类
+            </summary>
+        </member>
+        <member name="M:BFramework.StateMachines.State.#ctor(System.String)">
+            <summary>
+            使用字符串为名称新建一个状态
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:BFramework.StateMachines.State.#ctor(System.String,BFramework.BDelegate{System.Object,System.String}.Method)">
+            <summary>
+            使用给定的名称与现有的方法新建状态
+            </summary>
+            <param name="name"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:BFramework.StateMachines.State.#ctor(System.String,BFramework.BDelegate{System.Object,System.String})">
+            <summary>
+            使用字符串为名称，已有的委托新建一个状态
+            </summary>
+            <param name="name"></param>
+            <param name="action"></param>
+        </member>
+        <member name="P:BFramework.StateMachines.State.Action">
+            <summary>
+            状态节点的行为
+            </summary>
+        </member>
+        <member name="P:BFramework.StateMachines.State.Name">
+            <summary>
+            状态名
+            </summary>
+        </member>
+        <member name="P:BFramework.StateMachines.State.StateMachine">
+            <summary>
+            状态节点对状态机的指针
+            </summary>
+        </member>
+        <member name="M:BFramework.StateMachines.State.Initiate(BFramework.StateMachines.StateMachine)">
+            <summary>
+            使用给定的状态机进行初始化
+            </summary>
+            <param name="machine"></param>
+        </member>
+        <member name="M:BFramework.StateMachines.State.Act(System.Object)">
+            <summary>
+            执行该状态的行为
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.StateMachines.State.AddTranslation(System.String,BFramework.BDelegate{System.Object,System.Boolean}.Method,BFramework.BDelegate{System.Object,System.String}.Method)">
+            <summary>
+            条件有参数, 回调有参数
+            </summary>
+            <param name="targetState"></param>
+            <param name="conditionMethod"></param>
+            <param name="callbackMethod"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.StateMachines.State.AddTranslation(System.String,BFramework.BDelegate{System.Object,System.Boolean}.MethodNone,BFramework.BDelegate{System.Object,System.String}.MethodNone)">
+            <summary>
+            条件无参数, 回调无参数
+            </summary>
+            <param name="targetState"></param>
+            <param name="conditionMethod"></param>
+            <param name="callbackMethod"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.StateMachines.State.AddTranslation(System.String,BFramework.BDelegate{System.Object,System.Boolean}.MethodNone,BFramework.BDelegate{System.Object,System.String}.Method)">
+            <summary>
+            条件无参数, 回调有参数
+            </summary>
+            <param name="targetState"></param>
+            <param name="conditionMethod"></param>
+            <param name="callbackMethod"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.StateMachines.State.RemoveTranslationTo(System.String)">
+            <summary>
+            移除通向目标状态的转移
+            </summary>
+            <param name="targetState"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.StateMachines.Translation">
+            <summary>
+            状态转换类
+            </summary>
+        </member>
+        <member name="T:BFramework.StateMachines.StateMachine">
+            <summary>
+            有限状态机
+            </summary>
+        </member>
+        <member name="M:BFramework.StateMachines.StateMachine.#ctor(BFramework.StateMachines.State[])">
+            <summary>
+            由给定状态建立状态机
+            </summary>
+            <param name="states"></param>
+        </member>
+        <member name="M:BFramework.StateMachines.StateMachine.AddState(BFramework.StateMachines.State)">
+            <summary>
+            添加状态节点
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="F:BFramework.StateMachines.StateMachine._nextState">
+            <summary>
+            下一个状态
+            </summary>
+        </member>
+        <member name="P:BFramework.StateMachines.StateMachine.Current">
+            <summary>
+            当前状态节点
+            </summary>
+        </member>
+        <member name="P:BFramework.StateMachines.StateMachine.Params">
+            <summary>
+            公用变量，用于状态之间传递参数
+            </summary>
+        </member>
+        <member name="P:BFramework.StateMachines.StateMachine.States">
+            <summary>
+            保存状态机中所有状态节点
+            </summary>
+        </member>
+        <member name="P:BFramework.StateMachines.StateMachine.Tags">
+            <summary>
+            用于记录状态节点的名称
+            </summary>
+        </member>
+        <member name="M:BFramework.StateMachines.StateMachine.Run">
+            <summary>
+            执行当前状态节点
+            </summary>
+        </member>
+        <member name="M:BFramework.StateMachines.StateMachine.AddAnyStateTranslation(System.String,BFramework.BDelegate{System.Object,System.Boolean},BFramework.BDelegate{System.Object,System.String})">
+            <summary>
+            添加任意状态到某状态的转移
+            </summary>
+            <param name="targetState"></param>
+            <param name="conditionMethod"></param>
+            <param name="callbackMethod"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.StateMachines.StateMachine.RemoveTranslation(System.String,System.String)">
+            <summary>
+            移除状态转换
+            </summary>
+            <param name="stateName"></param>
+            <param name="translationName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.Tools.BStopWatch.Click">
+            <summary>
+            返回从计时器新建/上一次刷新到现在的时间
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.Tools.Lever">
+            <summary>
+            由字符串快速设置/获取某个实例的字段, 若要获取索引器, 需要标记为
+            [System.Runtime.CompilerServices.IndexerName(Tools.Lever.INDEXEDPROPERTYTAG)]
+            </summary>
+        </member>
+        <member name="F:BFramework.Tools.Lever.INDEXEDPROPERTYTAG">
+            <summary>
+            索引器标签常量, 用于标记索引器
+            </summary>
+        </member>
+        <member name="P:BFramework.Tools.Lever.Instance">
+            <summary>
+            取得目标实例
+            </summary>
+        </member>
+        <member name="P:BFramework.Tools.Lever.Type">
+            <summary>
+            目标的类型
+            </summary>
+        </member>
+        <member name="P:BFramework.Tools.Lever.Keys">
+            <summary>
+            目标的所有 public 属性名列表
+            </summary>
+        </member>
+        <member name="M:BFramework.Tools.Lever.#ctor(System.Object)">
+            <summary>
+            使用一个任意实例对 Lever 进行初始化
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="M:BFramework.Tools.Lever.SetValue(System.String,System.Object,System.Object[])">
+            <summary>
+            根据属性名字设定目标实例对应的值
+            </summary>
+            <param name="accessor"></param>
+            <param name="value"></param>
+            <param name="index"></param>
+        </member>
+        <member name="M:BFramework.Tools.Lever.GetValue(System.String,System.Object[])">
+            <summary>
+            根据属性名字获取目标实例对应的值
+            </summary>
+            <param name="accessor"></param>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.Tools.Exporter`1">
+            <summary>
+            序列化工具, 用于序列化保存或读取指定的类
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:BFramework.Pool`1">
+            <summary>
+            池的基类
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:BFramework.SafePool`1">
+            <summary>
+            安全对象池
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:BFramework.WatchBase">
+            <summary>
+            计时器基类
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.Cycle">
+            <summary>
+            计时器完成一个循环的时长
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.StartValue">
+            <summary>
+            计时器的初始值
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.Interval">
+            <summary>
+            计时器的间隔(每隔一段长度为该值的时间, 计时器将执行一次间隔事件)
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.Step">
+            <summary>
+            计时器的步长
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.Current">
+            <summary>
+            计时器的当前值
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.IsLoop">
+            <summary>
+            计时器是否循环计时(即当前值为循环时长时, 是否重置当前值到初始值)
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.quotientLast">
+            <summary>
+            记录上一次计时动作中, Current 与 Interval 的除数
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.quotient">
+            <summary>
+            记录当前计时动作中, Current 与 Interval 的除数
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.remainder">
+            <summary>
+            记录当前计时动作中, Current 与 Interval 的余数
+            </summary>
+        </member>
+        <member name="F:BFramework.WatchBase.IsRun">
+            <summary>
+            计时器是否在运行
+            </summary>
+        </member>
+        <member name="P:BFramework.WatchBase.CycleAction">
+            <summary>
+            循环事件, 在 Current 的值打到循环时长时执行
+            </summary>
+        </member>
+        <member name="P:BFramework.WatchBase.IntervalAction">
+            <summary>
+            间隔事件, 在 Current 值为 Interval 的整数倍时执行
+            </summary>
+        </member>
+        <member name="P:BFramework.WatchBase.StepAction">
+            <summary>
+            计数事件, 每一次计时动作执行
+            </summary>
+        </member>
+        <member name="P:BFramework.WatchBase.OnStart">
+            <summary>
+            开始事件, 在一轮计时循环开启时执行
+            </summary>
+        </member>
+        <member name="M:BFramework.WatchBase.StartUp(System.Collections.IEnumerator)">
+            <summary>
+            启动计时器
+            </summary>
+            <param name="mytick"></param>
+        </member>
+        <member name="M:BFramework.WatchBase.WaitForSeconds(System.Single)">
+            <summary>
+            等待指定事件(秒)
+            </summary>
+            <param name="seconds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.WatchBase.Tick">
+            <summary>
+            计时动作
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.WatchBase.Start">
+            <summary>
+            开始计时
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.WatchBase.Stop">
+            <summary>
+            停止计时, 将重置计时器
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.WatchBase.Reset">
+            <summary>
+            重置计时器
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.WatchBase.Pause">
+            <summary>
+            暂停计时
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.WatchBase.Continue">
+            <summary>
+            继续计时
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.WatchBase.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            序列化
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:BFramework.WatchBase.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            反序列化
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:BFramework.WatchBase.#ctor">
+            <summary>
+            无参构造一个计时器
+            </summary>
+        </member>
+        <member name="T:BFramework.World.FixedBounds2D">
+            <summary>
+            平面上长方形边界信息
+            </summary>
+        </member>
+        <member name="F:BFramework.World.FixedBounds2D.pivot">
+            <summary>
+            长方形的锚点, 即左下顶点
+            </summary>
+        </member>
+        <member name="F:BFramework.World.FixedBounds2D.size">
+            <summary>
+            长方形的尺寸, x : 宽, y : 0, z : 高
+            </summary>
+        </member>
+        <member name="F:BFramework.World.FixedBounds2D.vertices">
+            <summary>
+            长方形的所有顶点
+            </summary>
+        </member>
+        <member name="F:BFramework.World.FixedBounds2D.boxOffset">
+            <summary>
+            判断点在长方形中时使用的偏移量
+            </summary>
+        </member>
+        <member name="F:BFramework.World.FixedBounds2D.boundries">
+            <summary>
+            长方形边界上的点集
+            </summary>
+        </member>
+        <member name="F:BFramework.World.FixedBounds2D.boundriesOutside">
+            <summary>
+            长方形外边界上的点集
+            </summary>
+        </member>
+        <member name="P:BFramework.World.FixedBounds2D.Diagonal">
+            <summary>
+            对角点
+            </summary>
+        </member>
+        <member name="P:BFramework.World.FixedBounds2D.UpLeft">
+            <summary>
+            左上方顶点
+            </summary>
+        </member>
+        <member name="P:BFramework.World.FixedBounds2D.BottomRight">
+            <summary>
+            右下方顶点
+            </summary>
+        </member>
+        <member name="M:BFramework.World.FixedBounds2D.#ctor(BFramework.VectorInt,BFramework.VectorInt)">
+            <summary>
+            通过锚点坐标与尺寸构造一个边界信息
+            </summary>
+            <param name="position"></param>
+            <param name="size"></param>
+        </member>
+        <member name="M:BFramework.World.FixedBounds2D.IsPointInBounds(BFramework.VectorInt)">
+            <summary>
+            判断点是否在边界内部(无视点在 y 方向上的坐标
+            </summary>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.FixedBounds2D.IsIntersectWith(BFramework.World.FixedBounds2D)">
+            <summary>
+            判断另一个边界是否与此有重叠
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.World.Dungeon">
+            <summary>
+            地牢生成器
+            </summary>
+        </member>
+        <member name="T:BFramework.World.Dungeon.Room">
+            <summary>
+            地牢房间
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.Room.position">
+            <summary>
+            房间位置
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.Room.size">
+            <summary>
+            房间的尺寸
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.Room.bounds">
+            <summary>
+            房间的边界
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.Room.nodes">
+            <summary>
+            房间内的节点
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.Room.boundryNodes">
+            <summary>
+            房间边界上的节点
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Dungeon.Room.#ctor(BFramework.VectorInt,BFramework.VectorInt)">
+            <summary>
+            根据位置与尺寸, 构造一个房间, 同时将生成房间的边界信息
+            </summary>
+            <param name="position"></param>
+            <param name="size"></param>
+        </member>
+        <member name="M:BFramework.World.Dungeon.Room.IsIntersectWith(BFramework.World.Dungeon.Room)">
+            <summary>
+            判断房间是否与另一个房间由有重叠
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Dungeon.Room.IsPointIn(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            判断点是否在房间内
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Dungeon.Room.IsPointIn(BFramework.VectorInt)">
+            <summary>
+            判断点是否在房间内
+            </summary>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Dungeon.Room.IsNodeIn(BFramework.World.Node)">
+            <summary>
+            判断节点是否在房间内
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Dungeon.Room.Init(BFramework.World.Map,BFramework.World.Properties,BFramework.World.Properties,System.Int32)">
+            <summary>
+            对房间进行初始化, 即生成房间内节点列表与边界节点列表
+            </summary>
+            <param name="map"></param>
+            <param name="floorType"></param>
+            <param name="boundryType"></param>
+            <param name="minDistanceToMapEdge"></param>
+            <returns></returns>
+        </member>
+        <member name="F:BFramework.World.Dungeon.name">
+            <summary>
+            地牢名字
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.maxTestTimes">
+            <summary>
+            生成房间时, 最大计算次数, 值越大则房间越密集
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.maxRoomSize">
+            <summary>
+            生成房间的最大尺寸
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.minRoomSize">
+            <summary>
+            生成房间的最小尺寸
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.size">
+            <summary>
+            地牢的尺寸
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.origin">
+            <summary>
+            地牢在空间中的原点
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.minDistanceToEdge">
+            <summary>
+            房间到地牢边界的最小距离
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.roomFloorPrefab">
+            <summary>
+            房间地板的节点类型
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.boundryNodePrefab">
+            <summary>
+            房间边界的节点类型
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.dungeonNodePrefab">
+            <summary>
+            地牢节点的类型
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.mazeGenerationAgent">
+            <summary>
+            生成迷宫的检索代理
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.generationSpace">
+            <summary>
+            生成地牢的地图信息
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Dungeon.rooms">
+            <summary>
+            地牢中所有房间
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Dungeon.GenerateSpace">
+            <summary>
+            生成一张地图
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Dungeon.GenerateRooms">
+            <summary>
+            生成房间
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Dungeon.GenerateMaze">
+            <summary>
+            生成迷宫
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Dungeon.ToString">
+            <summary>
+            将地牢转换为可读的字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.World.Properties">
+            <summary>
+            节点属性类, 用于保存节点的属性及估值, 继承自 ExpandedMath.Estimable 类
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Properties.EmptyValue">
+            <summary>
+            空节点的类型值
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Properties.KeysStatic">
+            <summary>
+            默认的键值
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Properties.NodeType">
+            <summary>
+            节点的类型
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Properties.Cost">
+            <summary>
+            记录节点的开销
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Properties.#ctor">
+            <summary>
+            实例化空节点属性
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Properties.#ctor(System.String)">
+            <summary>
+            实例化空节点属性并声明其种类
+            </summary>
+            <param name="typeName"></param>
+        </member>
+        <member name="M:BFramework.World.Properties.#ctor(System.String,System.Collections.Generic.Dictionary{System.String,System.Double})">
+            <summary>
+            实例化节点属性
+            </summary>
+            <param name="typeName"></param>
+            <param name="dictionary"></param>
+        </member>
+        <member name="T:BFramework.World.DIRECTION">
+            <summary>
+            方向的枚举
+            </summary>
+        </member>
+        <member name="T:BFramework.World.Default">
+            <summary>
+            储存默认值的类
+            </summary>
+        </member>
+        <member name="T:BFramework.World.Default.Properties">
+            <summary>
+            对应 Properties 类的默认与预设值
+            </summary>
+        </member>
+        <member name="T:BFramework.World.Default.Properties.Keys">
+            <summary>
+            键的默认值
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Default.Properties.Empty">
+            <summary>
+            空节点属性
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Default.Properties.Water">
+            <summary>
+            障碍节点属性
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Default.Properties.Random">
+            <summary>
+            随机节点属性
+            </summary>
+        </member>
+        <member name="T:BFramework.World.Node">
+            <summary>
+            节点类
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Node.#ctor(System.Int32,System.Int32,System.Int32,BFramework.World.Properties)">
+            <summary>
+            根据给定的通行难度与坐标建立节点
+            </summary>
+            <param name="difficulty"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+        </member>
+        <member name="P:BFramework.World.Node._properties">
+            <summary>
+            节点的属性
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Node.Neighbors">
+            <summary>
+            节点的所有相邻节点
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Node.X">
+            <summary>
+            节点在 X 轴上的坐标
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Node.Y">
+            <summary>
+            节点在 Y 轴上的坐标
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Node.Z">
+            <summary>
+            节点在 Z 轴上的坐标
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Node.SwitchDirection(BFramework.World.DIRECTION@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            通过给定的方向, 调整坐标的指针
+            </summary>
+            <param name="direction"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+        </member>
+        <member name="P:BFramework.World.Node.Type">
+            <summary>
+            节点的类型值
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Node.Cost">
+            <summary>
+            通过该节点的开销
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Node.Difficulty">
+            <summary>
+            该节点的通行难度
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Node.GValue">
+            <summary>
+            该节点到其父节点的距离估值
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Node.HValue">
+            <summary>
+            该节点到目标节点的距离估值
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Node.Friction">
+            <summary>
+            该节点的通行阻力
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Node.SetCost(BFramework.ExpandedMath.Estimator{BFramework.World.Properties}@)">
+            <summary>
+            设置该节点的通行开销, 需要传入一个对 PathFind.Properties 类的估值器( ExpandedMath.Estimator 类)
+            </summary>
+            <param name="estimator"></param>
+        </member>
+        <member name="M:BFramework.World.Node.ToString">
+            <summary>
+            节点类输出为字符串的方法重载
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BFramework.World.Map">
+            <summary>
+            地图类, 保存地形
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Map.#ctor(System.String,System.Int32,System.Int32,System.Int32,BFramework.VectorInt,System.Boolean)">
+            <summary>
+            根据给定长宽高新建一个地图, 可选择是否随机给节点的通行难度赋值
+            </summary>
+            <param name="name"></param>
+            <param name="lengthX"></param>
+            <param name="lengthY"></param>
+            <param name="lengthZ"></param>
+            <param name="randomDifficulty"></param>
+        </member>
+        <member name="F:BFramework.World.Map.Name">
+            <summary>
+            地图名
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Map.Origin">
+            <summary>
+            地图原点
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Map.LengthX">
+            <summary>
+            地图在 X 轴方向的长度
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Map.LengthY">
+            <summary>
+            地图在 Y 轴方向的长度
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Map.LengthZ">
+            <summary>
+            地图在 Z 轴方向的长度
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Map.NodesCount">
+            <summary>
+            地图中的节点总量
+            </summary>
+        </member>
+        <member name="F:BFramework.World.Map.Nodes">
+            <summary>
+            地图中的所有节点
+            </summary>
+        </member>
+        <member name="P:BFramework.World.Map.Item(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            节点访问器, 根据坐标返回对应的节点(考虑地图原点)
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Map.SetNeighbors(BFramework.World.Node)">
+            <summary>
+            设定节点的相邻节点
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:BFramework.World.Map.SetNeighbors">
+            <summary>
+            设置自身所有节点的相邻节点
+            </summary>
+        </member>
+        <member name="M:BFramework.World.Map.IgnoreOriginCheck(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            根据坐标检查该坐标是否在地图内(不考虑地图原点)
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Map.Check(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            根据坐标检查该坐标是否在地图内(考虑地图原点)
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Map.ToString">
+            <summary>
+            地图类转化为字符串的方法重载
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.World.Map.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            序列化
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:BFramework.World.Map.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            反序列化
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:BFramework.ISingleton">
+            <summary>
+            单例接口
+            </summary>
+        </member>
+        <member name="T:BFramework.SingletonProperty`1">
+            <summary>
+            单例属性器, 无需继承单例基类
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:BFramework.SingletonProperty`1.Instance">
+            <summary>
+            取得实例
+            </summary>
+        </member>
+        <member name="M:BFramework.SingletonProperty`1.Dispose">
+            <summary>
+            释放单例
+            </summary>
+        </member>
+        <member name="M:BFramework.SingletonProperty`1.CreateSingleton">
+            <summary>
+            用于创建单例
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BFramework.Singleton`1.Reset">
+            <summary>
+            重置单例中所有标记了 NeedReset 属性的 Field
+            </summary>
+        </member>
+        <!-- 对于成员“T:SimplexNoise.Noise”忽略有格式错误的 XML 注释 -->
+        <member name="M:SimplexNoise.Noise.Generate(System.Single)">
+            <summary>
+            1D simplex noise
+            </summary>
+            <param name="x"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimplexNoise.Noise.Generate(System.Single,System.Single)">
+            <summary>
+            2D simplex noise
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

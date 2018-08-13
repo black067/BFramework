@@ -137,7 +137,13 @@ namespace SimplexNoise
             return 40.0f * (n0 + n1 + n2); // TODO: The scale factor is preliminary!
         }
 
-
+        /// <summary>
+        /// 根据给定的坐标生成噪音高度
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
         public static float Generate(float x, float y, float z)
         {
             // Simple skewing factors for the 3D case

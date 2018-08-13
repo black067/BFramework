@@ -10,15 +10,19 @@ namespace BFramework.World
     [System.Serializable]
     public class Map : ISerializable
     {
+        /// <summary>
+        /// 地图类的后缀名
+        /// </summary>
         public static readonly string Extension = ".map";
 
         /// <summary>
-        /// 根据给定长宽高新建一个地图, 可选择是否随机给节点的通行难度赋值
+        /// 根据给定长宽高与地图原点新建一个地图, 可选择是否随机给节点的通行难度赋值
         /// </summary>
         /// <param name="name"></param>
         /// <param name="lengthX"></param>
         /// <param name="lengthY"></param>
         /// <param name="lengthZ"></param>
+        /// <param name="origin"></param>
         /// <param name="randomDifficulty"></param>
         public Map(string name, int lengthX, int lengthY, int lengthZ, VectorInt origin, bool randomDifficulty = false)
         {
@@ -36,6 +40,37 @@ namespace BFramework.World
                     for (int k = 0; k < LengthZ; k++)
                     {
                         Nodes[i, j, k] = new Node(i + Origin.x, j + Origin.y, k + Origin.z, randomDifficulty ? Default.Properties.Random : Default.Properties.Empty);
+                    }
+                }
+            }
+            SetNeighbors();
+        }
+
+        /// <summary>
+        /// 根据给定长宽高与地图原点新建一个地图, 并将每个节点都设置为指定的节点类型
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="lengthX"></param>
+        /// <param name="lengthY"></param>
+        /// <param name="lengthZ"></param>
+        /// <param name="origin"></param>
+        /// <param name="fillPrefab"></param>
+        public Map(string name, int lengthX, int lengthY, int lengthZ, VectorInt origin, Properties fillPrefab)
+        {
+            Name = name;
+            Origin = origin;
+            LengthX = lengthX;
+            LengthY = lengthY;
+            LengthZ = lengthZ;
+            NodesCount = LengthX * LengthY * LengthZ;
+            Nodes = new Node[LengthX, LengthY, LengthZ];
+            for (int i = 0; i < LengthX; i++)
+            {
+                for (int j = 0; j < LengthY; j++)
+                {
+                    for (int k = 0; k < LengthZ; k++)
+                    {
+                        Nodes[i, j, k] = new Node(i + Origin.x, j + Origin.y, k + Origin.z, fillPrefab.Clone(true));
                     }
                 }
             }
@@ -77,8 +112,14 @@ namespace BFramework.World
         /// </summary>
         public Node[,,] Nodes;
 
+        /// <summary>
+        /// 地图中包含的节点类型的名字(用于序列化与反序列化)
+        /// </summary>
         public List<string> PrefabNodeTypes;
 
+        /// <summary>
+        /// 地图中所有节点的类型在类型名字列表中的索引(用于序列化与反序列化)
+        /// </summary>
         public int[,,] NodeTypes;
 
         /// <summary>
@@ -93,6 +134,19 @@ namespace BFramework.World
             get
             {
                 return Check(x, y, z) ? Nodes[x - Origin.x, y - Origin.y, z - Origin.z] : null;
+            }
+        }
+
+        /// <summary>
+        /// 根据点查找节点
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Node this[VectorInt point]
+        {
+            get
+            {
+                return this[point.x, point.y, point.z];
             }
         }
 
@@ -159,6 +213,11 @@ namespace BFramework.World
                 z >= Origin.z && z < (LengthZ + Origin.z);
         }
 
+        /// <summary>
+        /// 将节点设置为指定的类型
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="newProperties"></param>
         public static void SetNode(Node node, Properties newProperties)
         {
             if (newProperties == null)

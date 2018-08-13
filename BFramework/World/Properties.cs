@@ -74,5 +74,10 @@ namespace BFramework.World
             }
             return new Estimable(dic);
         }
+
+        public Properties Clone(bool anything)
+        {
+            return new Properties(NodeType, Dictionary);
+        }
     }
 }

@@ -68,6 +68,9 @@ namespace BFramework.StateMachines
             private set;
         }
 
+        /// <summary>
+        /// 从任意状态出发的转移列表
+        /// </summary>
         public List<Translation> AnyStateTranslations { get; set; } = new List<Translation>();
 
         /// <summary>
@@ -78,6 +81,10 @@ namespace BFramework.StateMachines
             Run(Params);
         }
 
+        /// <summary>
+        /// 状态机有参数输入运行
+        /// </summary>
+        /// <param name="input"></param>
         public void Run(object input)
         {
             foreach(var t in AnyStateTranslations)
@@ -102,13 +109,13 @@ namespace BFramework.StateMachines
             }
             return false;
         }
-        
+
         /// <summary>
         /// 添加任意状态到某状态的转移
         /// </summary>
         /// <param name="targetState"></param>
-        /// <param name="conditionMethod"></param>
-        /// <param name="callbackMethod"></param>
+        /// <param name="condition"></param>
+        /// <param name="callback"></param>
         /// <returns></returns>
         public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool> condition, BDelegate<object, string> callback)
         {
@@ -116,24 +123,56 @@ namespace BFramework.StateMachines
             AnyStateTranslations.Add(t);
             return t;
         }
+
+        /// <summary>
+        /// 添加一个任意状态到目标状态的转移, 并指定其条件与回调函数
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="condition"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.Method condition, BDelegate<object, string>.Method callback)
         {
             Translation t = new Translation("ANY", targetState, condition, callback);
             AnyStateTranslations.Add(t);
             return t;
         }
+
+        /// <summary>
+        /// 添加一个任意状态到目标状态的转移, 并指定其条件与回调函数
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="condition"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.Method condition, BDelegate<object, string>.MethodNone callback)
         {
             Translation t = new Translation("ANY", targetState, condition, callback);
             AnyStateTranslations.Add(t);
             return t;
         }
+
+        /// <summary>
+        /// 添加一个任意状态到目标状态的转移, 并指定其条件与回调函数
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="condition"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.MethodNone condition, BDelegate<object, string>.Method callback)
         {
             Translation t = new Translation("ANY", targetState, condition, callback);
             AnyStateTranslations.Add(t);
             return t;
         }
+
+        /// <summary>
+        /// 添加一个任意状态到目标状态的转移, 并指定其条件与回调函数
+        /// </summary>
+        /// <param name="targetState"></param>
+        /// <param name="condition"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public Translation AddAnyStateTranslation(string targetState, BDelegate<object, bool>.MethodNone condition, BDelegate<object, string>.MethodNone callback)
         {
             Translation t = new Translation("ANY", targetState, condition, callback);

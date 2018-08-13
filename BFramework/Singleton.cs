@@ -4,10 +4,13 @@ using System.Reflection;
 namespace BFramework
 {
     /// <summary>
-    /// 单例接口
+    /// 一个可以被单例属性器使用的类需要具备的方法
     /// </summary>
     public interface ISingleton
     {
+        /// <summary>
+        /// 初始化
+        /// </summary>
         void OnInitialized();
     }
 
@@ -17,7 +20,12 @@ namespace BFramework
     /// <typeparam name="T"></typeparam>
     public class SingletonProperty<T> where T : class, ISingleton
     {
+
+        /// <summary>
+        /// 全局唯一的实例
+        /// </summary>
         protected static T _instance = null;
+
         private static object _lock = new object();
 
         /// <summary>
@@ -71,24 +79,53 @@ namespace BFramework
         }
     }
     
+    /// <summary>
+    /// 重置属性标记, 用于标记单例中初始化时需要重置的字段
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
     public class NeedResetAttribute : Attribute
     {
+
+        /// <summary>
+        /// 是否需要将被标记的字段重置为 null
+        /// </summary>
         public bool ResetValueToNull;
+
+        /// <summary>
+        /// 设置标记, 并指定该字段是否需要重置为 null
+        /// </summary>
+        /// <param name="ResetValueToNull"></param>
         public NeedResetAttribute(bool ResetValueToNull)
         {
             this.ResetValueToNull = ResetValueToNull;
         }
     }
 
+    /// <summary>
+    /// 单例基类
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class Singleton<T> where T : Singleton<T>
     {
+
+        /// <summary>
+        /// 被维护的唯一对象实例
+        /// </summary>
         protected static T _instance = null;
 
+        /// <summary>
+        /// 被维护的对象是否初始化
+        /// </summary>
         protected static bool _initialized = false;
 
+        /// <summary>
+        /// 受保护的无参构建方法
+        /// </summary>
         protected Singleton() { }
         
+        /// <summary>
+        /// 取得全局唯一实例
+        /// </summary>
         public static T Instance
         {
             get
@@ -105,7 +142,7 @@ namespace BFramework
         }
 
         /// <summary>
-        /// 重置单例中所有标记了 NeedReset 属性的 Field
+        /// 重置单例中所有被标记为 NeedReset 的字段
         /// </summary>
         public static void Reset()
         {

@@ -9,3 +9,4 @@ C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild
 C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.pdb
 C:\Users\black\Projects\BFramework\WorldConfigBuild\bin\Release\BFramework.dll
 C:\Users\black\Projects\BFramework\WorldConfigBuild\obj\Release\WorldConfigBuild.csproj.CopyComplete
+C:\Users\black\Projects\BFramework\WorldConfigBuild\bin\Release\BFramework.xml

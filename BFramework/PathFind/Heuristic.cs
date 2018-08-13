@@ -13,10 +13,30 @@ namespace BFramework.PathFind
         /// </summary>
         public enum TYPE
         {
+
+            /// <summary>
+            /// 曼哈顿距离
+            /// </summary>
             MANHATTAN,
+
+            /// <summary>
+            /// 欧几里得距离
+            /// </summary>
             EUCLIDEAN,
+
+            /// <summary>
+            /// 欧几里得距离, 但是不开根号
+            /// </summary>
             EUCLIDEANSQUARE,
+
+            /// <summary>
+            /// 
+            /// </summary>
             OCTILE,
+
+            /// <summary>
+            /// 切比雪夫距离
+            /// </summary>
             CHEBYSHEV,
         }
         
@@ -107,8 +127,14 @@ namespace BFramework.PathFind
             return dX * dX + dY * dY + dZ * dZ;
         }
         
+        /// <summary>
+        /// 根号二
+        /// </summary>
         public static readonly double sqrt2 = Math.Sqrt(2);
         
+        /// <summary>
+        /// 根号三
+        /// </summary>
         public static readonly double sqrt3 = Math.Sqrt(3);
 
         /// <summary>

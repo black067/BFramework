@@ -13,10 +13,30 @@ namespace BFramework.PathFind
         /// </summary>
         public enum CLIMBLINGABILITY
         {
+
+            /// <summary>
+            /// 攀附能力弱, 只能在平面移动
+            /// </summary>
             WEAK = 0,
+
+            /// <summary>
+            /// 普通型, 可以攀爬一个高度的落差
+            /// </summary>
             NORMAL = 1,
+
+            /// <summary>
+            /// 强力型, 可以依附于竖直平面上
+            /// </summary>
             STRONG = 2,
+
+            /// <summary>
+            /// 可以依附于顶面上
+            /// </summary>
             EXCELLENT = 3,
+
+            /// <summary>
+            /// 不需要支撑点
+            /// </summary>
             EXTREME = 4
         }
         
@@ -62,6 +82,16 @@ namespace BFramework.PathFind
             }
         };
 
+        /// <summary>
+        /// 构建代理
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="climblingAbility"></param>
+        /// <param name="walkCapacity"></param>
+        /// <param name="fulcrumHardnessCapacity"></param>
+        /// <param name="weightTable"></param>
+        /// <param name="heuristicType"></param>
+        /// <param name="stepLimit"></param>
         public Agent(string name, CLIMBLINGABILITY climblingAbility, int walkCapacity, int fulcrumHardnessCapacity, Properties weightTable, Heuristic.TYPE heuristicType, int stepLimit)
         {
             Name = name;
@@ -71,6 +101,18 @@ namespace BFramework.PathFind
             WeightTable = weightTable;
             HeuristicType = heuristicType;
             StepsLimit = stepLimit;
+        }
+
+        /// <summary>
+        /// 取得一个默认代理
+        /// </summary>
+        public static Agent DefaultAgent
+        {
+            get
+            {
+                Properties table = new Properties("AgentTable", Default.GetDefaultTable());
+                return new Agent("DefaulAgent", CLIMBLINGABILITY.EXTREME, 500, 0, table, Heuristic.TYPE.MANHATTAN, 1000);
+            }
         }
 
         /// <summary>
@@ -140,6 +182,11 @@ namespace BFramework.PathFind
             return WalkCapacity >= target.Difficulty;
         }
 
+        /// <summary>
+        /// 判断节点可否立足
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public bool BeAbleToStand(Node node)
         {
             return node[Default.Properties.Keys.Hardness] > FulcrumHardnessCapacity;

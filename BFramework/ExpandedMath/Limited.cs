@@ -7,16 +7,15 @@ namespace BFramework.ExpandedMath
     /// 两两运算时，结果的上限是两数中最大的上限，下限是两数中最小的上限。
     /// </summary>
     [System.Serializable]
-    public class Limited
+    public struct Limited
     {
-
         /// <summary>
         /// 实例化一个限制数, 给定其下限, 上限, 与初始值
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <param name="value"></param>
-        public Limited(float min, float max, float value)
+        public Limited(float min, float max, float value) : this()
         {
             _min = min;
             _max = max;
@@ -25,7 +24,7 @@ namespace BFramework.ExpandedMath
                 _max = min;
                 _min = max;
             }
-            Value = value;
+            _value = value;
         }
 
         /// <summary>
@@ -34,15 +33,13 @@ namespace BFramework.ExpandedMath
         /// <param name="value"></param>
         public Limited(Limited value) : this(value.Min, value.Max, value.Value) { }
 
-        /// <summary>
-        /// 创建默认限制数, 下限为0, 上限为100, 初始值为0
-        /// </summary>
-        public Limited() : this(0, 100, 0) { }
-
         float _min;
         float _max;
         float _value;
 
+        /// <summary>
+        /// 值
+        /// </summary>
         public float Value
         {
             get
@@ -71,6 +68,10 @@ namespace BFramework.ExpandedMath
                 }
             }
         }
+
+        /// <summary>
+        /// 上限
+        /// </summary>
         public float Max
         {
             get
@@ -98,6 +99,10 @@ namespace BFramework.ExpandedMath
                 }
             }
         }
+
+        /// <summary>
+        /// 下限
+        /// </summary>
         public float Min
         {
             get
@@ -126,30 +131,47 @@ namespace BFramework.ExpandedMath
             }
         }
 
-        public float Overflow { get; protected set; }
+        /// <summary>
+        /// 溢出标记
+        /// </summary>
+        public float Overflow;
 
+        /// <summary>
+        /// 设置上限
+        /// </summary>
         public void SetMax()
         {
             _value = _max;
             Overflow = 0;
         }
 
+        /// <summary>
+        /// 设置下限
+        /// </summary>
         public void SetMin()
         {
             _value = _min;
             Overflow = 0;
         }
 
+        /// <summary>
+        /// 取得当前值的百分比
+        /// </summary>
+        /// <returns></returns>
         public float GetPercentage()
         {
             return (Value - Min) / (Max - Min);
         }
-        
+
+        /// <summary>
+        /// 判断相等
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
-            var limited = obj as Limited;
-            return limited != null &&
-                   _min == limited._min &&
+            var limited = (Limited)obj;
+            return _min == limited._min &&
                    _max == limited._max &&
                    _value == limited._value &&
                    Value == limited.Value &&
@@ -157,6 +179,10 @@ namespace BFramework.ExpandedMath
                    Min == limited.Min;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             var hashCode = -2087586221;
@@ -168,8 +194,14 @@ namespace BFramework.ExpandedMath
             hashCode = hashCode * -1521134295 + Min.GetHashCode();
             return hashCode;
         }
-        
-        public static Limited operator + (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 运算符 + 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator +(Limited lhs, Limited rhs)
         {
             return new Limited(lhs)
             {
@@ -178,7 +210,14 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value + rhs.Value,
             };
         }
-        public static Limited operator - (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 运算符 - 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator -(Limited lhs, Limited rhs)
         {
             return new Limited(lhs)
             {
@@ -187,7 +226,14 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value - rhs.Value,
             };
         }
-        public static Limited operator * (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 运算符 * 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator *(Limited lhs, Limited rhs)
         {
             return new Limited(lhs)
             {
@@ -196,7 +242,14 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value * rhs.Value,
             };
         }
-        public static Limited operator / (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 运算符 / 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator /(Limited lhs, Limited rhs)
         {
             return new Limited(lhs)
             {
@@ -206,91 +259,209 @@ namespace BFramework.ExpandedMath
             };
         }
 
-        public static Limited operator + (Limited lhs, float rhs)
+        /// <summary>
+        /// 运算符 + 的重载, 将浮点数与限制数的值相加, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator +(Limited lhs, float rhs)
         {
             return new Limited(lhs)
             {
                 Value = lhs.Value + rhs
             };
         }
-        public static Limited operator - (Limited lhs, float rhs)
+
+        /// <summary>
+        /// 运算符 - 的重载, 将浮点数与限制数的值相减, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator -(Limited lhs, float rhs)
         {
             return new Limited(lhs)
             {
                 Value = lhs.Value - rhs
             };
         }
-        public static Limited operator * (Limited lhs, float rhs)
+
+        /// <summary>
+        /// 运算符 - 的重载, 将浮点数与限制数的值相乘, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator *(Limited lhs, float rhs)
         {
             return new Limited(lhs)
             {
                 Value = lhs.Value * rhs
             };
         }
-        public static Limited operator / (Limited lhs, float rhs)
+
+        /// <summary>
+        /// 运算符 / 的重载, 将浮点数与限制数的值相除, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Limited operator /(Limited lhs, float rhs)
         {
             return new Limited(lhs)
             {
                 Value = lhs.Value / rhs
             };
         }
-        
-        public static bool operator == (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 判断两个限制数是否相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator ==(Limited lhs, Limited rhs)
         {
             return lhs.Min == rhs.Min && lhs.Max == rhs.Max && lhs.Value == rhs.Value;
         }
-        public static bool operator != (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 判断两个限制数是否不相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator !=(Limited lhs, Limited rhs)
         {
             return lhs.Min != rhs.Min || lhs.Max != rhs.Max || lhs.Value != rhs.Value;
         }
 
-        public static bool operator == (Limited lhs, float rhs)
+        /// <summary>
+        /// 判断限制数的值与浮点数是否相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator ==(Limited lhs, float rhs)
         {
             return lhs.Value == rhs;
         }
-        public static bool operator != (Limited lhs, float rhs)
+
+        /// <summary>
+        /// 判断限制数的值与浮点数是否不相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator !=(Limited lhs, float rhs)
         {
             return lhs.Value != rhs;
         }
 
-        public static bool operator >= (Limited lhs, Limited rhs)
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator >=(Limited lhs, Limited rhs)
         {
             return lhs.Value >= rhs.Value;
         }
-        public static bool operator <= (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator <=(Limited lhs, Limited rhs)
         {
             return lhs.Value <= rhs.Value;
         }
-        public static bool operator > (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator >(Limited lhs, Limited rhs)
         {
             return lhs.Value > rhs.Value;
         }
-        public static bool operator < (Limited lhs, Limited rhs)
+
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator <(Limited lhs, Limited rhs)
         {
             return lhs.Value < rhs.Value;
         }
 
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator >=(Limited lhs, float rhs)
         {
             return lhs.Value >= rhs;
         }
+
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator <=(Limited lhs, float rhs)
         {
             return lhs.Value <= rhs;
         }
-        public static bool operator > (Limited lhs, float rhs)
+
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator >(Limited lhs, float rhs)
         {
             return lhs.Value > rhs;
         }
-        public static bool operator < (Limited lhs, float rhs)
+
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator <(Limited lhs, float rhs)
         {
             return lhs.Value < rhs;
         }
     }
 
-    public class LimitedInt
+    /// <summary>
+    /// 整数型限制数，包含上限与下限。
+    /// 两两运算时，结果的上限是两数中最大的上限，下限是两数中最小的上限。
+    /// </summary>
+    [System.Serializable]
+    public struct LimitedInt
     {
-        public LimitedInt(int min, int max, int value)
+        /// <summary>
+        /// 实例化一个限制数, 给定其下限, 上限, 与初始值
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <param name="value"></param>
+        public LimitedInt(int min, int max, int value) : this()
         {
             _min = min;
             _max = max;
@@ -299,15 +470,22 @@ namespace BFramework.ExpandedMath
                 _max = min;
                 _min = max;
             }
-            Value = value;
+            _value = value;
         }
+
+        /// <summary>
+        /// 从现有的数创建一个限制数
+        /// </summary>
+        /// <param name="value"></param>
         public LimitedInt(LimitedInt value) : this(value.Min, value.Max, value.Value) { }
-        public LimitedInt() : this(0, 100, 0) { }
 
         int _min;
         int _max;
         int _value;
 
+        /// <summary>
+        /// 值
+        /// </summary>
         public int Value
         {
             get
@@ -321,18 +499,25 @@ namespace BFramework.ExpandedMath
                     if (value <= _max)
                     {
                         _value = value;
+                        Overflow = 0;
                     }
                     else
                     {
                         _value = _max;
+                        Overflow = value - _max;
                     }
                 }
                 else
                 {
                     _value = _min;
+                    Overflow = value - _min;
                 }
             }
         }
+
+        /// <summary>
+        /// 上限
+        /// </summary>
         public int Max
         {
             get
@@ -347,17 +532,23 @@ namespace BFramework.ExpandedMath
                 }
                 else if (value >= _min)
                 {
-                    _value = value;
                     _max = value;
+                    Overflow = _value - _max;
+                    _value = _max;
                 }
                 else
                 {
-                    _min = value / 2;
+                    _min = value - value;
                     _max = value;
-                    _value = value;
+                    Overflow = _value - _max;
+                    _value = _max;
                 }
             }
         }
+
+        /// <summary>
+        /// 下限
+        /// </summary>
         public int Min
         {
             get
@@ -372,38 +563,61 @@ namespace BFramework.ExpandedMath
                 }
                 else if (value <= _max)
                 {
-                    _value = value;
                     _min = value;
+                    Overflow = _value - _min;
+                    _value = _min;
                 }
                 else
                 {
                     _max = value * 2;
-                    _value = value;
                     _min = value;
+                    Overflow = _value - _min;
+                    _value = _min;
                 }
             }
         }
 
-        public bool OverflowP
+        /// <summary>
+        /// 溢出标记
+        /// </summary>
+        public int Overflow;
+
+        /// <summary>
+        /// 设置上限
+        /// </summary>
+        public void SetMax()
         {
-            get { return Value == Max; }
+            _value = _max;
+            Overflow = 0;
         }
 
-        public bool OverflowN
+        /// <summary>
+        /// 设置下限
+        /// </summary>
+        public void SetMin()
         {
-            get { return Value == Min; }
+            _value = _min;
+            Overflow = 0;
         }
 
-        public int GetPercentage()
+        /// <summary>
+        /// 取得当前值的百分比
+        /// </summary>
+        /// <returns></returns>
+        public float GetPercentage()
         {
             return (Value - Min) / (Max - Min);
         }
 
+        /// <summary>
+        /// 判断相等
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
-            var limited = obj as LimitedInt;
-            return limited != null &&
-                   _min == limited._min &&
+            var limited = (LimitedInt)obj;
+            return _min == limited._min &&
                    _max == limited._max &&
                    _value == limited._value &&
                    Value == limited.Value &&
@@ -411,6 +625,10 @@ namespace BFramework.ExpandedMath
                    Min == limited.Min;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             var hashCode = -2087586221;
@@ -422,7 +640,13 @@ namespace BFramework.ExpandedMath
             hashCode = hashCode * -1521134295 + Min.GetHashCode();
             return hashCode;
         }
-        
+
+        /// <summary>
+        /// 运算符 + 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator +(LimitedInt lhs, LimitedInt rhs)
         {
             return new LimitedInt(lhs)
@@ -432,6 +656,13 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value + rhs.Value,
             };
         }
+
+        /// <summary>
+        /// 运算符 - 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator -(LimitedInt lhs, LimitedInt rhs)
         {
             return new LimitedInt(lhs)
@@ -441,6 +672,13 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value - rhs.Value,
             };
         }
+
+        /// <summary>
+        /// 运算符 * 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator *(LimitedInt lhs, LimitedInt rhs)
         {
             return new LimitedInt(lhs)
@@ -450,6 +688,13 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value * rhs.Value,
             };
         }
+
+        /// <summary>
+        /// 运算符 / 的重载, 合并两个限制数, 结果的上限为最大的上限, 结果下限为最小的下限
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator /(LimitedInt lhs, LimitedInt rhs)
         {
             return new LimitedInt(lhs)
@@ -460,6 +705,12 @@ namespace BFramework.ExpandedMath
             };
         }
 
+        /// <summary>
+        /// 运算符 + 的重载, 将浮点数与限制数的值相加, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator +(LimitedInt lhs, int rhs)
         {
             return new LimitedInt(lhs)
@@ -467,6 +718,13 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value + rhs
             };
         }
+
+        /// <summary>
+        /// 运算符 - 的重载, 将浮点数与限制数的值相减, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator -(LimitedInt lhs, int rhs)
         {
             return new LimitedInt(lhs)
@@ -474,6 +732,13 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value - rhs
             };
         }
+
+        /// <summary>
+        /// 运算符 - 的重载, 将浮点数与限制数的值相乘, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator *(LimitedInt lhs, int rhs)
         {
             return new LimitedInt(lhs)
@@ -481,6 +746,13 @@ namespace BFramework.ExpandedMath
                 Value = lhs.Value * rhs
             };
         }
+
+        /// <summary>
+        /// 运算符 / 的重载, 将浮点数与限制数的值相除, 得到一个新的数
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static LimitedInt operator /(LimitedInt lhs, int rhs)
         {
             return new LimitedInt(lhs)
@@ -489,53 +761,133 @@ namespace BFramework.ExpandedMath
             };
         }
 
+        /// <summary>
+        /// 判断两个限制数是否相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator ==(LimitedInt lhs, LimitedInt rhs)
         {
             return lhs.Min == rhs.Min && lhs.Max == rhs.Max && lhs.Value == rhs.Value;
         }
+
+        /// <summary>
+        /// 判断两个限制数是否不相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator !=(LimitedInt lhs, LimitedInt rhs)
         {
             return lhs.Min != rhs.Min || lhs.Max != rhs.Max || lhs.Value != rhs.Value;
         }
 
+        /// <summary>
+        /// 判断限制数的值与浮点数是否相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator ==(LimitedInt lhs, int rhs)
         {
             return lhs.Value == rhs;
         }
+
+        /// <summary>
+        /// 判断限制数的值与浮点数是否不相等
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator !=(LimitedInt lhs, int rhs)
         {
             return lhs.Value != rhs;
         }
 
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator >=(LimitedInt lhs, LimitedInt rhs)
         {
             return lhs.Value >= rhs.Value;
         }
+
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator <=(LimitedInt lhs, LimitedInt rhs)
         {
             return lhs.Value <= rhs.Value;
         }
+
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator >(LimitedInt lhs, LimitedInt rhs)
         {
             return lhs.Value > rhs.Value;
         }
+
+        /// <summary>
+        /// 通过值比较两个限制数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator <(LimitedInt lhs, LimitedInt rhs)
         {
             return lhs.Value < rhs.Value;
         }
 
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator >=(LimitedInt lhs, int rhs)
         {
             return lhs.Value >= rhs;
         }
+
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator <=(LimitedInt lhs, int rhs)
         {
             return lhs.Value <= rhs;
         }
+
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator >(LimitedInt lhs, int rhs)
         {
             return lhs.Value > rhs;
         }
+
+        /// <summary>
+        /// 通过值比较限制数与浮点数的大小
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static bool operator <(LimitedInt lhs, int rhs)
         {
             return lhs.Value < rhs;

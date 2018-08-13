@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 namespace BFramework.ExpandedMath
 {
+
+    /// <summary>
+    /// 估值器类
+    /// </summary>
     [Serializable]
     public class Estimable
     {
@@ -29,7 +33,6 @@ namespace BFramework.ExpandedMath
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        [System.Runtime.CompilerServices.IndexerName(Tools.Lever.INDEXEDPROPERTYTAG)]
         public double this[string key]
         {
             get
@@ -58,6 +61,11 @@ namespace BFramework.ExpandedMath
         /// </summary>
         public Dictionary<string, double>.KeyCollection Keys { get { return Dictionary.Keys; } }
 
+        /// <summary>
+        /// 判断是否含有给定的键
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool ContainsKey(string key)
         {
             return Dictionary.ContainsKey(key);
@@ -171,13 +179,26 @@ namespace BFramework.ExpandedMath
     /// </summary>
     public class Estimator<T> where T : Estimable
     {
+
+        /// <summary>
+        /// 权重表
+        /// </summary>
         public T WeightItem { get; set; }
 
+        /// <summary>
+        /// 构建一个估值器
+        /// </summary>
+        /// <param name="weightItem"></param>
         public Estimator(T weightItem)
         {
             WeightItem = weightItem;
         }
         
+        /// <summary>
+        /// 计算
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public double Calculate(T item)
         {
             Estimable weightItem = WeightItem.Clone();

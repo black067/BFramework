@@ -23,6 +23,18 @@ namespace BFramework.World
     /// </summary>
     public static class Default
     {
+        public static Dictionary<string, double> GetDefaultTable()
+        {
+            return new Dictionary<string, double>
+            {
+                { "DIFFICULTY", 0 },
+                { "GVALUE", 1 },
+                { "HVALUE", 1 },
+                { "FRICTION", 0 },
+                { "TEMPERATURE", 0 }
+            };
+        }
+
         /// <summary>
         /// 对应 Properties 类的默认与预设值
         /// </summary>
@@ -59,6 +71,57 @@ namespace BFramework.World
                 }
             }
 
+            private static readonly object o = new object();
+            private static Dictionary<string, World.Properties> _pairs;
+            public static Dictionary<string, World.Properties> Pairs
+            {
+                get
+                {
+                    lock (o)
+                    {
+                        if (_pairs == null)
+                        {
+                            _pairs = new Dictionary<string, World.Properties>();
+                            System.Type t = typeof(World.Properties);
+                            PropertyInfo[] infos = typeof(Default.Properties).GetProperties(BindingFlags.Static | BindingFlags.Public);
+                            foreach (var i in infos)
+                            {
+                                if (i.PropertyType == t)
+                                {
+                                    _pairs.Add(i.Name, i.GetValue(null, null) as World.Properties);
+                                }
+                            }
+                        }
+                    }
+                    return _pairs;
+                }
+            }
+            public static Dictionary<string, World.Properties>.KeyCollection PrefabKeys
+            {
+                get
+                {
+                    return Pairs.Keys;
+                }
+            }
+            public static World.Properties GetPrefab(string key)
+            {
+                if(Pairs.TryGetValue(key, out World.Properties v))
+                {
+                    return v;
+                }
+                else
+                {
+                    foreach (var k in PrefabKeys)
+                    {
+                        if(string.Equals(key, k, System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            return Pairs[k];
+                        }
+                    }
+                    return null;
+                }
+            }
+
             /// <summary>
             /// 空节点属性
             /// </summary>
@@ -73,7 +136,7 @@ namespace BFramework.World
                             { "GVALUE", 0 },
                             { "HVALUE", 0 },
                             { "FRICTION", 0 },
-                            { "TEMPERATURE", 20 }
+                            { "TEMPERATURE", 0 }
                         });
                 }
             }

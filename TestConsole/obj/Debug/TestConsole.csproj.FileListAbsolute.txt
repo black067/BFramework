@@ -16,3 +16,4 @@ D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.exe
 D:\Projects\BFramework\TestConsole\obj\Debug\TestConsole.pdb
 C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csproj.CopyComplete
 C:\Users\black\Projects\BFramework\TestConsole\obj\Debug\TestConsole.csprojAssemblyReference.cache
+C:\Users\black\Projects\BFramework\TestConsole\bin\Debug\BFramework.xml

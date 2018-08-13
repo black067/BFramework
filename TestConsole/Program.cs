@@ -377,10 +377,8 @@ namespace TestConsole
             public static void Reflection()
             {
                 Node node = new Node(4, 5, 0, new Properties());
-                BDebug.Log(node);
                 Lever leverOfNode = new Lever(node.GetProperties());
                 leverOfNode["DIFFICULTY"] = 124;
-                BDebug.Log(leverOfNode["Cost"], leverOfNode["DIFFICULTY"]);
 
             }
 
@@ -469,6 +467,10 @@ namespace TestConsole
                     Console.WriteLine(r.Pop());
                 }
             }
+
+            public static void DungeonGenerate()
+            {
+            }
         }
         
 
@@ -482,14 +484,28 @@ namespace TestConsole
             //Test.Generate();
             //Test.HeuristicSort();
             //Test.BinaryTreeT2();
-            string typeName = typeof(Map).Name;
-            Console.WriteLine(typeName);
-            Console.WriteLine(typeof(Map));
-            Type tempType = Type.GetType(typeName, false, true);
-            Console.WriteLine(tempType);
-            Console.WriteLine("++++++");
-            Type tempTypeB = Type.GetType(typeName);
-            Console.WriteLine(tempTypeB);
+            
+            Dungeon d = new Dungeon()
+            {
+                maxRoomSize = new VectorInt(10, 0, 10),
+                minRoomSize = new VectorInt(4, 0, 4),
+                maxTestTimes = 25,
+                origin = new VectorInt(0, 0, 0),
+                size = new VectorInt(64, 1, 64),
+            };
+
+            Agent agent = Agent.DefaultAgent;
+            agent.WalkCapacity = 700;
+            agent.HeuristicType = Heuristic.TYPE.OCTILE;
+            agent.WeightTable[Default.Properties.Keys.Difficulty] = 1.5;
+            agent.WeightTable[Default.Properties.Keys.GValue] = 10;
+            agent.WeightTable[Default.Properties.Keys.HValue] = 5;
+            agent.StepsLimit = 2000;
+            d.mazeGenerationAgent = agent;
+
+            d.GenerateRooms();
+            d.GenerateMaze();
+            Console.WriteLine(d.ToString());
             Console.WriteLine("\nPress any key to exit.");
             Console.ReadKey();
         }

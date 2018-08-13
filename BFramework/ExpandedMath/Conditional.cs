@@ -13,6 +13,11 @@ namespace BFramework.ExpandedMath
     {
         private T _value;
 
+        /// <summary>
+        /// 给定初始值与条件构建一个容器
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="conditions"></param>
         public Conditional(T value, params BDelegate<T, bool>[] conditions)
         {
             int length = conditions.Length;
@@ -24,6 +29,11 @@ namespace BFramework.ExpandedMath
             Value = value;
         }
 
+        /// <summary>
+        /// 检查值是否满足条件
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool Check(T value)
         {
             if (Conditions.Count < 1)
@@ -47,6 +57,9 @@ namespace BFramework.ExpandedMath
             return false;
         }
 
+        /// <summary>
+        /// 值
+        /// </summary>
         public T Value
         {
             get
@@ -59,6 +72,9 @@ namespace BFramework.ExpandedMath
             }
         }
 
+        /// <summary>
+        /// 条件列表
+        /// </summary>
         public List<BDelegate<T, bool>> Conditions { get; set; }
 
     }
